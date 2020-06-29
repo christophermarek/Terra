@@ -1,10 +1,10 @@
 import React from 'react';
 
-function Grass({key}) {
+function Grass() {
   return (
      <div
-        key={key}
-        className="cellContainer"> 
+        className="cellContainer grass"
+        > 
      </div>
   );
 }

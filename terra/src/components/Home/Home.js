@@ -6,8 +6,7 @@ function Home() {
   return (
      <div> 
        <p>
-         <p>sadsa</p>
-         Hehe
+
        </p>
      </div>
   );

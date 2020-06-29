@@ -3,10 +3,7 @@ import React, { useState, useEffect } from 'react';
 import './Map.css';
 import TileHandler from '../Tiles/TileHandler';
 
-function Map({map}) {
-    console.log(map);
-
-    /*
+/*
     function updateMap(x, y){
         let newMap = [...props.map];
         newMap[x][y].active = !props.map[x][y].active;
@@ -21,7 +18,9 @@ function Map({map}) {
     //onClick={() => clickCell(element.x, element.y)}
     //style={{backgroundColor:element.active? "black" : "white"}}
 
-    
+
+function Map({map}) {
+    console.log(map);
 
     return (
         <div className="Map">

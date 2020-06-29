@@ -1,14 +1,32 @@
 import React from 'react';
 import Grass from './Grass';
+import Rock from './Rock';
+import Dirt from './Dirt';
+import Water from './Water';
 
-function TileHandler({tileType, key}) {
-    console.log(tileType);
-    console.log(key);
+function TileHandler({tileType}) {
+
     switch(tileType){
         case 'grass':
-        return (
-            <Grass key={key}/>
-         );
+            return (
+                <Grass />
+            );
+        case 'dirt':
+            return (
+                <Dirt />
+            );
+        case 'rock':
+            return (
+                <Rock />
+            );
+        case 'water':
+            return (
+                <Water />
+            );
+        default:
+            return (
+                <Dirt />
+            );
     }
     
 }

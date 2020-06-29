@@ -3,15 +3,31 @@
     flex: 1;
     padding: 15px;
     border: 1px solid black;
-    background-color: white;
   }
+
+.grass{
+  background-color: green;
+}
+
+.dirt{
+  background-color: brown;
+}
+
+.rock{
+  background-color: grey;
+}
+
+.water{
+  background-color: blue;
+}
   
-  .mapContainer {
-    display: flex;
-    flex: 1;
-    justify-content: center;
-    padding: 0 60px;
-  }
-  body{
-    background-color: grey;
-  }
+.mapContainer {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  padding: 0 60px;
+}
+
+body{
+  background-color: white;
+}
