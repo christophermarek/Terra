@@ -1,10 +1,13 @@
-import Map from './Map';
 import React, { useState, useEffect } from 'react';
+import Map from './Map';
+import TileSelector from './TileSelector';
 
 function MapEditor() {
 
     const [mapSize, setSize] = useState(20);
     const [map, setMap] = useState([]);
+    const [toggleBorder, setToggleBorder] = useState(true);
+    const [selectedTile, setSelectedTile] = useState('grass');
 
     useEffect(() => {
         
@@ -12,12 +15,9 @@ function MapEditor() {
 
     function Grass(x, y){
         let defaultTile = {
-            active:false,
             x: x,
             y: y,
-            updated: false,
             type:"grass",
-            color:"green",
         };
         return defaultTile;
     }
@@ -39,6 +39,21 @@ function MapEditor() {
         setMap(map => (newMap));
     };
 
+    function toggleCellBorders(e){
+        e.preventDefault();
+        setToggleBorder(!toggleBorder);
+    }
+
+    function updateSelectedTileType(type){
+        setSelectedTile(type);
+    } 
+
+    function updateMapWithSelectedTile(x, y){
+        let newMap = [...map];
+        newMap[x][y].type = selectedTile;
+        setMap(map => (newMap));
+    }
+  
     return (
         <div className = "Map-Editor"> 
             {map.length === 0 ? (
@@ -49,9 +64,12 @@ function MapEditor() {
                     </form>
                 </>
             ) : (
-                <>
-                    <p>Map</p>
-                    <Map map={map}/>
+                <>  
+                    <form onSubmit={toggleCellBorders} >
+                        <button type="Submit">Toggle Cell Borders</button>
+                    </form>
+                    <TileSelector updateSelectedTileType={updateSelectedTileType}/>
+                    <Map map={map} toggleBorder={toggleBorder} updateMapWithSelectedTile={updateMapWithSelectedTile}/>
                 </>
             )}
         </div>

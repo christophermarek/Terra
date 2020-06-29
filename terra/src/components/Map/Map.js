@@ -19,8 +19,8 @@ import TileHandler from '../Tiles/TileHandler';
     //style={{backgroundColor:element.active? "black" : "white"}}
 
 
-function Map({map}) {
-    console.log(map);
+function Map({map, toggleBorder, updateMapWithSelectedTile}) {
+    //console.log(map);
 
     return (
         <div className="Map">
@@ -28,7 +28,14 @@ function Map({map}) {
                 {map.map(function (item, i){
                 let entry = item.map(function (element, j) {
                     return ( 
-                            <TileHandler tileType={element.type} key={j}/>
+                            <TileHandler 
+                                x={element.x} 
+                                y={element.y} 
+                                tileType={element.type} 
+                                toggleBorder={toggleBorder} 
+                                key={j} 
+                                updateMapWithSelectedTile={updateMapWithSelectedTile}
+                            />
                         );
                 });
                 return (

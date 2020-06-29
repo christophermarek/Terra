@@ -4,28 +4,28 @@ import Rock from './Rock';
 import Dirt from './Dirt';
 import Water from './Water';
 
-function TileHandler({tileType}) {
+function TileHandler({tileType, toggleBorder, x, y, updateMapWithSelectedTile}) {
 
     switch(tileType){
         case 'grass':
             return (
-                <Grass />
+                <Grass toggleBorder={toggleBorder} x={x} y={y} updateMapWithSelectedTile={updateMapWithSelectedTile}/>
             );
         case 'dirt':
             return (
-                <Dirt />
+                <Dirt toggleBorder={toggleBorder} x={x} y={y} updateMapWithSelectedTile={updateMapWithSelectedTile}/>
             );
         case 'rock':
             return (
-                <Rock />
+                <Rock toggleBorder={toggleBorder} x={x} y={y} updateMapWithSelectedTile={updateMapWithSelectedTile}/>
             );
         case 'water':
             return (
-                <Water />
+                <Water toggleBorder={toggleBorder} x={x} y={y} updateMapWithSelectedTile={updateMapWithSelectedTile}/>
             );
         default:
             return (
-                <Dirt />
+                <Dirt toggleBorder={toggleBorder} x={x} y={y} updateMapWithSelectedTile={updateMapWithSelectedTile}/>
             );
     }
     

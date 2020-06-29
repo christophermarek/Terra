@@ -2,23 +2,27 @@
     display: flex;
     flex: 1;
     padding: 15px;
-    border: 1px solid black;
   }
 
+.cell-border{
+  outline: 1px solid black;
+}
+
+
 .grass{
-  background-color: green;
+  background-color:#7ec850;
 }
 
 .dirt{
-  background-color: brown;
+  background-color: #9b7653;
 }
 
 .rock{
-  background-color: grey;
+  background-color: #888c8d;
 }
 
 .water{
-  background-color: blue;
+  background-color: #1ca3ec;
 }
   
 .mapContainer {
