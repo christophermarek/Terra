@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Map from './Map';
 import TileSelector from './TileSelector';
 import MapFileHandler from './MapFileHandler';
+import SurfaceTileSelector from './SurfaceTileSelector';
 
 function MapEditor() {
 
@@ -10,7 +11,7 @@ function MapEditor() {
     const [toggleBorder, setToggleBorder] = useState(true);
     const [selectedTile, setSelectedTile] = useState('grass');
     const [surfaceTiles, setSurfaceTiles] = useState([]);
-
+    const [selectedTileType, setSelectedTileType] = useState('');
 
     function airTile(x, y){
         let airTile = {
@@ -77,13 +78,28 @@ function MapEditor() {
 
     function updateSelectedTileType(type){
         setSelectedTile(type);
+        setSelectedTileType('map');
     } 
 
-    function updateMapWithSelectedTile(x, y){
-        let newMap = [...map];
-        newMap[x][y].type = selectedTile;
-        setMap(map => (newMap));
+    function updateSelectedSurfaceTileType(type){
+        setSelectedTile(type);
+        setSelectedTileType('surface');
     }
+
+    function updateMapWithSelectedTile(x, y){
+        if(selectedTileType === 'map'){
+            let newMap = [...map];
+            newMap[x][y].type = selectedTile;
+            setMap(map => (newMap));
+        }
+
+        if(selectedTileType === 'surface'){
+            let newSurfaceTiles = [...surfaceTiles];
+            newSurfaceTiles[x][y].type = selectedTile;
+            setSurfaceTiles(surfaceTiles => (newSurfaceTiles));
+        }
+    }
+
 
     function loadMap(importedMap){
         let impMap = JSON.parse(importedMap);
@@ -106,8 +122,13 @@ function MapEditor() {
                         <button type="Submit">Toggle Cell Borders</button>
                     </form>
                     <TileSelector updateSelectedTileType={updateSelectedTileType}/>
+                    <SurfaceTileSelector updateSelectedSurfaceTileType={updateSelectedSurfaceTileType} />
                     <MapFileHandler loadMap={loadMap} map={map} />
-                    <Map map={map} surfaceTiles={surfaceTiles} toggleBorder={toggleBorder} updateMapWithSelectedTile={updateMapWithSelectedTile}/>
+                    <Map map={map}
+                         surfaceTiles={surfaceTiles}
+                         toggleBorder={toggleBorder} 
+                         updateMapWithSelectedTile={updateMapWithSelectedTile}
+                    />
                 </>
             )}
         </div>

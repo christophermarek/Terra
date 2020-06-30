@@ -24,6 +24,14 @@
 .water{
   background-color: #1ca3ec;
 }
+
+.tree{
+  background-color: #006400;
+}
+
+.bush{
+  background-color: #556B2F;
+}
   
 .mapContainer {
   display: flex;

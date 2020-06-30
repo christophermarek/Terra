@@ -27,3 +27,51 @@ For this reason surface tiles will be stored in a 2d array as well.
 ![image](surfaceTilesProps)
 
 Ive decided to initialize surface tiles filled with air tiles, I think its better initializing the full array now so I do not need to worry about element collision handling in the array.
+
+![image](mapConditionalRendering)
+
+![image](surfaceTileHandler)
+
+![image](tree)
+
+Now when the map parses the map array, it checks if there is a match at that index in the surface tiles array. The map will render a surfaceTile instead.
+
+The Surface Tile handler is very similar to the Tile handler but you cant really get around boilerplate code like that, and I prefer to keep it separate incase of future changes I would like to make
+
+![image](surfaceTilescss)
+
+
+Now that the code is in place for rendering the surface tiles we need to add surface tile placement in the map editor 
+
+## Surface tile map editor
+
+![image](surfaceTileControls)
+
+The controls to place surface tiles is now added.
+
+![image](updateSelectedTile)
+
+I added a new state called selected tile type, and now when we update the map the code will update the either the map or the surface tiles depending on the type selected.
+
+I also added an air surface tile
+
+![image](airSurfaceTileHandler)
+![image](air)
+
+Since in the map rendering we skip the surface tile at [x][y] if its type is air, to clear a surface tile from the map we just need to set it to air.
+
+Since the map and surface tiles are separate, when we clear a surface tile the map tile still remains and renders properly. We can also change the map tile that is under a surface tile without having to clear the surface tile.
+
+![image](mapwithsurfaceTiles)
+
+Now this is a better forest, it has bushes and trees. When I implement textures it will look much fuller
+
+## Surface tile placement rules
+
+
+## Saving/Loading surface tiles
+create an object before stringifying it, so surface and then map
+
+## Tile tooltips
+
+## Map Sizing

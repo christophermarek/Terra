@@ -10,14 +10,15 @@ function Map({map, surfaceTiles, toggleBorder, updateMapWithSelectedTile}) {
             <div className="mapContainer">
                 {map.map(function (item, i){
                 let entry = item.map(function (element, j) {
-                    if(surfaceTiles[i][j].type != "air"){
+                    if(surfaceTiles[i][j].type !== "air"){
                         return(
                             <SurfaceTileHandler 
                                 x={element.x} 
                                 y={element.y} 
-                                tileType={element.type} 
+                                tileType={surfaceTiles[i][j].type} 
                                 toggleBorder={toggleBorder} 
                                 key={j} 
+                                updateMapWithSelectedTile={updateMapWithSelectedTile}
                             />
                         );
                     }else{

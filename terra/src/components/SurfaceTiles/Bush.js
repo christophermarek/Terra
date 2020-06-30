@@ -1,8 +1,8 @@
 import React from 'react';
 
-function Tree({toggleBorder, x, y, updateMapWithSelectedTile}) {
+function Bush({toggleBorder, x, y, updateMapWithSelectedTile}) {
    let borderClass = toggleBorder ? "cell-border" : "no-border";
-   let classname = "cellContainer tree " + borderClass 
+   let classname = "cellContainer bush " + borderClass 
    return (
       <div
          className={classname}
@@ -12,4 +12,4 @@ function Tree({toggleBorder, x, y, updateMapWithSelectedTile}) {
    );
 }
 
-export default Tree;
+export default Bush;
