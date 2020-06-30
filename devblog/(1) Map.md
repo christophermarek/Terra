@@ -63,7 +63,7 @@ I want the map editor to have:
 
 The map editor is going to function as such, you select a tile type you want to place on the map, when you click on a tile on the map the map will update that position you clicked with the tile you have selected.
 
-Toggle border added
+## Toggle border added
 ![image](withborders)
 ![image](noborders)
 
@@ -74,7 +74,7 @@ Toggle on/off for the borders.
 I had to switch the borders to outline since the border css property adds pixels so the map would change size on toggle, but outline does not do that.
 But for this functionality all it took was making a conditional border css class for my tiles to render an outline or none.
 
-Tile Selector added
+## Tile Selector added
 ![image](tileSelector)
 
 The selected tile will be stored into a local state variable in the map editor
@@ -85,7 +85,7 @@ I pass the function to change the selected tile state to a tile selector compone
 
 Now that the selected tile will be stored in the state, we have all the pieces now to update tiles onclick with the selected tile
 
-Update Tile onClick added
+## Update Tile onClick added
 ![image](mapCreation)
 ![image](mapCreationNoBorder)
 
@@ -96,4 +96,36 @@ To make this update all I did was have a function that updates the board at posi
 ![image](updateMapPassed)
 And pass this function to each tile so we can get the x,y value for each tile to update the map array accordingly
 
+## Map Saving/Loading added
 
+With javascript, you cannot save files to the pc. Which is okay. What this program needs is a button to save the map array to a text blob and then also to be able to parse that blob later to load a map that is exactly the same.
+
+Since writing to a file is not something I will do, and since there is no backend yet to save files, we can export the mapfile to json to a textfield so the user can copy and load the map they want. This requires the user to save the file locally. 
+
+For the map exporting I just turned the map array into a JSON string.
+To load the map I just parse the JSON file and set the map to the loaded parsed string.
+
+![image](loadMap)
+![image](mapFileHandler)
+
+This is not an efficient solution for larger maps, and for a 20x20 tile map there will be 400 tiles, the map will be bigger eventually so a map file compression algorithm will have to be a task for the future.
+
+![image](fileHandlerUI)
+The left text field is where you load the imported map string
+and the right text field is where the map string is generated.
+
+![image](mapExported)
+When you hit export the map string is populated, now if I make a change to the map I can revert the changes
+by loading in the map string
+
+Here I messed up the map but have the good copy saved in a string
+![image](mapDirty)
+
+When I load the map back in the changes get reverted back to the original state. 
+![image](mapLoaded)
+
+
+
+Now that the map generation, editing, tile handling, and saving/loading is completed, the next step is to handle surface tiles, such as trees, bushes, and animals.
+
+Part two will deal with surface tiles.

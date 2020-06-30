@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Map from './Map';
 import TileSelector from './TileSelector';
+import MapFileHandler from './MapFileHandler';
 
 function MapEditor() {
 
@@ -53,6 +54,12 @@ function MapEditor() {
         newMap[x][y].type = selectedTile;
         setMap(map => (newMap));
     }
+
+    function loadMap(importedMap){
+        let impMap = JSON.parse(importedMap);
+        setMap(map => (impMap));
+    }
+
   
     return (
         <div className = "Map-Editor"> 
@@ -69,6 +76,7 @@ function MapEditor() {
                         <button type="Submit">Toggle Cell Borders</button>
                     </form>
                     <TileSelector updateSelectedTileType={updateSelectedTileType}/>
+                    <MapFileHandler loadMap={loadMap} map={map}/>
                     <Map map={map} toggleBorder={toggleBorder} updateMapWithSelectedTile={updateMapWithSelectedTile}/>
                 </>
             )}
