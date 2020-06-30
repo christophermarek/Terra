@@ -2,32 +2,26 @@ import { Route, Switch } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import './Map.css';
 import TileHandler from '../Tiles/TileHandler';
+import SurfaceTileHandler from '../SurfaceTiles/SurfaceTileHandler'; 
 
-/*
-    function updateMap(x, y){
-        let newMap = [...props.map];
-        newMap[x][y].active = !props.map[x][y].active;
-        setMap(board => (newMap));
-    }
-  
-    function clickCell(x, y){
-        updateMap(x, y);
-    }
-    */
-
-    //onClick={() => clickCell(element.x, element.y)}
-    //style={{backgroundColor:element.active? "black" : "white"}}
-
-
-function Map({map, toggleBorder, updateMapWithSelectedTile}) {
-    //console.log(map);
-
+function Map({map, surfaceTiles, toggleBorder, updateMapWithSelectedTile}) {
     return (
         <div className="Map">
             <div className="mapContainer">
                 {map.map(function (item, i){
                 let entry = item.map(function (element, j) {
-                    return ( 
+                    if(surfaceTiles[i][j].type != "air"){
+                        return(
+                            <SurfaceTileHandler 
+                                x={element.x} 
+                                y={element.y} 
+                                tileType={element.type} 
+                                toggleBorder={toggleBorder} 
+                                key={j} 
+                            />
+                        );
+                    }else{
+                        return ( 
                             <TileHandler 
                                 x={element.x} 
                                 y={element.y} 
@@ -37,6 +31,7 @@ function Map({map, toggleBorder, updateMapWithSelectedTile}) {
                                 updateMapWithSelectedTile={updateMapWithSelectedTile}
                             />
                         );
+                    }
                 });
                 return (
                     <div className="row" key={i}>{entry}</div>
