@@ -68,6 +68,8 @@ Now this is a better forest, it has bushes and trees. When I implement textures 
 
 ## Surface tile placement rules
 
+![image](surfaceTileAllowed)
+
 
 ## Saving/Loading surface tiles
 create an object before stringifying it, so surface and then map

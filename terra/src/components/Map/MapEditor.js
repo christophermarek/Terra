@@ -86,6 +86,19 @@ function MapEditor() {
         setSelectedTileType('surface');
     }
 
+    function surfaceTileAllowed(x, y){
+        let plantSurfaceTiles = ['tree', 'bush'];
+        let plantMapTiles = ['grass', 'dirt'];
+
+        if(plantSurfaceTiles.includes(selectedTile)){
+            if(plantMapTiles.includes(map[x][y].type)){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }
+
     function updateMapWithSelectedTile(x, y){
         if(selectedTileType === 'map'){
             let newMap = [...map];
@@ -94,9 +107,11 @@ function MapEditor() {
         }
 
         if(selectedTileType === 'surface'){
-            let newSurfaceTiles = [...surfaceTiles];
-            newSurfaceTiles[x][y].type = selectedTile;
-            setSurfaceTiles(surfaceTiles => (newSurfaceTiles));
+            if(surfaceTileAllowed(x, y) || selectedTile == 'air'){
+                let newSurfaceTiles = [...surfaceTiles];
+                newSurfaceTiles[x][y].type = selectedTile;
+                setSurfaceTiles(surfaceTiles => (newSurfaceTiles));
+            }
         }
     }
 
