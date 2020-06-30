@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 
-function MapFileHandler({map, loadMap}) {
+function MapFileHandler({map, loadMap, surfaceTiles}) {
 
     const [exportedMap, setExportedMap] = useState(' ');
     const [importedMap, setImportedMap] = useState('');
 
     function mapExport(){
         let mapCopy = [...map];
-        let parsedMap = JSON.stringify(mapCopy);
-        setExportedMap(parsedMap);
+        let surfaceTilesCopy = [...surfaceTiles];
+        let saveData = {mapData: mapCopy, surfaceData: surfaceTilesCopy};
+        let saveDataString = JSON.stringify(saveData);
+        setExportedMap(saveDataString);
     }
 
     function importMapTextHandler(event){

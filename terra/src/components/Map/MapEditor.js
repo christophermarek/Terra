@@ -116,9 +116,10 @@ function MapEditor() {
     }
 
 
-    function loadMap(importedMap){
-        let impMap = JSON.parse(importedMap);
-        setMap(map => (impMap));
+    function loadMap(importedData){
+        let data = JSON.parse(importedData);
+        setMap(map => (data.mapData));
+        setSurfaceTiles(surfaceTiles => (data.surfaceData))
     }
 
   
@@ -138,7 +139,7 @@ function MapEditor() {
                     </form>
                     <TileSelector updateSelectedTileType={updateSelectedTileType}/>
                     <SurfaceTileSelector updateSelectedSurfaceTileType={updateSelectedSurfaceTileType} />
-                    <MapFileHandler loadMap={loadMap} map={map} />
+                    <MapFileHandler loadMap={loadMap} map={map} surfaceTiles={surfaceTiles}/>
                     <Map map={map}
                          surfaceTiles={surfaceTiles}
                          toggleBorder={toggleBorder} 

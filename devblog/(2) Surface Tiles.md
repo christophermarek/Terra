@@ -70,9 +70,17 @@ Now this is a better forest, it has bushes and trees. When I implement textures 
 
 ![image](surfaceTileAllowed)
 
+Now you cannot add trees or bushes onto anything other than dirt or grass.
 
 ## Saving/Loading surface tiles
-create an object before stringifying it, so surface and then map
+
+Right now surface tiles will be reset when we try to import into a fresh map, so I need to add the surfaceFiles data to the file saver aswell
+
+![image](mapexport)
+
+![image](mapimport)
+
+Now the save data is an object with two properties mapData and surfaceData. The simulator can now correctly save surface tiles
 
 ## Tile tooltips
 
