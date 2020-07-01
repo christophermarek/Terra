@@ -4,7 +4,7 @@ import './Map.css';
 import TileHandler from '../Tiles/TileHandler';
 import SurfaceTileHandler from '../SurfaceTiles/SurfaceTileHandler'; 
 
-function Map({map, surfaceTiles, toggleBorder, updateMapWithSelectedTile}) {
+function Map({map, surfaceTiles, toggleBorder, updateMapWithSelectedTile, tileHover}) {
     return (
         <div className="Map">
             <div className="mapContainer">
@@ -19,6 +19,7 @@ function Map({map, surfaceTiles, toggleBorder, updateMapWithSelectedTile}) {
                                 toggleBorder={toggleBorder} 
                                 key={j} 
                                 updateMapWithSelectedTile={updateMapWithSelectedTile}
+                                tileHover={tileHover}
                             />
                         );
                     }else{
@@ -30,6 +31,7 @@ function Map({map, surfaceTiles, toggleBorder, updateMapWithSelectedTile}) {
                                 toggleBorder={toggleBorder} 
                                 key={j} 
                                 updateMapWithSelectedTile={updateMapWithSelectedTile}
+                                tileHover={tileHover}
                             />
                         );
                     }

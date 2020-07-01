@@ -84,4 +84,36 @@ Now the save data is an object with two properties mapData and surfaceData. The 
 
 ## Tile tooltips
 
-## Map Sizing
+Instead of tile tooltips I have decided on using a div for information on hover, with a control button to enable to information box.
+
+![image](hoverState)
+
+First I made 3 variables, 2 to capture state and 1 to control the hover information
+
+![image](hoverFunctions)
+
+Then these handler functions update and control the state
+
+![image](mapHover)
+
+Then finally we pass down the hover state to the map to capture data from each tile.
+
+![image](mapNoHover)
+
+Here the map has hover disabled
+
+![image](mapHoverEnabled)
+
+So now the map has controls for hover data, which will be used as a control in the full simulation as well.
+
+## Map Resizing
+
+The only time map resizing will be enabled is in the generate map screen, because I dont want to regenerate the map when the map array is already initialized
+
+![image](mapSizeCode)
+
+So to add this feature we just add an input to the generateMap form and this lets the user update the map size before generation
+
+![image](bigMap)
+
+With a map size of 50, the map is a lot larger, and I do intend for the map in the full simulation to be large. My web browser can only handle so many divs at once, since they are not super performance friendly and a 50x50 tile grid is still 2500 tiles. So doing larger like a map that is 200x200 would mean that I have to optimize the render function and only render what is in the view, but that I will do in the future.

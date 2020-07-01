@@ -3,6 +3,7 @@ import Map from './Map';
 import TileSelector from './TileSelector';
 import MapFileHandler from './MapFileHandler';
 import SurfaceTileSelector from './SurfaceTileSelector';
+import HoverControls from './HoverControls';
 
 function MapEditor() {
 
@@ -12,6 +13,10 @@ function MapEditor() {
     const [selectedTile, setSelectedTile] = useState('grass');
     const [surfaceTiles, setSurfaceTiles] = useState([]);
     const [selectedTileType, setSelectedTileType] = useState('');
+    const [hoverEnabled, setHoverEnabled] = useState(false);
+    const [mapHover, setMapHover] = useState(' ');
+    const [surfaceHover, setSurfaceHover] = useState('');
+
 
     function airTile(x, y){
         let airTile = {
@@ -122,6 +127,27 @@ function MapEditor() {
         setSurfaceTiles(surfaceTiles => (data.surfaceData))
     }
 
+    function tileHover(x, y){
+        if(hoverEnabled){
+            setMapHover("Map: " + map[x][y].type);
+            setSurfaceHover("Surface: " + surfaceTiles[x][y].type);
+        }
+    }
+    
+    function enableHover(){
+        if(hoverEnabled){
+            setHoverEnabled(!hoverEnabled);
+            setMapHover('');
+            setSurfaceHover('');
+        }else{
+            setHoverEnabled(!hoverEnabled);
+        }
+    }
+
+    function mapSizeChange(e){
+        setSize(e.target.value);
+    }
+
   
     return (
         <div className = "Map-Editor"> 
@@ -129,6 +155,7 @@ function MapEditor() {
                 <>
                     <p>Map Empty</p>
                     <form onSubmit={generateWorld} >
+                        <input type="text" value={mapSize} onChange={mapSizeChange}></input>
                         <button type="Submit">Generate</button>
                     </form>
                 </>
@@ -140,10 +167,12 @@ function MapEditor() {
                     <TileSelector updateSelectedTileType={updateSelectedTileType}/>
                     <SurfaceTileSelector updateSelectedSurfaceTileType={updateSelectedSurfaceTileType} />
                     <MapFileHandler loadMap={loadMap} map={map} surfaceTiles={surfaceTiles}/>
+                    <HoverControls surfaceHover={surfaceHover} mapHover={mapHover} enableHover={enableHover}/>
                     <Map map={map}
                          surfaceTiles={surfaceTiles}
                          toggleBorder={toggleBorder} 
                          updateMapWithSelectedTile={updateMapWithSelectedTile}
+                         tileHover={tileHover}
                     />
                 </>
             )}
