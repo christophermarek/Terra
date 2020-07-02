@@ -10,19 +10,19 @@ I found a library called [react-window](https://github.com/bvaughn/react-window)
 
 ## Implementing react-window
 
-![image](grid)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(3)%20Large%20map%20handling%20screenshots/grid.PNG)
 
 Instead of mapping over the 2d array, react-window does it for you. I just have to pass the various properties of the map to the react-window Grid component.
 
 
-![image](cell)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(3)%20Large%20map%20handling%20screenshots/Cell.PNG)
 
 When I render the cells, I noticed that I do not need to pass each element to the tile handler to render the correct tile, since the tile color is a css classname I can just assign the class from map[x][y].type since it is saved in the data structure. The same with hover and onClick. So I can safely remove the tilehandler and all the tile files for now. I like this implementation better, it is less confusing and the previous solution felt overengineered, especially if there ends up being a large amount of map tiles added.
 
 You can also see in this update that surface tiles are not being rendered anymore, I have decided that these objects should not be tiles. I do not want a tree to be an entire tile but rather an element that sits on a tile. I do not want to change from a tile based map because I do think it gives good performance.
 
-![image](largemap)
-![image](largemapscroll)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(3)%20Large%20map%20handling%20screenshots/largemap.png)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(3)%20Large%20map%20handling%20screenshots/largemapscroll.png)
 
 So now you can see that you can scroll through the map.
 
