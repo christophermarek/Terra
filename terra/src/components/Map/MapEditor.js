@@ -61,11 +61,11 @@ function MapEditor() {
         let newMap = [];
         
         for(let i = 0; i < mapSize; i++){
-        let columns = [];
-        for(let j = 0; j < mapSize; j++){
-            columns.push(Grass(i, j));
-        }
-        newMap.push(columns);  
+            let columns = [];
+            for(let j = 0; j < mapSize; j++){
+                columns.push(Grass(i, j));
+            }
+            newMap.push(columns);  
         }
 
         setMap(map => (newMap));
@@ -78,6 +78,15 @@ function MapEditor() {
 
     function toggleCellBorders(e){
         e.preventDefault();
+        let newMap = [];
+        let size = 200;
+        for(let i = 0; i < size; i++){
+            let columns = [];
+            for(let j = 0; j < size; j++){
+                columns.push(Grass(i, j));
+            }
+            newMap.push(columns);  
+        }
         setToggleBorder(!toggleBorder);
     }
 
