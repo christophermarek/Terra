@@ -7,7 +7,7 @@ import HoverControls from './HoverControls';
 
 function MapEditor() {
 
-    const [mapSize, setSize] = useState(20);
+    const [mapSize, setSize] = useState(200);
     const [map, setMap] = useState([]);
     const [toggleBorder, setToggleBorder] = useState(true);
     const [selectedTile, setSelectedTile] = useState('grass');

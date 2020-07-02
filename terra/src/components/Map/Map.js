@@ -1,45 +1,44 @@
 import { Route, Switch } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import './Map.css';
-import TileHandler from '../Tiles/TileHandler';
-import SurfaceTileHandler from '../SurfaceTiles/SurfaceTileHandler'; 
+import { VariableSizeGrid as Grid } from 'react-window';
 
 function Map({map, surfaceTiles, toggleBorder, updateMapWithSelectedTile, tileHover}) {
+    
+    const columnWidths = new Array(map.length)
+        .fill(true)
+        .map(() => 35);
+
+    const rowHeights = new Array(map.length)
+        .fill(true)
+        .map(() => 35);
+
+    const Cell = ({ columnIndex, rowIndex, style }) => (
+        <div
+            style={style}
+            className={map[rowIndex][columnIndex].type + " " + (toggleBorder ? "cell-border" : "no-border")}
+            onClick={() => updateMapWithSelectedTile(map[rowIndex][columnIndex].x, map[rowIndex][columnIndex].y)}
+            onMouseEnter={() => tileHover(map[rowIndex][columnIndex].x, map[rowIndex][columnIndex].y)}
+        >
+        </div>
+    );
+
     return (
         <div className="Map">
             <div className="mapContainer">
-                {map.map(function (item, i){
-                let entry = item.map(function (element, j) {
-                    if(surfaceTiles[i][j].type !== "air"){
-                        return(
-                            <SurfaceTileHandler 
-                                x={element.x} 
-                                y={element.y} 
-                                tileType={surfaceTiles[i][j].type} 
-                                toggleBorder={toggleBorder} 
-                                key={j} 
-                                updateMapWithSelectedTile={updateMapWithSelectedTile}
-                                tileHover={tileHover}
-                            />
-                        );
-                    }else{
-                        return ( 
-                            <TileHandler 
-                                x={element.x} 
-                                y={element.y} 
-                                tileType={element.type} 
-                                toggleBorder={toggleBorder} 
-                                key={j} 
-                                updateMapWithSelectedTile={updateMapWithSelectedTile}
-                                tileHover={tileHover}
-                            />
-                        );
-                    }
-                });
-                return (
-                    <div className="row" key={i}>{entry}</div>
-                );
-                })}
+                {
+                    <Grid
+                    className="Grid"
+                    columnCount={map.length}
+                    columnWidth={index => columnWidths[index]}
+                    height={750}
+                    rowCount={map.length}
+                    rowHeight={index => rowHeights[index]}
+                    width={1000}
+                  >
+                    {Cell}
+                  </Grid>
+                }
             </div>           
         </div>
     );
