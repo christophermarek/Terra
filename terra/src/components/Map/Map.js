@@ -7,22 +7,32 @@ function Map({map, surfaceTiles, toggleBorder, updateMapWithSelectedTile, tileHo
     
     const columnWidths = new Array(map.length)
         .fill(true)
-        .map(() => 35);
+        .map(() => 100);
 
     const rowHeights = new Array(map.length)
         .fill(true)
-        .map(() => 35);
+        .map(() => 100);
 
     const Cell = ({ columnIndex, rowIndex, style }) => (
         <div
             style={style}
-            className={map[rowIndex][columnIndex].type + " " + (toggleBorder ? "cell-border" : "no-border")}
+            className={map[rowIndex][columnIndex].type + " " + (toggleBorder ? "cell-border" : "no-border") + " Cell"}
             onClick={() => updateMapWithSelectedTile(map[rowIndex][columnIndex].x, map[rowIndex][columnIndex].y)}
             onMouseEnter={() => tileHover(map[rowIndex][columnIndex].x, map[rowIndex][columnIndex].y)}
         >
+            {((columnIndex == 4) && rowIndex == 4) ? (
+                <svg className="svg">
+                    <circle cx="100" cy="100" r="15" fill="yellow" />
+                    <circle cx="100" cy="0" r="15" fill="yellow" />
+                    <circle cx="0" cy="100" r="15" fill="yellow" />
+                    <circle cx="0" cy="0" r="15" fill="yellow" />
+                </svg>) : (<svg className="svg"></svg>)
+                
+            }
+            
         </div>
     );
-
+    console.log(map);
     return (
         <div className="Map">
             <div className="mapContainer">
@@ -39,6 +49,8 @@ function Map({map, surfaceTiles, toggleBorder, updateMapWithSelectedTile, tileHo
                     {Cell}
                   </Grid>
                 }
+                
+                
             </div>           
         </div>
     );

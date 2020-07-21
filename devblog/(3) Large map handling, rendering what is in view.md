@@ -1,6 +1,8 @@
 
 # Large map handling, and rendering what is in view
 
+Linked commit="Devblog 3"
+
 So a major limitation to the simulation I immediately noticed was that it cannot handle a large map very well.
 At first I thought it might be javascript is too slow to iterate through a 200x200 2d array, but after testing I realized that this is not the problem.
 

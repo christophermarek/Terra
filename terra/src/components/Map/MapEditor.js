@@ -17,6 +17,8 @@ function MapEditor() {
     const [mapHover, setMapHover] = useState(' ');
     const [surfaceHover, setSurfaceHover] = useState('');
 
+    const [surfaceTobjects, setSurfaceObjects] = useState([]);
+ 
 
     function airTile(x, y){
         let airTile = {
