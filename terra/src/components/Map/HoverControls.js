@@ -1,10 +1,10 @@
 import React from 'react';
 
-function HoverControls({surfaceHover, mapHover, enableHover}) {
+function HoverControls({ mapHover, enableHover}) {
 
     return(
         <div className="Hover-Controls">
-            <p>{surfaceHover + " " + mapHover}</p>
+            <p>{mapHover}</p>
             <button onClick={enableHover}>Enable Hover Data</button>
         </div>
     );

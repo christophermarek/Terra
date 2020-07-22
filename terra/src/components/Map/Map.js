@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import './Map.css';
 import { VariableSizeGrid as Grid } from 'react-window';
 
-function Map({map, surfaceTiles, toggleBorder, updateMapWithSelectedTile, tileHover}) {
+function Map({map, surfaceTiles, surfaceObjects, toggleBorder, updateMapWithSelectedTile, tileHover}) {
     
     const columnWidths = new Array(map.length)
         .fill(true)
@@ -13,6 +13,35 @@ function Map({map, surfaceTiles, toggleBorder, updateMapWithSelectedTile, tileHo
         .fill(true)
         .map(() => 100);
 
+    function renderSurfaceObjects(col, row){
+        let temp = [];
+        for(let i = 0; i < surfaceObjects.length; i++){
+            if(String(surfaceObjects[i].x).charAt(0) == col && String(surfaceObjects[i].y).charAt(0) == row){
+                temp.push(surfaceObjects[i]);
+            }
+        }
+        return(
+            <svg className="svg">
+                {temp.map((object, i) => {
+                    //since x,y are ints, cast to int and remove the first index
+                    //since the first index is the tile index
+                    let x = String(object.x).substr(1);
+                    let y = String(object.y).substr(1);
+                    if(object.type == "tree"){
+                        console.log("got a tree");
+                        return(
+                            <rect x={x} y={y} fill={object.color} height="50" width="50"></rect>
+                        )
+                    }else{
+                        return(
+                            <circle cx={x} cy={y} r="15" fill={object.color}></circle>
+                        )
+                    }
+                })}
+            </svg>
+        );
+    }
+
     const Cell = ({ columnIndex, rowIndex, style }) => (
         <div
             style={style}
@@ -20,19 +49,11 @@ function Map({map, surfaceTiles, toggleBorder, updateMapWithSelectedTile, tileHo
             onClick={() => updateMapWithSelectedTile(map[rowIndex][columnIndex].x, map[rowIndex][columnIndex].y)}
             onMouseEnter={() => tileHover(map[rowIndex][columnIndex].x, map[rowIndex][columnIndex].y)}
         >
-            {((columnIndex == 4) && rowIndex == 4) ? (
-                <svg className="svg">
-                    <circle cx="100" cy="100" r="15" fill="yellow" />
-                    <circle cx="100" cy="0" r="15" fill="yellow" />
-                    <circle cx="0" cy="100" r="15" fill="yellow" />
-                    <circle cx="0" cy="0" r="15" fill="yellow" />
-                </svg>) : (<svg className="svg"></svg>)
-                
-            }
+            {renderSurfaceObjects(columnIndex, rowIndex)}
             
         </div>
     );
-    console.log(map);
+    console.log(surfaceObjects);
     return (
         <div className="Map">
             <div className="mapContainer">

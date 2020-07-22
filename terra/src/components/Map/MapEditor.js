@@ -4,6 +4,8 @@ import TileSelector from './TileSelector';
 import MapFileHandler from './MapFileHandler';
 import SurfaceTileSelector from './SurfaceTileSelector';
 import HoverControls from './HoverControls';
+import SurfaceObjectSelector from './SurfaceObjectSelector';
+import {tree, rabbit} from '.././surfaceObjects';
 
 function MapEditor() {
 
@@ -15,35 +17,24 @@ function MapEditor() {
     const [selectedTileType, setSelectedTileType] = useState('');
     const [hoverEnabled, setHoverEnabled] = useState(false);
     const [mapHover, setMapHover] = useState(' ');
-    const [surfaceHover, setSurfaceHover] = useState('');
 
-    const [surfaceTobjects, setSurfaceObjects] = useState([]);
- 
+    const [surfaceObjects, setSurfaceObjects] = useState([]);
+    
 
-    function airTile(x, y){
-        let airTile = {
-            x: x,
-            y: y,
-            type: "air",
-        }
-        return airTile;
+
+
+    function generateSurfaceObjects(){
+
+        let newSurfaceObjects = [];
+
+        newSurfaceObjects.push({type: 'tree', color: "#42692f", x: 250, y: 350});
+        newSurfaceObjects.push({type: 'tree', color: "#42692f", x: 150, y: 350});
+        newSurfaceObjects.push({type: 'tree', color: "#42692f", x: 350, y: 350});
+        newSurfaceObjects.push({type: 'rabbit', color: "#9f9289", x: 200, y: 200});
+        newSurfaceObjects.push({type: 'rabbit', color: "#9f9289", x: 425, y: 435});
+
+        setSurfaceObjects(surfaceObjects => (newSurfaceObjects));
     }
-
-    function generateSurfaceTiles(){
-
-        let newSurfaceTiles = [];
-        
-        for(let i = 0; i < mapSize; i++){
-            let columns = [];
-            for(let j = 0; j < mapSize; j++){
-                columns.push(airTile(i, j));
-            }
-
-        newSurfaceTiles.push(columns);  
-        }
-
-        setSurfaceTiles(surfaceTiles => (newSurfaceTiles));
-    };
 
     //move function out of this file to separate handler
     function Grass(x, y){
@@ -75,7 +66,7 @@ function MapEditor() {
 
     function generateWorld(){
         generateMap();
-        generateSurfaceTiles();
+        generateSurfaceObjects();
     }
 
     function toggleCellBorders(e){
@@ -102,17 +93,9 @@ function MapEditor() {
         setSelectedTileType('surface');
     }
 
-    function surfaceTileAllowed(x, y){
-        let plantSurfaceTiles = ['tree', 'bush'];
-        let plantMapTiles = ['grass', 'dirt'];
-
-        if(plantSurfaceTiles.includes(selectedTile)){
-            if(plantMapTiles.includes(map[x][y].type)){
-                return true;
-            }else{
-                return false;
-            }
-        }
+    function updateSelectedSurfaceObjectType(type){
+        setSelectedTile(type);
+        setSelectedTileType('surface');
     }
 
     function updateMapWithSelectedTile(x, y){
@@ -123,11 +106,27 @@ function MapEditor() {
         }
 
         if(selectedTileType === 'surface'){
-            if(surfaceTileAllowed(x, y) || selectedTile == 'air'){
-                let newSurfaceTiles = [...surfaceTiles];
-                newSurfaceTiles[x][y].type = selectedTile;
-                setSurfaceTiles(surfaceTiles => (newSurfaceTiles));
+            
+            let newSurfaceObjects = [...surfaceObjects];
+
+            let newObj = {
+                x: y*100,
+                y: x*100,
             }
+
+            if(selectedTile == 'rabbit'){
+                newObj.color= rabbit.color;
+                newObj.shape = rabbit.shape;
+                newObj.type = 'rabbit';
+            }else{
+                newObj.color= tree.color;
+                newObj.shape = tree.shape;
+                newObj.type = 'tree';
+            }
+            
+            newSurfaceObjects.push(newObj);
+            setSurfaceObjects(surfaceObjects => (newSurfaceObjects))
+            
         }
     }
 
@@ -141,7 +140,6 @@ function MapEditor() {
     function tileHover(x, y){
         if(hoverEnabled){
             setMapHover("Map: " + map[x][y].type);
-            setSurfaceHover("Surface: " + surfaceTiles[x][y].type);
         }
     }
     
@@ -149,7 +147,6 @@ function MapEditor() {
         if(hoverEnabled){
             setHoverEnabled(!hoverEnabled);
             setMapHover('');
-            setSurfaceHover('');
         }else{
             setHoverEnabled(!hoverEnabled);
         }
@@ -176,11 +173,12 @@ function MapEditor() {
                         <button type="Submit">Toggle Cell Borders</button>
                     </form>
                     <TileSelector updateSelectedTileType={updateSelectedTileType}/>
-                    <SurfaceTileSelector updateSelectedSurfaceTileType={updateSelectedSurfaceTileType} />
+                    <SurfaceObjectSelector updateSelectedSurfaceObjectType={updateSelectedSurfaceObjectType}></SurfaceObjectSelector>
                     <MapFileHandler loadMap={loadMap} map={map} surfaceTiles={surfaceTiles}/>
-                    <HoverControls surfaceHover={surfaceHover} mapHover={mapHover} enableHover={enableHover}/>
+                    <HoverControls mapHover={mapHover} enableHover={enableHover}/>
                     <Map map={map}
                          surfaceTiles={surfaceTiles}
+                         surfaceObjects={surfaceObjects}
                          toggleBorder={toggleBorder} 
                          updateMapWithSelectedTile={updateMapWithSelectedTile}
                          tileHover={tileHover}
