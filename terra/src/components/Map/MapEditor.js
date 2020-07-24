@@ -24,16 +24,17 @@ function MapEditor() {
 
 
     function generateSurfaceObjects(){
-
+        
         let newSurfaceObjects = [];
 
-        newSurfaceObjects.push({type: 'tree', color: "#42692f", x: 250, y: 350});
-        newSurfaceObjects.push({type: 'tree', color: "#42692f", x: 150, y: 350});
-        newSurfaceObjects.push({type: 'tree', color: "#42692f", x: 350, y: 350});
-        newSurfaceObjects.push({type: 'rabbit', color: "#9f9289", x: 200, y: 200});
-        newSurfaceObjects.push({type: 'rabbit', color: "#9f9289", x: 425, y: 435});
+        newSurfaceObjects.push({x: 25, y: 35, type: tree.type});
+        newSurfaceObjects.push({x: 150, y: 350, type: tree.type});
+        newSurfaceObjects.push({x: 350, y: 350, type: tree.type});
+        newSurfaceObjects.push({x: 200, y: 200, type: rabbit.type});
+        newSurfaceObjects.push({x: 425, y: 435, type: rabbit.type});
 
         setSurfaceObjects(surfaceObjects => (newSurfaceObjects));
+        
     }
 
     //move function out of this file to separate handler
@@ -98,7 +99,7 @@ function MapEditor() {
         setSelectedTileType('surface');
     }
 
-    function updateMapWithSelectedTile(x, y){
+    function updateMapWithSelectedTile(e, x, y){
         if(selectedTileType === 'map'){
             let newMap = [...map];
             newMap[x][y].type = selectedTile;
@@ -106,13 +107,16 @@ function MapEditor() {
         }
 
         if(selectedTileType === 'surface'){
-            
             let newSurfaceObjects = [...surfaceObjects];
-
+            
+            let CalcX = Number(String(x) + String(e.nativeEvent.offsetX));
+            let CalcY = Number(String(y) + String(e.nativeEvent.offsetY));
+            //x y have to be flipped for svg
             let newObj = {
-                x: y*100,
-                y: x*100,
+                x: CalcY,
+                y: CalcX,
             }
+
 
             if(selectedTile == 'rabbit'){
                 newObj.color= rabbit.color;
@@ -134,7 +138,9 @@ function MapEditor() {
     function loadMap(importedData){
         let data = JSON.parse(importedData);
         setMap(map => (data.mapData));
-        setSurfaceTiles(surfaceTiles => (data.surfaceData))
+        setSurfaceObjects(surfaceObjects => (data.surfaceData));
+        console.log("map loaded");
+
     }
 
     function tileHover(x, y){
@@ -174,7 +180,7 @@ function MapEditor() {
                     </form>
                     <TileSelector updateSelectedTileType={updateSelectedTileType}/>
                     <SurfaceObjectSelector updateSelectedSurfaceObjectType={updateSelectedSurfaceObjectType}></SurfaceObjectSelector>
-                    <MapFileHandler loadMap={loadMap} map={map} surfaceTiles={surfaceTiles}/>
+                    <MapFileHandler loadMap={loadMap} map={map} surfaceObjects={surfaceObjects}/>
                     <HoverControls mapHover={mapHover} enableHover={enableHover}/>
                     <Map map={map}
                          surfaceTiles={surfaceTiles}

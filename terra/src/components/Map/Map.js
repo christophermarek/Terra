@@ -16,21 +16,45 @@ function Map({map, surfaceTiles, surfaceObjects, toggleBorder, updateMapWithSele
     function renderSurfaceObjects(col, row){
         let temp = [];
         for(let i = 0; i < surfaceObjects.length; i++){
-            if(String(surfaceObjects[i].x).charAt(0) == col && String(surfaceObjects[i].y).charAt(0) == row){
+            let strX = String(surfaceObjects[i].x);
+            let strY = String(surfaceObjects[i].y);
+            //fix if [0][y] or [x][0]
+            if(strX.length <= 2){
+                strX = "0" + strX;
+            }
+            if(strY.length <= 2){
+                strY = "0" + strY;
+            }
+
+            //fetch only the coords for col/row. last two digits are internal svg coords
+            let xIndex = strX.substring(0, strX.length - 2);
+            let yIndex = strY.substring(0, strY.length - 2);
+            //have to check if x or y is not a 
+            if(xIndex == col && yIndex == row){
                 temp.push(surfaceObjects[i]);
             }
         }
         return(
             <svg className="svg">
                 {temp.map((object, i) => {
-                    //since x,y are ints, cast to int and remove the first index
-                    //since the first index is the tile index
-                    let x = String(object.x).substr(1);
-                    let y = String(object.y).substr(1);
+                    
+                    let xToStr = String(object.x);
+                    let yToStr = String(object.y);
+                    if(xToStr.length <= 2){
+                        xToStr = "0" + xToStr;
+                    }
+                    if(yToStr.length <= 2){
+                        yToStr = "0" + yToStr;
+                    }
+
+                    //since x,y are ints, cast to string and get the last two indexes
+                    //since the begining index's are the tile's index
+                    let x = xToStr.slice(-2);
+                    let y = yToStr.slice(-2);
+
                     if(object.type == "tree"){
-                        console.log("got a tree");
                         return(
-                            <rect x={x} y={y} fill={object.color} height="50" width="50"></rect>
+                            <rect  x={x} y={y} fill={object.color} height="50" width="50"></rect>
                         )
                     }else{
                         return(
@@ -46,14 +70,13 @@ function Map({map, surfaceTiles, surfaceObjects, toggleBorder, updateMapWithSele
         <div
             style={style}
             className={map[rowIndex][columnIndex].type + " " + (toggleBorder ? "cell-border" : "no-border") + " Cell"}
-            onClick={() => updateMapWithSelectedTile(map[rowIndex][columnIndex].x, map[rowIndex][columnIndex].y)}
+            onClick={(e) => updateMapWithSelectedTile(e, map[rowIndex][columnIndex].x, map[rowIndex][columnIndex].y)}
             onMouseEnter={() => tileHover(map[rowIndex][columnIndex].x, map[rowIndex][columnIndex].y)}
         >
             {renderSurfaceObjects(columnIndex, rowIndex)}
             
         </div>
     );
-    console.log(surfaceObjects);
     return (
         <div className="Map">
             <div className="mapContainer">

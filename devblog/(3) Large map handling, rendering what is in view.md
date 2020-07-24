@@ -30,5 +30,5 @@ So now you can see that you can scroll through the map.
 
 This is all the changes for now.
 
-The next part will deal with rendering surface objects ontop of the grid. Im not sure how to do that yet but I have some ideas, maybe using the css transform property
+The next part will deal with rendering surface objects ontop of the grid. Im not sure how to do that yet but I have some ideas.
 
