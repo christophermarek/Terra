@@ -2,42 +2,31 @@ import React, { useState, useEffect } from 'react';
 import Map from './Map';
 import TileSelector from './TileSelector';
 import MapFileHandler from './MapFileHandler';
-import SurfaceTileSelector from './SurfaceTileSelector';
-import HoverControls from './HoverControls';
 import SurfaceObjectSelector from './SurfaceObjectSelector';
-import {tree, rabbit} from '.././surfaceObjects';
 
 function MapEditor() {
 
     const [mapSize, setSize] = useState(200);
     const [map, setMap] = useState([]);
-    const [toggleBorder, setToggleBorder] = useState(true);
     const [selectedTile, setSelectedTile] = useState('grass');
-    const [surfaceTiles, setSurfaceTiles] = useState([]);
     const [selectedTileType, setSelectedTileType] = useState('');
-    const [hoverEnabled, setHoverEnabled] = useState(false);
-    const [mapHover, setMapHover] = useState(' ');
-
     const [surfaceObjects, setSurfaceObjects] = useState([]);
     
-
-
 
     function generateSurfaceObjects(){
         
         let newSurfaceObjects = [];
 
-        newSurfaceObjects.push({x: 25, y: 35, type: tree.type});
-        newSurfaceObjects.push({x: 150, y: 350, type: tree.type});
-        newSurfaceObjects.push({x: 350, y: 350, type: tree.type});
-        newSurfaceObjects.push({x: 200, y: 200, type: rabbit.type});
-        newSurfaceObjects.push({x: 425, y: 435, type: rabbit.type});
+        newSurfaceObjects.push({x: 25, y: 35, type: "tree"});
+        newSurfaceObjects.push({x: 150, y: 350, type: "tree"});
+        newSurfaceObjects.push({x: 350, y: 350, type: "tree"});
+        newSurfaceObjects.push({x: 200, y: 200, type: "rabbit"});
+        newSurfaceObjects.push({x: 425, y: 435, type: "rabbit"});
 
         setSurfaceObjects(surfaceObjects => (newSurfaceObjects));
         
     }
 
-    //move function out of this file to separate handler
     function Grass(x, y){
         let defaultTile = {
             x: x,
@@ -68,20 +57,6 @@ function MapEditor() {
     function generateWorld(){
         generateMap();
         generateSurfaceObjects();
-    }
-
-    function toggleCellBorders(e){
-        e.preventDefault();
-        let newMap = [];
-        let size = 200;
-        for(let i = 0; i < size; i++){
-            let columns = [];
-            for(let j = 0; j < size; j++){
-                columns.push(Grass(i, j));
-            }
-            newMap.push(columns);  
-        }
-        setToggleBorder(!toggleBorder);
     }
 
     function updateSelectedTileType(type){
@@ -119,12 +94,8 @@ function MapEditor() {
 
 
             if(selectedTile == 'rabbit'){
-                newObj.color= rabbit.color;
-                newObj.shape = rabbit.shape;
                 newObj.type = 'rabbit';
             }else{
-                newObj.color= tree.color;
-                newObj.shape = tree.shape;
                 newObj.type = 'tree';
             }
             
@@ -139,24 +110,8 @@ function MapEditor() {
         let data = JSON.parse(importedData);
         setMap(map => (data.mapData));
         setSurfaceObjects(surfaceObjects => (data.surfaceData));
-        console.log("map loaded");
-
     }
 
-    function tileHover(x, y){
-        if(hoverEnabled){
-            setMapHover("Map: " + map[x][y].type);
-        }
-    }
-    
-    function enableHover(){
-        if(hoverEnabled){
-            setHoverEnabled(!hoverEnabled);
-            setMapHover('');
-        }else{
-            setHoverEnabled(!hoverEnabled);
-        }
-    }
 
     function mapSizeChange(e){
         setSize(e.target.value);
@@ -175,19 +130,12 @@ function MapEditor() {
                 </>
             ) : (
                 <>  
-                    <form onSubmit={toggleCellBorders} >
-                        <button type="Submit">Toggle Cell Borders</button>
-                    </form>
                     <TileSelector updateSelectedTileType={updateSelectedTileType}/>
                     <SurfaceObjectSelector updateSelectedSurfaceObjectType={updateSelectedSurfaceObjectType}></SurfaceObjectSelector>
                     <MapFileHandler loadMap={loadMap} map={map} surfaceObjects={surfaceObjects}/>
-                    <HoverControls mapHover={mapHover} enableHover={enableHover}/>
                     <Map map={map}
-                         surfaceTiles={surfaceTiles}
                          surfaceObjects={surfaceObjects}
-                         toggleBorder={toggleBorder} 
                          updateMapWithSelectedTile={updateMapWithSelectedTile}
-                         tileHover={tileHover}
                     />
                 </>
             )}

@@ -61,6 +61,42 @@ For the refractor I want to accomplish:
 * refractor mapeditor.js, want the code to be separate enough so I can easily render the map in the main program aswell
 * remove all warnings and errors in the terminal and console
 
+![image](fetchObjects)
+![image](renderCut)
+
+First part to clean was splitting the surfaceObjects rendering, now that the logic and render is separate it will be easier to debug.
+
+![image](surfaceObjectsFile)
+
+Now I also refractored my surfaceObjects.js file. This file should be what the map.js uses to render the look and feel of various surfaceObjects, I want all the view related files to only manage whats displayed.
+
+I have also moved this file to a folder out of the components folder, into data/map. Data folder should be for static data that is fetched for this simulation. I also expect to use this directory for some constants for the ai.
+
+![image](renderFetch)
+
+Now that the rendering of objects is separate from the map editor, I also want to remove some dependencies from the map.js
+
+![image](dependencies)
+
+There are quite a few props that need to be passed to the map for it to render the map without errors, ideally the map.js should only need map and surfaceObjects to render and perform the actions it needs. So to finish refractoring this I need to decouple map from map editor. First thing to change is toggle borders
+
+![image](toggleBorder)
+
+Toggle border has now been moved to the map, in the simulation this control might still be used, and I can even have a toggle to hide them later so I think this is okay. Refractoring isnt just deleting code because decoupling is just as important
+
+![image](hoverImport)
+
+Moved the hover controls to map.js aswell, I think hoverdata would be useful even during the simulation, and it doesnt need to be a part of the map editor.
+
+Now the last dependency map has is the function updateMapWithSelectedTile(). This I cannot take out of the map editor. 
+
+![image](updateMapWithSelectedTile)
+
+Since I cannot remove the props, because I still will want it for the mapEditor, I just do a check before I render that checks if the function exists, if it doesnt then we just set it to an empty function.
+
+That should be all the refractoring for map.js, I think it is decoupled from the map editor now as it only depends on the map & surfaceObjects data structures to render.
+For the map editor itself, I dont think it needs refractoring as we pulled out most of the functions that dont deserve to be in there anymore.
+
 ### post refractor
 Do minor css on map editor
 

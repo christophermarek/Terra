@@ -1,5 +1,3 @@
-.cellContainer{
-  }
 
 .cell-border{
   outline: 1px solid black;
@@ -62,8 +60,4 @@ svg {
   left: 0;
   overflow: visible;
   position: absolute;
-  display: block;
-}
-
-circle{
 }

@@ -1,10 +1,35 @@
-import { Route, Switch } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
+import React, {useState} from 'react';
 import './Map.css';
 import { VariableSizeGrid as Grid } from 'react-window';
+import {returnSurfaceObject} from '../../data/map/surfaceObjects'
+import HoverControls from './HoverControls';
 
-function Map({map, surfaceTiles, surfaceObjects, toggleBorder, updateMapWithSelectedTile, tileHover}) {
-    
+function Map({map, surfaceObjects, updateMapWithSelectedTile}) {
+
+    const [toggleBorder, setToggleBorder] = useState(true);
+    const [hoverEnabled, setHoverEnabled] = useState(false);
+    const [mapHover, setMapHover] = useState(' ');
+
+    function tileHover(x, y){
+        if(hoverEnabled){
+            setMapHover("Map: " + map[x][y].type);
+        }
+    }
+
+    function enableHover(){
+        if(hoverEnabled){
+            setHoverEnabled(!hoverEnabled);
+            setMapHover('');
+        }else{
+            setHoverEnabled(!hoverEnabled);
+        }
+    }
+
+    function toggleCellBorders(e){
+        e.preventDefault();
+        setToggleBorder(!toggleBorder);
+    }
+
     const columnWidths = new Array(map.length)
         .fill(true)
         .map(() => 100);
@@ -13,7 +38,8 @@ function Map({map, surfaceTiles, surfaceObjects, toggleBorder, updateMapWithSele
         .fill(true)
         .map(() => 100);
 
-    function renderSurfaceObjects(col, row){
+    //creates an array of the surfaceObjects that exist in tile at col, row
+    function fetchSurfaceObjectsForTile(col, row){
         let temp = [];
         for(let i = 0; i < surfaceObjects.length; i++){
             let strX = String(surfaceObjects[i].x);
@@ -34,9 +60,15 @@ function Map({map, surfaceTiles, surfaceObjects, toggleBorder, updateMapWithSele
                 temp.push(surfaceObjects[i]);
             }
         }
+        return temp;
+    }
+
+    function renderSurfaceObjects(col, row){
+        let matchingSurfaceObjects = fetchSurfaceObjectsForTile(col, row); 
+
         return(
             <svg className="svg">
-                {temp.map((object, i) => {
+                {matchingSurfaceObjects.map((object, i) => {
                     
                     let xToStr = String(object.x);
                     let yToStr = String(object.y);
@@ -51,16 +83,12 @@ function Map({map, surfaceTiles, surfaceObjects, toggleBorder, updateMapWithSele
                     //since the begining index's are the tile's index
                     let x = xToStr.slice(-2);
                     let y = yToStr.slice(-2);
-
-                    if(object.type == "tree"){
-                        return(
-                            <rect  x={x} y={y} fill={object.color} height="50" width="50"></rect>
-                        )
-                    }else{
-                        return(
-                            <circle cx={x} cy={y} r="15" fill={object.color}></circle>
-                        )
-                    }
+                    
+                    let fetchedObject = returnSurfaceObject(object.type);
+                    return(
+                        <circle cx={x} cy={y} r={fetchedObject.size} fill={fetchedObject.color}></circle>
+                    )
+                    
                 })}
             </svg>
         );
@@ -77,8 +105,17 @@ function Map({map, surfaceTiles, surfaceObjects, toggleBorder, updateMapWithSele
             
         </div>
     );
+
+    if (!(typeof updateMapWithSelectedTile === "function")) { 
+        updateMapWithSelectedTile = function(){}
+    }
+
     return (
         <div className="Map">
+            <form onSubmit={toggleCellBorders} >
+                <button type="Submit">Toggle Cell Borders</button>
+            </form>
+            <HoverControls mapHover={mapHover} enableHover={enableHover}/>
             <div className="mapContainer">
                 {
                     <Grid
