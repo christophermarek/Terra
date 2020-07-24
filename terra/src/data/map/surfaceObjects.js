@@ -22,5 +22,7 @@ export function returnSurfaceObject(type){
             return rabbit;
         case "wold":
             return wolf;
+        default:
+            return tree;
     }
 }

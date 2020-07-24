@@ -97,10 +97,7 @@ Since I cannot remove the props, because I still will want it for the mapEditor,
 That should be all the refractoring for map.js, I think it is decoupled from the map editor now as it only depends on the map & surfaceObjects data structures to render.
 For the map editor itself, I dont think it needs refractoring as we pulled out most of the functions that dont deserve to be in there anymore.
 
-### post refractor
-Do minor css on map editor
+Now that all the rendering is done though, we will not have to touch the map or mapeditor again for a while unless there are bugs.
+I feel like this project got way bigger than I expected it to be, I just wanted to program some ai. But you do need a game engine so might aswell make your own.
 
-And finally I want to create a Simulation page, which will just load tha map, it will start with a blank page with an input for a map import or a premade map import already.
-
-Now that all the rendering is done though, we will not have to touch it again really for the ai unless there are bugs.
-Feels like I programmed a 2d tile game engine just to work on AI for the project, but I think it was more fun than using canvas. 
+Next I want to make a simulation page, and test some pathfinding. 

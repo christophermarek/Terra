@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Map from './Map';
 import TileSelector from './TileSelector';
 import MapFileHandler from './MapFileHandler';
@@ -64,10 +64,6 @@ function MapEditor() {
         setSelectedTileType('map');
     } 
 
-    function updateSelectedSurfaceTileType(type){
-        setSelectedTile(type);
-        setSelectedTileType('surface');
-    }
 
     function updateSelectedSurfaceObjectType(type){
         setSelectedTile(type);
@@ -92,8 +88,7 @@ function MapEditor() {
                 y: CalcX,
             }
 
-
-            if(selectedTile == 'rabbit'){
+            if(selectedTile === 'rabbit'){
                 newObj.type = 'rabbit';
             }else{
                 newObj.type = 'tree';
