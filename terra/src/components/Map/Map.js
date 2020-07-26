@@ -56,7 +56,8 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile}) {
             let xIndex = strX.substring(0, strX.length - 2);
             let yIndex = strY.substring(0, strY.length - 2);
             //have to check if x or y is not a 
-            if(xIndex === col && yIndex === row){
+            
+            if(Number(xIndex) == col && Number(yIndex) == row){
                 temp.push(surfaceObjects[i]);
             }
         }

@@ -6,7 +6,7 @@ import SurfaceObjectSelector from './SurfaceObjectSelector';
 
 function MapEditor() {
 
-    const [mapSize, setSize] = useState(200);
+    const [mapSize, setSize] = useState(20);
     const [map, setMap] = useState([]);
     const [selectedTile, setSelectedTile] = useState('grass');
     const [selectedTileType, setSelectedTileType] = useState('');
@@ -76,7 +76,6 @@ function MapEditor() {
             newMap[x][y].type = selectedTile;
             setMap(map => (newMap));
         }
-
         if(selectedTileType === 'surface'){
             let newSurfaceObjects = [...surfaceObjects];
             
