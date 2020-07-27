@@ -11,6 +11,7 @@ function MapFileHandler({map, loadMap, surfaceObjects}) {
         let saveData = {mapData: mapCopy, surfaceData: surfaceObjectsCopy};
         let saveDataString = JSON.stringify(saveData);
         setExportedMap(saveDataString);
+        console.log(saveDataString);
     }
 
     function importMapTextHandler(event){
