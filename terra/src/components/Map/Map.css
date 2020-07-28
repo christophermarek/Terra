@@ -61,3 +61,31 @@ svg {
   overflow: visible;
   position: absolute;
 }
+
+.preLoad{
+  display: flex;
+  justify-content: center;
+  background-color: hsl(257, 7%, 63%);
+  padding-top: 3%;
+  padding-bottom: 3%;
+  margin-left: 30%;
+  margin-right: 30%;
+  border-radius: 30px;
+  flex-direction: row;
+}
+
+.mapControls{
+  display: flex;
+  justify-content: center;
+  padding-left: 15%;
+  padding-right: 15%;
+}
+
+.editorControls{
+  display: inline-block;
+  text-align: center;
+}
+
+.Map-Editor{
+ text-align: center;
+}

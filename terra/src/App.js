@@ -16,10 +16,10 @@ function App() {
     <div className="App">
       <Router>
       <div>
-        <nav>
-              <Link className="navBtn" to="/Simulation">Simulation</Link>
-              <Link className="navBtn" to="/Editor">Editor</Link>
-
+        <nav className="navBar">
+              <p className="navItem">Terra</p>
+              <Link className="navItem navBtn" to="/Simulation">Simulation</Link>
+              <Link className="navItem navBtn" to="/Editor">Editor</Link>
         </nav>
         <Switch>
           <Route path="/simulation">

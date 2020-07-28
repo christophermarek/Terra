@@ -115,18 +115,17 @@ function MapEditor() {
     return (
         <div className = "Map-Editor"> 
             {map.length === 0 ? (
-                <>
-                    <p>Map Empty</p>
-                    <form onSubmit={generateWorld} >
-                        <input type="text" value={mapSize} onChange={mapSizeChange}></input>
-                        <button type="Submit">Generate</button>
-                    </form>
-                </>
+                <div className="preLoad">
+                    <input type="text" value={mapSize} onChange={mapSizeChange}></input>
+                    <button className="button" onClick={generateWorld}>Generate</button>
+                </div>
             ) : (
-                <>  
+                <>  <div className="editorControls">
                     <TileSelector updateSelectedTileType={updateSelectedTileType}/>
                     <SurfaceObjectSelector updateSelectedSurfaceObjectType={updateSelectedSurfaceObjectType}></SurfaceObjectSelector>
                     <MapFileHandler loadMap={loadMap} map={map} surfaceObjects={surfaceObjects}/>
+                    </div>
+                    
                     <Map map={map}
                          surfaceObjects={surfaceObjects}
                          updateMapWithSelectedTile={updateMapWithSelectedTile}

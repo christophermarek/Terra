@@ -39,3 +39,36 @@ I created a file for a map preset, its just the text from the map export functio
 ![image](postSelect)
 
 Now that map presets can be loaded, it will speed up playing the simulation considerably. I really have to decide on some simple styling atleast for this project though so it looks better.
+
+The gameloop is going to be tricky for me to implement, ive never done it before so hopefully I can find some resources on this topic. I want the gameloop to be time based not fps based. I want the animals in the simulation to have a walk speed in time so the gameloop must be managed with time so I can achieve this consistently.
+
+I found these two articles here. I will use both to implement this. The first article has a lot of useful information for making my gameloop work with time, and moving objects in the world based on movement speed. The second article is what I will use to help me implement the loop and letting it be controlled with a play button.
+
+https://spicyyoghurt.com/tutorials/html5-javascript-game-development/create-a-smooth-canvas-animation
+https://stackoverflow.com/questions/10735922/how-to-stop-a-requestanimationframe-recursion-loop/10748750
+
+![image](startLoop)
+
+I just render a start button to the dom if the map has been loaded. 
+
+![image](stateVars)
+
+There are two new state variables, one to keep track of if the simulation loop has been started, and the animation frame ID to be able to cancel the loop if we want too.
+
+![image](loopLogic)
+
+This is how the game loop operates. If the loop hasnt been started onClick, we start the loop and store the animation frame id. If the loop is already active, we cancel it with the id stored in the variable. 
+
+![image](gameScreenshot)
+
+
+Some css changes
+
+![image](css1)
+![image](css3)
+![image](css2)
+
+Added some styling to my pages, it will be a lot nicer to work with now that ive spent some time working on the look and feel of the ui. I like the navigation bar at the top but I might change the buttons later.
+
+
+This is how the project looks now, I have created everything preliminary to the AI and have 'set the stage' to start working on the AI. First part to that is to handle path finding. That will be the next deblog though.

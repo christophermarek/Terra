@@ -4,7 +4,7 @@ import { VariableSizeGrid as Grid } from 'react-window';
 import {returnSurfaceObject} from '../../data/map/surfaceObjects'
 import HoverControls from './HoverControls';
 
-function Map({map, surfaceObjects, updateMapWithSelectedTile}) {
+function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, started}) {
 
     const [toggleBorder, setToggleBorder] = useState(true);
     const [hoverEnabled, setHoverEnabled] = useState(false);
@@ -113,10 +113,12 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile}) {
 
     return (
         <div className="Map">
-            <form onSubmit={toggleCellBorders} >
-                <button type="Submit">Toggle Cell Borders</button>
-            </form>
-            <HoverControls mapHover={mapHover} enableHover={enableHover}/>
+            <div className="mapControls">
+                <button className="button" onClick={startClicked}>{started ? "Stop" : "Start"}</button>
+                <button className="button" onClick={toggleCellBorders}>Toggle Cell Borders</button>
+                <HoverControls mapHover={mapHover} enableHover={enableHover}/>
+            </div>
+            
             <div className="mapContainer">
                 {
                     <Grid

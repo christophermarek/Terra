@@ -1,22 +1,53 @@
+@font-face {
+  font-family: Poppins;
+  src: url(https://fonts.google.com/specimen/Poppins);
+}
+
+.navBar{
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.navItem{
+  padding-left: 1%;
+  font-weight: 700;
+  font-size: 26px;
+  color: hsl(255, 11%, 22%);
+  
+}
+
 .navBtn{
-  display:inline-block;
-  padding:0.46em 1.6em;
-  border:0.1em solid #000000;
-  margin:0 0.2em 0.2em 0;
-  border-radius:0.12em;
-  box-sizing: border-box;
-  text-decoration:none;
-  font-family:'Roboto',sans-serif;
-  font-weight:300;
-  color:#000000;
-  text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
-  background-color:#FFFFFF;
-  text-align:center;
-  transition: all 0.15s;
+  text-decoration: none;
+  color: hsl(257, 7%, 63%);
+  font-weight: 500;
+  font-size: 16px;
 }
 
 .navBtn:hover{
-  text-shadow: 0 0 2em rgba(255,255,255,1);
-  color:#FFFFFF;
-  border-color:#FFFFFF;
+  color: hsl(255, 11%, 22%);
+}
+
+.button{
+  background-color:hsl(180, 66%, 49%);
+  color:white;
+  font-family: Poppins, sans-serif;
+  padding-top: 0.5%;
+  padding-bottom: 0.5%;
+  padding-left: 2%;
+  padding-right: 2%;
+  margin: 1%;
+  border:none;
+  border-radius: 5%;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.button:hover{
+  background-color: hsl(257, 27%, 26%);
+}
+
+
+.App{
+  font-family: Poppins, sans-serif;
 }
