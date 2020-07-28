@@ -10,33 +10,33 @@ Now that the simulation rendering is complete, and we have a functioning map edi
 * play button that starts the simulation loop.
 * optionally site wide css to start planning a theme for the site style
 
-![image](app)
-![image](appsc)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(5)%20Setting%20the%20Stage%20screenshots/app.PNG)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(5)%20Setting%20the%20Stage%20screenshots/appsc.PNG)
 
 I just added some css to try to make the nav buttons look different from the rest. Its probably not the style im going to stick with. But now we have two routes for the game, the simulation and the editor. We also now have a simulation component.
 
-![image](simulation)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(5)%20Setting%20the%20Stage%20screenshots/simulation.PNG)
 
 The simulation checks if a map is loaded, if its not it allows the user to select a map, if it is loaded then it renders the map and passes the map and surfaceObject props
 
-![image](emptysim)
-![image](populatedSim)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(5)%20Setting%20the%20Stage%20screenshots/emptySim.PNG)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(5)%20Setting%20the%20Stage%20screenshots/populatedSim.PNG)
 
 Now the simulator can load maps and we can soon start the ai. First though I do not want to keep having to create a map in the editor every time i want to play the simulation. I need to create some presets and store the json for those in a constants file that I can pull from anytime. This will speed up testing and it can help setup a structure for saving files on a server if i ever get there.
 
-![image](mapExport)
-![image](mapExportText)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(5)%20Setting%20the%20Stage%20screenshots/mapExport.PNG)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(5)%20Setting%20the%20Stage%20screenshots/mapExportText.PNG)
 
 Since its just a string that we parse onLoad, we can have a constants file that exports these map strings on demand.
 
-![image](map1)
-![image](form)
-![image](mapDropdown)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(5)%20Setting%20the%20Stage%20screenshots/map1.PNG)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(5)%20Setting%20the%20Stage%20screenshots/form.PNG)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(5)%20Setting%20the%20Stage%20screenshots/mapDropdown.PNG)
 
 I created a file for a map preset, its just the text from the map export function. I was going to make a larger file to handle them all, but I dont think im going to make many map presets and the ide slows down considerably when I have too many characters in a file like that. So the preset is just loaded into the map state variables when it is submitted from the dropdown
 
-![image](preselect)
-![image](postSelect)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(5)%20Setting%20the%20Stage%20screenshots/preSelect.PNG)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(5)%20Setting%20the%20Stage%20screenshots/postSelect.PNG)
 
 Now that map presets can be loaded, it will speed up playing the simulation considerably. I really have to decide on some simple styling atleast for this project though so it looks better.
 
@@ -47,26 +47,26 @@ I found these two articles here. I will use both to implement this. The first ar
 https://spicyyoghurt.com/tutorials/html5-javascript-game-development/create-a-smooth-canvas-animation
 https://stackoverflow.com/questions/10735922/how-to-stop-a-requestanimationframe-recursion-loop/10748750
 
-![image](startLoop)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(5)%20Setting%20the%20Stage%20screenshots/startLoop.PNG)
 
 I just render a start button to the dom if the map has been loaded. 
 
-![image](stateVars)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(5)%20Setting%20the%20Stage%20screenshots/stateVars.PNG)
 
 There are two new state variables, one to keep track of if the simulation loop has been started, and the animation frame ID to be able to cancel the loop if we want too.
 
-![image](loopLogic)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(5)%20Setting%20the%20Stage%20screenshots/loopLogic.PNG)
 
 This is how the game loop operates. If the loop hasnt been started onClick, we start the loop and store the animation frame id. If the loop is already active, we cancel it with the id stored in the variable. 
 
-![image](gameScreenshot)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(5)%20Setting%20the%20Stage%20screenshots/gameScreenshot.PNG)
 
 
 Some css changes
 
-![image](css1)
-![image](css3)
-![image](css2)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(5)%20Setting%20the%20Stage%20screenshots/css1.PNG)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(5)%20Setting%20the%20Stage%20screenshots/css3.PNG)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(5)%20Setting%20the%20Stage%20screenshots/css2.PNG)
 
 Added some styling to my pages, it will be a lot nicer to work with now that ive spent some time working on the look and feel of the ui. I like the navigation bar at the top but I might change the buttons later.
 
