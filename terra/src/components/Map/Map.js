@@ -42,8 +42,9 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
     function fetchSurfaceObjectsForTile(col, row){
         let temp = [];
         for(let i = 0; i < surfaceObjects.length; i++){
-            let strX = String(surfaceObjects[i].x);
-            let strY = String(surfaceObjects[i].y);
+            //have to round since you cant have decimal co-ordinates
+            let strX = String(Math.round(surfaceObjects[i].x));
+            let strY = String(Math.round(surfaceObjects[i].y));
             //fix if [0][y] or [x][0]
             if(strX.length <= 2){
                 strX = "0" + strX;
@@ -63,16 +64,17 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
         }
         return temp;
     }
-
     function renderSurfaceObjects(col, row){
         let matchingSurfaceObjects = fetchSurfaceObjectsForTile(col, row); 
-
+        if(matchingSurfaceObjects.length > 0){
+            //console.log(matchingSurfaceObjects);
+        }
         return(
             <svg className="svg">
                 {matchingSurfaceObjects.map((object, i) => {
                     
-                    let xToStr = String(object.x);
-                    let yToStr = String(object.y);
+                    let xToStr = String(Math.round(object.x));
+                    let yToStr = String(Math.round(object.y));
                     if(xToStr.length <= 2){
                         xToStr = "0" + xToStr;
                     }

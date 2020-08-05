@@ -12,7 +12,11 @@ function Simulation() {
     const [mapPreset, setMapPreset] = useState("map1");
     const [started, setStarted] = useState(false);
     const [requestAnimationFrameID, setRequestAnimationFrameID] = useState(undefined); 
-    
+
+    let secondsPassed = 0;
+    let oldTimeStamp = 0;
+
+
     function mapLoaded(){
         setIsLoaded(true);
     }
@@ -71,11 +75,29 @@ function Simulation() {
          }
     }
 
-    function gameLoop(){
+    function update(secondsPassed){
+        let update = [...surfaceObjects];
+        //its calculated as x += movementspeed * secondspassed
+        //where movement speed is in pixels per second
+        update[0].x = update[0].x + (30 * secondsPassed); 
+        update[0].y = update[0].y + (30 * secondsPassed); 
+        //update[0].x = Number(update[0].x.toFixed(2));
+        setSurfaceObjects(surfaceObjects => (update));
+    }
+
+    function gameLoop(timeStamp){
         setRequestAnimationFrameID(undefined);
+        let seconds = (timeStamp - oldTimeStamp) / 1000;
+        //global vars defined at top, not state vars
+        secondsPassed = seconds;
+        //limit time skip on pause/start
+        secondsPassed = Math.min(secondsPassed, 0.1);
+        oldTimeStamp = timeStamp;
+
         //
-        //call in the middle
-        console.log("looping...");
+        
+        update(secondsPassed);
+        
         //
         startLoop();
     }

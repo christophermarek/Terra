@@ -2,16 +2,19 @@
 const tree = {
     color: "#42692f",
     size: "30",
+    movementSpeed: 50
 }
 
 const rabbit = {
     color: "#9f9289",
     size: "15",
+    movementSpeed: 50,
 }
 
 const wolf = {
     color: "#FAD7A0",
     size: "25",
+    movementSpeed: 70,
 }
 
 export function returnSurfaceObject(type){
