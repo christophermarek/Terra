@@ -17,6 +17,7 @@ const wolf = {
     movementSpeed: 70,
 }
 
+
 export function returnSurfaceObject(type){
     switch(type){
         case "tree":

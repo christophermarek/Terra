@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Map from '../Map/Map';
 import './styles.css';
 import { map1 } from '../../data/map/map1';
+import {returnSurfaceObject} from '../../data/map/surfaceObjects'
 
 function Simulation() {
 
@@ -75,14 +76,37 @@ function Simulation() {
          }
     }
 
-    function update(secondsPassed){
+    function getDistanceToPoint(x, y, destX, destY){
+        let distance = Math.hypot(destX - x, destY - y);
+        return distance;
+    }
+
+    function getDirectionToPoint(x, y, destX, destY, distance){
+        let xDir = (destX - x) / distance
+        let yDir = (destY - y) / distance
+        
+        return {x: xDir, y: yDir};
+    }
+
+    function updateSurfaceObjects(secondsPassed){
         let update = [...surfaceObjects];
         //its calculated as x += movementspeed * secondspassed
         //where movement speed is in pixels per second
-        update[0].x = update[0].x + (30 * secondsPassed); 
-        update[0].y = update[0].y + (30 * secondsPassed); 
+
+        for(let i = 0; i < update.length; i++){
+            //add check to see if at point
+            getDistanceToPoint();
+            getDirectionToPoint()
+            update[i].x = update[i].x + (returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
+            update[i].y = update[i].y + (returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
+        }
+        
         //update[0].x = Number(update[0].x.toFixed(2));
         setSurfaceObjects(surfaceObjects => (update));
+    }
+
+    function update(secondsPassed){
+        updateSurfaceObjects(secondsPassed)
     }
 
     function gameLoop(timeStamp){
