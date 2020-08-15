@@ -30,7 +30,7 @@ function Simulation() {
         //loadAi
         let aiData = JSON.parse(window.localStorage.getItem('map1Ai'));
         setBrain(aiData);
-        
+        console.log(aiData);
         mapLoaded();
     }
 
@@ -93,12 +93,47 @@ function Simulation() {
         return {x: xDir, y: yDir};
     }
 
+    function getBrainObjectById(id){
+        let brainCopy = [...brain];
+        let brainObjCopy = false;
+
+        for(let i = 0; i < brainCopy.length; i++){
+            if(brainCopy[i].surfaceObjectId === id){
+                brainObjCopy = brainCopy[i];
+            }    
+        }
+
+        return brainObjCopy;
+    }
+
+    function updateBrainObjById(id, brainObj){
+        let brainCopy = [...brain];
+        let updated = false;
+
+        for(let i = 0; i < brainCopy.length; i++){
+            if(brainCopy[i].surfaceObjectId === id){
+                brainCopy[i] = brainObj;
+                updated = true;
+            }    
+        }
+
+        setBrain(brain => (brainCopy));
+        
+        if(!updated){
+            console.log("error updating brain object by id");
+        }
+    }
+
     function updateSurfaceObjects(secondsPassed){
         let update = [...surfaceObjects];
         //its calculated as x += movementspeed * secondspassed
         //where movement speed is in pixels per second
 
         for(let i = 0; i < update.length; i++){
+
+            let brainN = getBrainObjectById(i);
+            updateBrainObjById(brainN.surfaceObjectId, brainN);
+            console.log(brainN);
             //add check to see if at point
             //getDistanceToPoint();
             //getDirectionToPoint()

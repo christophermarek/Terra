@@ -62,7 +62,13 @@ Seems like even more work I need to do now, I think I should move the map saving
 
 now the map and the ai will export to the local storage. It doesnt handle multiple maps dynamically yet. So now on load of the simulation I just load from whats in the local storage for map and ai.
 
-Now that this is handled, I can go back to making the AI move to a point on the map.
+Now that this is handled, I can go back to making the AI move to a point on the map. 
+
+![image](brainHelpers)
+
+I added functions to help us update the data in the brain object array.
+
+I now have to check if the brainObj for a surfaceObject is moving or not moving, and we will use that to move the surfaceObject to a point.
 
 AI will have to sense, think, then act
 

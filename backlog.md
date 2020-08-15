@@ -4,3 +4,5 @@
 
 * Textures for simulation instead of just colored cells
 * push to github pages
+
+
