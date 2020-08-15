@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Map from '../Map/Map';
 import './styles.css';
-import { map1 } from '../../data/map/map1';
 import {returnSurfaceObject} from '../../data/map/surfaceObjects'
 
 function Simulation() {
@@ -13,6 +12,7 @@ function Simulation() {
     const [mapPreset, setMapPreset] = useState("map1");
     const [started, setStarted] = useState(false);
     const [requestAnimationFrameID, setRequestAnimationFrameID] = useState(undefined); 
+    const [brain, setBrain] = useState([]);
 
     let secondsPassed = 0;
     let oldTimeStamp = 0;
@@ -26,6 +26,11 @@ function Simulation() {
         let data = JSON.parse(importedData);
         setMap(map => (data.mapData));
         setSurfaceObjects(surfaceObjects => (data.surfaceData));
+
+        //loadAi
+        let aiData = JSON.parse(window.localStorage.getItem('map1Ai'));
+        setBrain(aiData);
+        
         mapLoaded();
     }
 
@@ -43,9 +48,9 @@ function Simulation() {
         
         switch(mapPreset){
             case "map1":
-                loadMap(JSON.stringify(map1));
+                loadMap(window.localStorage.getItem('map1'));
             default:
-                loadMap(JSON.stringify(map1));
+                loadMap(window.localStorage.getItem('map1'));
         }  
     }
 
@@ -95,8 +100,8 @@ function Simulation() {
 
         for(let i = 0; i < update.length; i++){
             //add check to see if at point
-            getDistanceToPoint();
-            getDirectionToPoint()
+            //getDistanceToPoint();
+            //getDirectionToPoint()
             update[i].x = update[i].x + (returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
             update[i].y = update[i].y + (returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
         }

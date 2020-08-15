@@ -17,11 +17,11 @@ function MapEditor() {
         
         let newSurfaceObjects = [];
 
-        newSurfaceObjects.push({x: 25, y: 35, type: "tree"});
-        newSurfaceObjects.push({x: 150, y: 350, type: "tree"});
-        newSurfaceObjects.push({x: 350, y: 350, type: "tree"});
-        newSurfaceObjects.push({x: 200, y: 200, type: "rabbit"});
-        newSurfaceObjects.push({x: 425, y: 435, type: "rabbit"});
+        //newSurfaceObjects.push({x: 25, y: 35, type: "tree"});
+        //newSurfaceObjects.push({x: 150, y: 350, type: "tree"});
+        //newSurfaceObjects.push({x: 350, y: 350, type: "tree"});
+        //newSurfaceObjects.push({x: 200, y: 200, type: "rabbit"});
+        //newSurfaceObjects.push({x: 425, y: 435, type: "rabbit"});
 
         setSurfaceObjects(surfaceObjects => (newSurfaceObjects));
         
@@ -93,6 +93,9 @@ function MapEditor() {
                 newObj.type = 'tree';
             }
             
+            //add id for ai link
+            newObj.id = newSurfaceObjects.length;
+
             newSurfaceObjects.push(newObj);
             setSurfaceObjects(surfaceObjects => (newSurfaceObjects))
             

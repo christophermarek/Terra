@@ -36,10 +36,35 @@ We then normalize the X,Y direction by dividing the direction by the distance so
 
 ![image])(getDistance)
 
-Now we have implemented these methods, we still need to know if the surfaceObject is moving or if it is stopped. This brings another design decision that I knew I had to make, how & where to store the AI brain. I want the brain to 
+Now we have implemented these methods, we still need to know if the surfaceObject is moving or if it is stopped. This brings another design decision that I knew I had to make, how & where to store the AI brain. I want for every AI to be able to move, eat, interact with eachother, and I need somewhere to store that state. I can store it in surfaceObjects, but if this is also being passed to the renderer every frame, it seems like a lot of extra data being passed around. I also do not need AI in the map editor, which also uses surfaceObjects.
+
+Eventually I will have to code in a system that will be me complex but for now all I need to store for each surfaceObject is the action it is doing like moving to point, and if it is moving or not.
+
+I could use Redux, I think it would be appropriate. The AI brain having a single source of truth is the best choice I think. I can do this without redux but to do this I just need to move the state up to our App.js so that the ai state will persist. I dont see a reason to use Redux now other than it being fun to use, so I wont go through all that effort right now but maybe I will need to move to it in the future.
+
+I want this state to be designed currently as:
+brain: [
+    {
+        id,
+        moving,
+        action,
+    },
+]
+
+I need an id to link the surfaceObjects to the brain. When the simulator loads the map I can iterate through each surfaceObject and assign it an id, and also create a blank AI object in the brain with the same id to link them. 
+
+I want the map when you click on loadMap to link to a saved AI as well, so if there is map1.txt the program will load the AI state for that program. I dont think it is possible to make the AI persist, it has to be saved and get reset on refresh because I dont want to save local files, maybe when I link a database to save and load the simulation I can track changes. The AI state doesnt have to be pulled to App.js since I am just load the AI state on mapLoad, so all the work I am going to be doing will be in file export to create an ai file for the map. AI will be exported when map gets exported since map export is a new map, might change this later though, I want to be editiing the maps too but I also just want to work on the AI for now. This also wont work because I want the AI to mate and that means there will be new surfaceObjects that wont persist.
+
+Seems like even more work I need to do now, I think I should move the map saving and loading to local storage, then I can actually export maps to my device, and have them persist on refresh, and right now I only export the map and paste it into my map preset file.
 
 
-We also will need the 
+![image](generateAi)
+
+now the map and the ai will export to the local storage. It doesnt handle multiple maps dynamically yet. So now on load of the simulation I just load from whats in the local storage for map and ai.
+
+Now that this is handled, I can go back to making the AI move to a point on the map.
+
+AI will have to sense, think, then act
 
 Pathfinding
 AI wander function
