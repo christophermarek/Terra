@@ -17,7 +17,16 @@ function MapFileHandler({map, loadMap, surfaceObjects}) {
             let brainObj = {
                 surfaceObjectId: linkedId,
                 isMoving: false,
-                action: ''
+                action: 'Idle',
+                movement: {
+                    distanceToPoint: '',
+                    directionX: '',
+                    directionY: '',
+                    startX: 0,
+                    startY: 0,
+                    endX: 0,
+                    endY: 0,
+                }
             }
 
             brain.push(brainObj);

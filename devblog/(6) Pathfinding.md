@@ -70,6 +70,8 @@ I added functions to help us update the data in the brain object array.
 
 I now have to check if the brainObj for a surfaceObject is moving or not moving, and we will use that to move the surfaceObject to a point.
 
+
+
 AI will have to sense, think, then act
 
 Pathfinding

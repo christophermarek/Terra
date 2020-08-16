@@ -6,3 +6,4 @@
 * push to github pages
 
 
+export multiple maps and load from local storage

@@ -30,7 +30,6 @@ function Simulation() {
         //loadAi
         let aiData = JSON.parse(window.localStorage.getItem('map1Ai'));
         setBrain(aiData);
-        console.log(aiData);
         mapLoaded();
     }
 
@@ -87,6 +86,7 @@ function Simulation() {
     }
 
     function getDirectionToPoint(x, y, destX, destY, distance){
+
         let xDir = (destX - x) / distance
         let yDir = (destY - y) / distance
         
@@ -130,15 +130,57 @@ function Simulation() {
         //where movement speed is in pixels per second
 
         for(let i = 0; i < update.length; i++){
-
             let brainN = getBrainObjectById(i);
+
+            //decide what to do here.
+
+            //thinking
+            if(brainN.action === "Idle"){
+                brainN.movement.endX = 300;
+                brainN.movement.endY = 300;
+                brainN.action = "Moving";
+            }
+
+            //actions
+            if(brainN.action === "Moving"){
+                
+                //init movement
+                if(brainN.isMoving === false){
+                    brainN.movement.distanceToPoint = getDistanceToPoint(update[i].x, update[i].y, 250, 250);
+                    
+                    brainN.movement.startX = update[i].x;
+                    brainN.movement.startY = update[i].y;
+                    brainN.isMoving = true;
+                }else{
+                    let direction = getDirectionToPoint(update[i].x, update[i].y, 250, 250, brainN.movement.distanceToPoint);
+                    brainN.movement.directionX = direction.x;
+                    brainN.movement.directionY = direction.y;
+                    update[i].x = update[i].x + (brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
+                    update[i].y = update[i].y + (brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
+                    console.log(brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
+                    console.log(brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
+                }
+
+                //find why it cant handle multiple
+
+                //init the ai, check if state is idle and if it is then make it move,
+                //this is where we set the initial paramaters for movement
+
+                //this doesnt work because x can be greater like what if its going left, how tf to calculate this
+                if(Math.sqrt(Math.pow(update[i].x - brainN.startX, 2) + Math.pow(update[i].y - brainN.startY, 2))){
+                    brainN.isMoving = false;
+                    brainN.action = 'Done moving';
+                }
+                if(update[i].x > brainN.movement.endX || update[i].y > brainN.movement.endY){
+                    //update[i].x = brainN.endX;
+                    //update[i].y = brainN.endY;
+                    
+                }
+                
+            }
+            //update brain object when done with it
             updateBrainObjById(brainN.surfaceObjectId, brainN);
-            console.log(brainN);
-            //add check to see if at point
-            //getDistanceToPoint();
-            //getDirectionToPoint()
-            update[i].x = update[i].x + (returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
-            update[i].y = update[i].y + (returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
+            
         }
         
         //update[0].x = Number(update[0].x.toFixed(2));
