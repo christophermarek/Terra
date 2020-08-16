@@ -8,7 +8,7 @@ const tree = {
 const rabbit = {
     color: "#9f9289",
     size: "15",
-    movementSpeed: 50,
+    movementSpeed: 75,
 }
 
 const wolf = {

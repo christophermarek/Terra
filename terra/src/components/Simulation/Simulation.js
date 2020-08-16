@@ -81,6 +81,7 @@ function Simulation() {
     }
 
     function getDistanceToPoint(x, y, destX, destY){
+        //console.log(" x: " + x + " y: " + y + " destX: " + destX + " destY: " + destY);
         let distance = Math.hypot(destX - x, destY - y);
         return distance;
     }
@@ -136,9 +137,11 @@ function Simulation() {
 
             //thinking
             if(brainN.action === "Idle"){
-                brainN.movement.endX = 300;
-                brainN.movement.endY = 300;
+                brainN.movement.endX = 250;
+                brainN.movement.endY = 250;
                 brainN.action = "Moving";
+                brainN.movement.startX = update[i].x;
+                brainN.movement.startY = update[i].y;
             }
 
             //actions
@@ -146,19 +149,19 @@ function Simulation() {
                 
                 //init movement
                 if(brainN.isMoving === false){
-                    brainN.movement.distanceToPoint = getDistanceToPoint(update[i].x, update[i].y, 250, 250);
-                    
-                    brainN.movement.startX = update[i].x;
-                    brainN.movement.startY = update[i].y;
-                    brainN.isMoving = true;
-                }else{
-                    let direction = getDirectionToPoint(update[i].x, update[i].y, 250, 250, brainN.movement.distanceToPoint);
+                    brainN.movement.distanceToPoint = getDistanceToPoint(update[i].x, update[i].y, brainN.movement.endX, brainN.movement.endY);
+                    let direction = getDirectionToPoint(update[i].x, update[i].y, brainN.movement.endX, brainN.movement.endY, brainN.movement.distanceToPoint);
                     brainN.movement.directionX = direction.x;
                     brainN.movement.directionY = direction.y;
+                    
+                    brainN.isMoving = true;
+                    
+                }else{
+                    
                     update[i].x = update[i].x + (brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
-                    update[i].y = update[i].y + (brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
-                    console.log(brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
-                    console.log(brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
+                    update[i].y = update[i].y + (brainN.movement.directionY * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
+                    //console.log(brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
+                    //console.log(brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
                 }
 
                 //find why it cant handle multiple
@@ -167,14 +170,14 @@ function Simulation() {
                 //this is where we set the initial paramaters for movement
 
                 //this doesnt work because x can be greater like what if its going left, how tf to calculate this
-                if(Math.sqrt(Math.pow(update[i].x - brainN.startX, 2) + Math.pow(update[i].y - brainN.startY, 2))){
+                //console.log(" x: " + update[i].x + " y: " + update[i].y + " brainN.startX: " + brainN.movement.startX + " brainN.startY: " + brainN.movement.startY);
+                //console.log("current distance: " + Math.hypot(update[i].x - brainN.movement.startX, update[i].y - brainN.movement.startY) + " final distance: " + brainN.movement.distanceToPoint);
+               
+                if(Math.hypot(update[i].x - brainN.movement.startX, update[i].y - brainN.movement.startY) >= brainN.movement.distanceToPoint){
                     brainN.isMoving = false;
                     brainN.action = 'Done moving';
-                }
-                if(update[i].x > brainN.movement.endX || update[i].y > brainN.movement.endY){
-                    //update[i].x = brainN.endX;
-                    //update[i].y = brainN.endY;
-                    
+                    update[i].x = brainN.movement.endX;
+                    update[i].y = brainN.movement.endY;
                 }
                 
             }
