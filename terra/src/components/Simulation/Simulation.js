@@ -31,6 +31,7 @@ function Simulation() {
         let aiData = JSON.parse(window.localStorage.getItem('map1Ai'));
         setBrain(aiData);
         mapLoaded();
+
     }
 
     function importMapTextHandler(event){
@@ -61,6 +62,7 @@ function Simulation() {
             stopLoop();
         }
         if(!started){
+            setupGrid();
             startLoop();
         }
         
@@ -127,51 +129,37 @@ function Simulation() {
 
     function updateSurfaceObjects(secondsPassed){
         let update = [...surfaceObjects];
+
         //its calculated as x += movementspeed * secondspassed
         //where movement speed is in pixels per second
 
         for(let i = 0; i < update.length; i++){
             let brainN = getBrainObjectById(i);
 
-            //decide what to do here.
 
             //thinking
             if(brainN.action === "Idle"){
                 brainN.movement.endX = 250;
                 brainN.movement.endY = 250;
-                brainN.action = "Moving";
                 brainN.movement.startX = update[i].x;
                 brainN.movement.startY = update[i].y;
+                brainN.action = "Moving";
             }
 
             //actions
             if(brainN.action === "Moving"){
                 
                 //init movement
-                if(brainN.isMoving === false){
+                if(!brainN.isMoving){
                     brainN.movement.distanceToPoint = getDistanceToPoint(update[i].x, update[i].y, brainN.movement.endX, brainN.movement.endY);
                     let direction = getDirectionToPoint(update[i].x, update[i].y, brainN.movement.endX, brainN.movement.endY, brainN.movement.distanceToPoint);
                     brainN.movement.directionX = direction.x;
                     brainN.movement.directionY = direction.y;
-                    
                     brainN.isMoving = true;
-                    
                 }else{
-                    
                     update[i].x = update[i].x + (brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
                     update[i].y = update[i].y + (brainN.movement.directionY * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
-                    //console.log(brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
-                    //console.log(brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
                 }
-
-                //find why it cant handle multiple
-
-                //init the ai, check if state is idle and if it is then make it move,
-                //this is where we set the initial paramaters for movement
-
-                //this doesnt work because x can be greater like what if its going left, how tf to calculate this
-                //console.log(" x: " + update[i].x + " y: " + update[i].y + " brainN.startX: " + brainN.movement.startX + " brainN.startY: " + brainN.movement.startY);
-                //console.log("current distance: " + Math.hypot(update[i].x - brainN.movement.startX, update[i].y - brainN.movement.startY) + " final distance: " + brainN.movement.distanceToPoint);
                
                 if(Math.hypot(update[i].x - brainN.movement.startX, update[i].y - brainN.movement.startY) >= brainN.movement.distanceToPoint){
                     brainN.isMoving = false;
@@ -181,12 +169,12 @@ function Simulation() {
                 }
                 
             }
+
             //update brain object when done with it
             updateBrainObjById(brainN.surfaceObjectId, brainN);
             
         }
         
-        //update[0].x = Number(update[0].x.toFixed(2));
         setSurfaceObjects(surfaceObjects => (update));
     }
 
@@ -210,6 +198,35 @@ function Simulation() {
         //
         startLoop();
     }
+
+    //Cells that go inside the grid
+    function Cell(x, y){
+        this.x = x;
+        this.y = y;
+    }
+
+    //grid for pathfinding
+    function setupGrid(){
+        //console.log(map.length);
+
+        //map.length
+        //the grid will have map.length * 100 elements since there that many co-ordinates in the 
+        //world and each map index is a tile with 100px of coordinates.
+
+        let size = map.length * 100;
+        let grid = [];
+
+       
+        for(let i = 0; i < size; i++){
+            let columns = [];
+            for(let j = 0; j < size; j++){
+                columns.push(new Cell(i, j));
+            }
+            grid.push(columns);
+        }
+
+    }
+
 
     return(
         <div className="Simulation">
@@ -237,7 +254,7 @@ function Simulation() {
                          surfaceObjects={surfaceObjects}
                          startClicked={startClicked}
                          started={started}
-                         />
+                    />
                 </>
             )}
 

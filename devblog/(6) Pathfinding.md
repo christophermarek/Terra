@@ -70,8 +70,48 @@ I added functions to help us update the data in the brain object array.
 
 I now have to check if the brainObj for a surfaceObject is moving or not moving, and we will use that to move the surfaceObject to a point.
 
+![image](moveToPointCode)
 
-Draw a diagram to show how moving across the line works, helpful for future reference aswell.
+This is the final code to move a surfaceObject to a point.
+
+First we go through each surfaceObject, for the surfaceObject we are currently indexed at we get the corresponding brain object for it.
+
+Each brain object has a state: 
+![image](brainState)
+
+The action is for control flow. AI will think and make decisions and once it makes a decision it will execute an action.
+For this simple movement to a point the AI action flow is currently: Idle->Moving->Done Moving.
+
+So at the start the loop checks if the object is idle, if it is then start the moving action and initialize the vars for movement.
+Now the Ai wont start moving yet, next we need to check if isMoving is false, because the action can be Moving but it will not be moving until isMoving is true. We use this break between action and execution to get more paramaters for the movement. 
+
+![image](drawing)
+First we get the distance to point which is the hypotenuse or c in the drawing. This is the distance we want to move the surface object over the plane.
+
+Then we get the direction to a point in the X and Y plane, this is calculated by getting the vertical change and horizontal change for A->B.
+
+We then move the object by x/y += change x/y * movementspeed * time elapsed
+
+This move the object on both x/y at the direction to the end point.
+
+To check if we reached the end destination we want, we check if the current distance from the start is greater than or equal to the distance from end point to start. If the hypotenuse of the current point to the start is greater than the original distance hypotenuse calculated then we have moved past the end point.
+
+Once we reach the end we set the state to finished to terminate the movement, and lock the final x and y variables in place to the end points so that it gets to the desired co ordinate.
+
+![gif](singleToPoint)
+
+Right now for testing the point is at 250,250 px. We can see a surfaceObject now will move to the point specified.
+
+It also works with multiple surfaceObjects
+
+![gif](multipleToPoint)
+
+Now we have to do pathfinding with obstacles.
+
+I did some reading at http://theory.stanford.edu/~amitp/GameProgramming/index.html. This is really indepth on the theory of using A* pathfinding. Im going to use it as a guide to help me choose the right implementation for my game.
+
+The first thing I need to do is create a graph representation of the map to use in the pathfinding algorithm. I think an adjacency matrix is the best solution for this since almost every grid tile is connected so we dont save performance using an adjacency list.
+
 
 
 AI will have to sense, think, then act
