@@ -106,15 +106,34 @@ It also works with multiple surfaceObjects
 
 ![gif](multipleToPoint)
 
-Now we have to do pathfinding with obstacles.
+Now we have to do pathfinding
 
-I did some reading at http://theory.stanford.edu/~amitp/GameProgramming/index.html. This is really indepth on the theory of using A* pathfinding. Im going to use it as a guide to help me choose the right implementation for my game.
+I did some reading at http://theory.stanford.edu/~amitp/GameProgramming/index.html. 
 
-The first thing I need to do is create a graph representation of the map to use in the pathfinding algorithm. I think an adjacency matrix is the best solution for this since almost every grid tile is connected so we dont save performance using an adjacency list.
-
-
+I have implemented the list a* algorithm from here, 
 https://briangrinstead.com/blog/astar-search-algorithm-in-javascript/
-Used this one, want to try binary heap implementation instead
+
+![image](setupGrid)
+The first thing I had to do was set up a grid representation of our map tiles
+
+![image](cell)
+this grid is populated with cells.
+
+![image](startSearch)
+
+To retrieve a path from start to end we run the pathfinding algorithm in the search function. 
+
+![image](pathfindingReturn)
+
+This is what the pathfinding algorithm returns. 
+
+## Now we need to implement this into our surfaceObjects so they can move to a destination.
+I think to implement this all we need to do is:
+-when idle, set the first point to go to as the first element we pop out of the path array.
+-when moveing and point is reached, check if final point in path, if it is then stop moving. if its not then pop out the next point from the array.
+
+## We also need to make the pathfinding work around obstacles like trees.
+
 
 AI will have to sense, think, then act
 
