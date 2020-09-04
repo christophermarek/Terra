@@ -113,6 +113,8 @@ I did some reading at http://theory.stanford.edu/~amitp/GameProgramming/index.ht
 The first thing I need to do is create a graph representation of the map to use in the pathfinding algorithm. I think an adjacency matrix is the best solution for this since almost every grid tile is connected so we dont save performance using an adjacency list.
 
 
+https://briangrinstead.com/blog/astar-search-algorithm-in-javascript/
+Used this one, want to try binary heap implementation instead
 
 AI will have to sense, think, then act
 
