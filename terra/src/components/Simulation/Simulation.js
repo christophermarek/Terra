@@ -318,7 +318,7 @@ function Simulation() {
 
                 //check if path exists, if not generate one to 250, 250
                 if(brainN.path === undefined){
-                    brainN.path = startSearch(update[i].x, update[i].y, 100, 100);
+                    brainN.path = startSearch(update[i].x, update[i].y, 250, 250);
                     let nextPoint = brainN.path.shift();
                     //capture this value we just shifted out and are printing to the console.log
                     //set endX and endY to the x and y from this
@@ -349,7 +349,9 @@ function Simulation() {
                
                 if(Math.hypot(update[i].x - brainN.movement.startX, update[i].y - brainN.movement.startY) >= brainN.movement.distanceToPoint){
                     
-                    
+                    //why is it moving past the point, the correct path is being popped in the console but the actual svg will not update its co ordinates properly
+                    //maybe we need to skip some points like pop until we are where we are at 
+
                     //else get next point.
                     //when point reached
                     //if last point then set to done moving
@@ -360,20 +362,25 @@ function Simulation() {
                         update[i].y = brainN.movement.endY;
                     }else{
                         let nextPoint = brainN.path.shift();
+                        update[i].x = brainN.movement.endX;
+                        update[i].y = brainN.movement.endY;
                         brainN.movement.endX = nextPoint.x;
                         brainN.movement.endY = nextPoint.y;
+                        
                     }
                     
                 }
                 
             }
-
+            console.log(brainN.path);
             //update brain object when done with it
             updateBrainObjById(brainN.surfaceObjectId, brainN);
             
         }
         
         setSurfaceObjects(surfaceObjects => (update));
+
+        
     }
 
     function update(secondsPassed){
