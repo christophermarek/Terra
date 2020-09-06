@@ -3,7 +3,7 @@ Now onto pathfinding, I want to setup a pathfinding algorithm to give a path tha
 
 First I have to do a few things to make sure an object can move
 
-Gameloop updating by time now
+Game loop updating by time now
 
 ![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/gameloop.PNG)
 
@@ -11,7 +11,6 @@ In this image im just moving 1 object, so for test purposes im only accessing [0
 
 I had to change the renderer to round the co-ordinates when they are calculated for the svg since we cannot have decimal svg co-ordinates.
 
-might need to change from image
 ![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/movement.gif)
 
 
@@ -34,7 +33,7 @@ Since this is a 2d plane, we can calculate the distance to the next point using 
 To find the direction the object will travel on the plane we just have to find the change on that axis, (x2 - x1).
 We then normalize the X,Y direction by dividing the direction by the distance so that when we use the direction x, y we get to have our constant movement speed.
 
-![image])(https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/getDistance.PNG)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/getDistance.PNG)
 
 Now we have implemented these methods, we still need to know if the surfaceObject is moving or if it is stopped. This brings another design decision that I knew I had to make, how & where to store the AI brain. I want for every AI to be able to move, eat, interact with eachother, and I need somewhere to store that state. I can store it in surfaceObjects, but if this is also being passed to the renderer every frame, it seems like a lot of extra data being passed around. I also do not need AI in the map editor, which also uses surfaceObjects.
 
@@ -53,7 +52,7 @@ brain: [
 
 I need an id to link the surfaceObjects to the brain. When the simulator loads the map I can iterate through each surfaceObject and assign it an id, and also create a blank AI object in the brain with the same id to link them. 
 
-I want the map when you click on loadMap to link to a saved AI as well, so if there is map1.txt the program will load the AI state for that program. I dont think it is possible to make the AI persist, it has to be saved and get reset on refresh because I dont want to save local files, maybe when I link a database to save and load the simulation I can track changes. The AI state doesnt have to be pulled to App.js since I am just load the AI state on mapLoad, so all the work I am going to be doing will be in file export to create an ai file for the map. AI will be exported when map gets exported since map export is a new map, might change this later though, I want to be editiing the maps too but I also just want to work on the AI for now. This also wont work because I want the AI to mate and that means there will be new surfaceObjects that wont persist.
+I want the map when you click on loadMap to link to a saved AI as well, so if there is map1.txt the program will load the AI state for that program. I dont think it is possible to make the AI persist, it has to be saved and get reset on refresh because I dont want to save local files, maybe when I link a database to save and load the simulation I can track changes. The AI state doesnt have to be pulled to App.js since I am just load the AI state on mapLoad, so all the work I am going to be doing will be in file export to create an ai file for the map. AI will be exported when map gets exported since map export is a new map, might change this later though, I want to be editing the maps too but I also just want to work on the AI for now. This also wont work because I want the AI to mate and that means there will be new surfaceObjects that wont persist.
 
 Seems like even more work I need to do now, I think I should move the map saving and loading to local storage, then I can actually export maps to my device, and have them persist on refresh, and right now I only export the map and paste it into my map preset file.
 
@@ -132,8 +131,8 @@ This is what the pathfinding algorithm returns.
 
 ## Now we need to implement this into our surfaceObjects so they can move to a destination.
 I think to implement this all we need to do is:
--when idle, set the first point to go to as the first element we shift out of the path array.
--when moveing and point is reached, check if final point in path, if it is then stop moving. if its not then shift out the next point from the array.
+* when idle, set the first point to go to as the first element we shift out of the path array.
+* when moving and point is reached, check if final point in path, if it is then stop moving. if its not then shift out the next point from the array.
 
 ![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/idleState.PNG)
 
