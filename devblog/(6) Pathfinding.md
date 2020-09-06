@@ -129,13 +129,27 @@ This is what the pathfinding algorithm returns.
 
 ## Now we need to implement this into our surfaceObjects so they can move to a destination.
 I think to implement this all we need to do is:
--when idle, set the first point to go to as the first element we pop out of the path array.
--when moveing and point is reached, check if final point in path, if it is then stop moving. if its not then pop out the next point from the array.
+-when idle, set the first point to go to as the first element we shift out of the path array.
+-when moveing and point is reached, check if final point in path, if it is then stop moving. if its not then shift out the next point from the array.
+
+![image](idleState)
+Now when the AI is idle it generates a path to an end point that we want it to go to, for now it is just 250,250
+
+![image](moving)
+Now we move through each point until the end is reached. 
 
 ## We also need to make the pathfinding work around obstacles like trees.
+We have to iterate through surfaceObjects and add them as walls on the grid
+-first I have to go through each surface Object
+-calculate bounding box of circle with x, y and radius of circle
+-set co ordinates in that bounding box to wall.
 
+![image](treeborders)
+Now when I generate the grid I go through every surfaceObject, fetch the size of the surfaceObject, and iterate a square around the surfaceObject and set all the tiles in this square to isWall = true.
 
-AI will have to sense, think, then act
+This solution doesnt allow for pathfinding around other surfaceObjects, because they move so the wall will change. I also have to check type === tree because if a rabbit wants to pathfind and it is inside a square of isWall = true then it will never get a valid path from the pathfinding algorithm. 
 
-Pathfinding
-AI wander function
+This is how it goes around trees. It does not support diagonal paths yet.
+![gif](pathAroundTree)
+
+Now that pathfinding is implemented we can work on the AI more. The pathfinding needs more tuning though and it needs to handle diagonal paths.

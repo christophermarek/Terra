@@ -3,7 +3,7 @@ import Map from './Map';
 import TileSelector from './TileSelector';
 import MapFileHandler from './MapFileHandler';
 import SurfaceObjectSelector from './SurfaceObjectSelector';
-
+import {returnSurfaceObject} from '../../data/map/surfaceObjects'
 function MapEditor() {
 
     const [mapSize, setSize] = useState(20);
@@ -81,6 +81,7 @@ function MapEditor() {
             
             let CalcX = Number(String(x) + String(e.nativeEvent.offsetX));
             let CalcY = Number(String(y) + String(e.nativeEvent.offsetY));
+
             //x y have to be flipped for svg
             let newObj = {
                 x: CalcY,

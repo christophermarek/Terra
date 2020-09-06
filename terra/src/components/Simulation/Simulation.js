@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Map from '../Map/Map';
 import './styles.css';
-import {returnSurfaceObject} from '../../data/map/surfaceObjects'
+import { returnSurfaceObject } from '../../data/map/surfaceObjects'
 
 function Simulation() {
 
@@ -182,7 +182,27 @@ function Simulation() {
                 }
                 grid.push(columns);
             }
-    
+
+            //go through surface objects and calculate the walls for this grid.
+            for(let k = 0; k < surfaceObjects.length; k++){
+                let fetchedData = returnSurfaceObject(surfaceObjects[k].type);
+                let radius = fetchedData.size;
+                //these two loops create a square around the circle which will be the bounding box for the surfaceObject
+
+                for(let n = (surfaceObjects[k].x - radius);  n < (surfaceObjects[k].x + radius); n++){
+                  for(let m = (surfaceObjects[k].y - radius);  m < (surfaceObjects[k].y + radius); m++){
+                    //skip if out of grid bounds
+                        if(surfaceObjects[k].type === "tree"){
+                            if(n >= 0 && m >=0 && n < map.length * 100 && m < map.length * 100 ){
+                                //we cannot set isWall for surfaceObjects that need to 
+                                //pathfind since there is a wall all around each surface object as the bounding box 
+                                grid[n][m].isWall = true;
+                            }
+                        }
+                    }
+                }
+            }
+
             return grid;
         }
     
@@ -310,7 +330,6 @@ function Simulation() {
         for(let i = 0; i < update.length; i++){
             let brainN = getBrainObjectById(i);
 
-            console.log("x: " +  brainN.movement.endX + " y: " + brainN.movement.endY);
             //thinking
             if(brainN.action === "Idle"){
                 //add brain variable of path to find array
@@ -320,13 +339,19 @@ function Simulation() {
                 if(brainN.path === undefined){
                     brainN.path = startSearch(update[i].x, update[i].y, 250, 250);
                     let nextPoint = brainN.path.shift();
-                    //capture this value we just shifted out and are printing to the console.log
-                    //set endX and endY to the x and y from this
-                    brainN.movement.endX = nextPoint.x;
-                    brainN.movement.endY = nextPoint.y;
-                    brainN.movement.startX = update[i].x;
-                    brainN.movement.startY = update[i].y;
-                    brainN.action = "Moving";
+
+                    if(nextPoint === undefined){
+                        console.log("no path found");
+                    }else{
+                        //set endX and endY to the x and y from this
+                        //console.log(brainN);
+                        brainN.movement.endX = nextPoint.x;
+                        brainN.movement.endY = nextPoint.y;
+                        brainN.movement.startX = update[i].x;
+                        brainN.movement.startY = update[i].y;
+                        brainN.action = "Moving";
+                    }
+                    
                 }
 
                 
@@ -348,10 +373,6 @@ function Simulation() {
                 }
                
                 if(Math.hypot(update[i].x - brainN.movement.startX, update[i].y - brainN.movement.startY) >= brainN.movement.distanceToPoint){
-                    
-                    //why is it moving past the point, the correct path is being popped in the console but the actual svg will not update its co ordinates properly
-                    //maybe we need to skip some points like pop until we are where we are at 
-
                     //else get next point.
                     //when point reached
                     //if last point then set to done moving
@@ -372,7 +393,6 @@ function Simulation() {
                 }
                 
             }
-            console.log(brainN.path);
             //update brain object when done with it
             updateBrainObjById(brainN.surfaceObjectId, brainN);
             
