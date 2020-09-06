@@ -5,14 +5,14 @@ First I have to do a few things to make sure an object can move
 
 Gameloop updating by time now
 
-![image](gameloop)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/gameloop.PNG)
 
 In this image im just moving 1 object, so for test purposes im only accessing [0] which is the only element in surfaceObjects
 
 I had to change the renderer to round the co-ordinates when they are calculated for the svg since we cannot have decimal svg co-ordinates.
 
 might need to change from image
-![image](movement.gif)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/movement.gif)
 
 
 ## Path finding
@@ -21,9 +21,9 @@ The first thing we need to do is iterate through every surfaceObject instead of 
 
 I also want the movement speed to depend on the type of object, I already have created from the renderer a file that gets me the movement speed and other data from the type of surfaceObject
 
-![image](data)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/data.PNG)
 
-![image](updateModified)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/updateModified.PNG)
 
 I also added another function to handle only updating the surfaceObjects. I still have a problem though, how do I move an object from a point to another. Since it is moving according to a movement speed, I cannot just change the x,y to the next point. 
 
@@ -34,7 +34,7 @@ Since this is a 2d plane, we can calculate the distance to the next point using 
 To find the direction the object will travel on the plane we just have to find the change on that axis, (x2 - x1).
 We then normalize the X,Y direction by dividing the direction by the distance so that when we use the direction x, y we get to have our constant movement speed.
 
-![image])(getDistance)
+![image])(https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/getDistance.PNG)
 
 Now we have implemented these methods, we still need to know if the surfaceObject is moving or if it is stopped. This brings another design decision that I knew I had to make, how & where to store the AI brain. I want for every AI to be able to move, eat, interact with eachother, and I need somewhere to store that state. I can store it in surfaceObjects, but if this is also being passed to the renderer every frame, it seems like a lot of extra data being passed around. I also do not need AI in the map editor, which also uses surfaceObjects.
 
@@ -58,26 +58,26 @@ I want the map when you click on loadMap to link to a saved AI as well, so if th
 Seems like even more work I need to do now, I think I should move the map saving and loading to local storage, then I can actually export maps to my device, and have them persist on refresh, and right now I only export the map and paste it into my map preset file.
 
 
-![image](generateAi)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/generateAi.PNG)
 
 now the map and the ai will export to the local storage. It doesnt handle multiple maps dynamically yet. So now on load of the simulation I just load from whats in the local storage for map and ai.
 
 Now that this is handled, I can go back to making the AI move to a point on the map. 
 
-![image](brainHelpers)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/brainHelper.PNG)
 
 I added functions to help us update the data in the brain object array.
 
 I now have to check if the brainObj for a surfaceObject is moving or not moving, and we will use that to move the surfaceObject to a point.
 
-![image](moveToPointCode)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/moveToPointCode.PNG)
 
 This is the final code to move a surfaceObject to a point.
 
 First we go through each surfaceObject, for the surfaceObject we are currently indexed at we get the corresponding brain object for it.
 
 Each brain object has a state: 
-![image](brainState)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/brainState.PNG)
 
 The action is for control flow. AI will think and make decisions and once it makes a decision it will execute an action.
 For this simple movement to a point the AI action flow is currently: Idle->Moving->Done Moving.
@@ -85,7 +85,8 @@ For this simple movement to a point the AI action flow is currently: Idle->Movin
 So at the start the loop checks if the object is idle, if it is then start the moving action and initialize the vars for movement.
 Now the Ai wont start moving yet, next we need to check if isMoving is false, because the action can be Moving but it will not be moving until isMoving is true. We use this break between action and execution to get more paramaters for the movement. 
 
-![image](drawing)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/drawing.png)
+
 First we get the distance to point which is the hypotenuse or c in the drawing. This is the distance we want to move the surface object over the plane.
 
 Then we get the direction to a point in the X and Y plane, this is calculated by getting the vertical change and horizontal change for A->B.
@@ -98,13 +99,13 @@ To check if we reached the end destination we want, we check if the current dist
 
 Once we reach the end we set the state to finished to terminate the movement, and lock the final x and y variables in place to the end points so that it gets to the desired co ordinate.
 
-![gif](singleToPoint)
+![gif](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/singleToPoint.gif)
 
 Right now for testing the point is at 250,250 px. We can see a surfaceObject now will move to the point specified.
 
 It also works with multiple surfaceObjects
 
-![gif](multipleToPoint)
+![gif](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/multipleToPoint.gif)
 
 Now we have to do pathfinding
 
@@ -113,17 +114,19 @@ I did some reading at http://theory.stanford.edu/~amitp/GameProgramming/index.ht
 I have implemented the list a* algorithm from here, 
 https://briangrinstead.com/blog/astar-search-algorithm-in-javascript/
 
-![image](setupGrid)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/setupGrid.PNG)
+
 The first thing I had to do was set up a grid representation of our map tiles
 
-![image](cell)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/cell.PNG)
+
 this grid is populated with cells.
 
-![image](startSearch)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/startSearch.PNG)
 
 To retrieve a path from start to end we run the pathfinding algorithm in the search function. 
 
-![image](pathfindingReturn)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/pathfindingReturn.PNG)
 
 This is what the pathfinding algorithm returns. 
 
@@ -132,10 +135,12 @@ I think to implement this all we need to do is:
 -when idle, set the first point to go to as the first element we shift out of the path array.
 -when moveing and point is reached, check if final point in path, if it is then stop moving. if its not then shift out the next point from the array.
 
-![image](idleState)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/idleState.PNG)
+
 Now when the AI is idle it generates a path to an end point that we want it to go to, for now it is just 250,250
 
-![image](moving)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/moving.PNG)
+
 Now we move through each point until the end is reached. 
 
 ## We also need to make the pathfinding work around obstacles like trees.
@@ -144,12 +149,15 @@ We have to iterate through surfaceObjects and add them as walls on the grid
 -calculate bounding box of circle with x, y and radius of circle
 -set co ordinates in that bounding box to wall.
 
-![image](treeborders)
+![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/treeBarriers.PNG)
+
 Now when I generate the grid I go through every surfaceObject, fetch the size of the surfaceObject, and iterate a square around the surfaceObject and set all the tiles in this square to isWall = true.
 
 This solution doesnt allow for pathfinding around other surfaceObjects, because they move so the wall will change. I also have to check type === tree because if a rabbit wants to pathfind and it is inside a square of isWall = true then it will never get a valid path from the pathfinding algorithm. 
 
 This is how it goes around trees. It does not support diagonal paths yet.
-![gif](pathAroundTree)
+
+![gif](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/pathAroundTree.gif)
 
 Now that pathfinding is implemented we can work on the AI more. The pathfinding needs more tuning though and it needs to handle diagonal paths.
+
