@@ -132,7 +132,7 @@ This is what the pathfinding algorithm returns.
 ## Now we need to implement this into our surfaceObjects so they can move to a destination.
 I think to implement this all we need to do is:
 * when idle, set the first point to go to as the first element we shift out of the path array.
-* when moving and point is reached, check if final point in path, if it is then stop moving. if its not then shift out the next point from the array.
+* when moving and point is reached, check if it is the final point in path, if it is then stop moving. if its not then shift out the next point from the array.
 
 ![image](https://github.com/christophermarek/Terra/blob/master/devblog/(6)%20Pathfinding/idleState.PNG)
 

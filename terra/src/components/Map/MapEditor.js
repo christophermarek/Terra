@@ -88,11 +88,12 @@ function MapEditor() {
                 y: CalcX,
             }
 
-            if(selectedTile === 'rabbit'){
-                newObj.type = 'rabbit';
-            }else{
-                newObj.type = 'tree';
-            }
+            let objData = returnSurfaceObject(selectedTile);
+
+
+
+            newObj.health = objData.maxHealth;
+            newObj.type = objData.type;
             
             //add id for ai link
             newObj.id = newSurfaceObjects.length;

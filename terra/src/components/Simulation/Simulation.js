@@ -126,6 +126,26 @@ function Simulation() {
         }
     }
 
+    function deleteBrainObjById(id, brainObj){
+        let brainCopy = [...brain];
+        let updated = false;
+        let index = 0;
+
+        for(let i = 0; i < brainCopy.length; i++){
+            if(brainCopy[i].surfaceObjectId === id){
+                index = i;
+            }    
+        }
+
+        brainCopy.splice(index, 1);
+
+        setBrain(brain => (brainCopy));
+        
+        if(!updated){
+            console.log("error updating brain object by id");
+        }
+    }
+
         //Cells that go inside the grid
         function Cell(x, y){
             this.x = x;
@@ -231,95 +251,108 @@ function Simulation() {
             
         }
     
-        function calcHeuristic(pos0, pos1){
-            // See list of heuristics: http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html
-            let d1 = Math.abs (pos1.x - pos0.x);
-            let d2 = Math.abs (pos1.y - pos0.y);
-            return d1 + d2;
-        }
+    function calcHeuristic(pos0, pos1){
+        // See list of heuristics: http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html
+        let d1 = Math.abs (pos1.x - pos0.x);
+        let d2 = Math.abs (pos1.y - pos0.y);
+        return d1 + d2;
+    }
     
-        function search(grid, start, end){        
-            let openList = [];
-            openList.push(start);
+    function search(grid, start, end){        
+        let openList = [];
+        openList.push(start);
     
-            while(openList.length > 0){
-                // Grab the lowest f(x) to process next
-                let lowInd = 0;
-                for(let i = 0; i < openList.length; i++) {
-                    if(openList[i].f < openList[lowInd].f) { 
-                        lowInd = i; 
-                    }
-                }
-                
-                let currentNode = openList[lowInd];
-    
-                // End case -- result has been found, return the traced path
-                if(currentNode.x == end.x && currentNode.y == end.y) {
-                    let curr = currentNode;
-                    let ret = [];
-                    while(curr.parent) {
-                        ret.push(curr);
-                        curr = curr.parent;
-                    }
-                    return ret.reverse();
-                }
-                
-                // Normal case -- move currentNode from open to closed, process each of its neighbors
-                openList.remove(lowInd);
-                currentNode.closed = true;
-    
-                let neighbors = getNeighbors(grid, currentNode);
-                for(let i = 0; i < neighbors.length; i++) {
-                    let neighbor = neighbors[i];
-    
-                    if(neighbor.closed || neighbor.isWall) {
-                        // not a valid node to process, skip to next neighbor
-                        continue;
-                    }
-    
-                    // g score is the shortest distance from start to current node, we need to check if
-                    //   the path we have arrived at this neighbor is the shortest one we have seen yet
-                    let gScore = currentNode.g + 1; // 1 is the distance from a node to it's neighbor
-                    let gScoreIsBest = false;
-    
-                    if(!neighbor.visited) {
-                        // This the the first time we have arrived at this node, it must be the best
-                        // Also, we need to take the h (heuristic) score since we haven't done so yet
-    
-                        gScoreIsBest = true;
-                        neighbor.h = calcHeuristic({x: neighbor.x, y: neighbor.y}, {x: end.x, y: end.y});
-                        neighbor.visited = true;
-                        openList.push(neighbor);
-                    }
-                    else if(gScore < neighbor.g) {
-                        // We have already seen the node, but last time it had a worse g (distance from start)
-                        gScoreIsBest = true;
-                    }
-    
-                    if(gScoreIsBest) {
-                        // Found an optimal (so far) path to this node.  Store info on how we got here and
-                        //  just how good it really is...
-                        neighbor.parent = currentNode;
-                        neighbor.g = gScore;
-                        neighbor.f = neighbor.g + neighbor.h;
-                        neighbor.debug = "F: " + neighbor.f + "<br />G: " + neighbor.g + "<br />H: " + neighbor.h;
-                    }
+        while(openList.length > 0){
+            // Grab the lowest f(x) to process next
+            let lowInd = 0;
+            for(let i = 0; i < openList.length; i++) {
+                if(openList[i].f < openList[lowInd].f) { 
+                    lowInd = i; 
                 }
             }
+                
+            let currentNode = openList[lowInd];
     
-            // No result was found -- empty array signifies failure to find path
-            return [];
+            // End case -- result has been found, return the traced path
+            if(currentNode.x == end.x && currentNode.y == end.y) {
+                let curr = currentNode;
+                let ret = [];
+                while(curr.parent) {
+                    ret.push(curr);
+                    curr = curr.parent;
+                }
+                return ret.reverse();
+            }
+                
+            // Normal case -- move currentNode from open to closed, process each of its neighbors
+            openList.remove(lowInd);
+            currentNode.closed = true;
+    
+            let neighbors = getNeighbors(grid, currentNode);
+
+            for(let i = 0; i < neighbors.length; i++) {
+                let neighbor = neighbors[i];
+    
+                if(neighbor.closed || neighbor.isWall) {
+                    // not a valid node to process, skip to next neighbor
+                    continue;
+                }
+    
+                // g score is the shortest distance from start to current node, we need to check if
+                //   the path we have arrived at this neighbor is the shortest one we have seen yet
+                let gScore = currentNode.g + 1; // 1 is the distance from a node to it's neighbor
+                let gScoreIsBest = false;
+    
+                if(!neighbor.visited) {
+                    // This the the first time we have arrived at this node, it must be the best
+                    // Also, we need to take the h (heuristic) score since we haven't done so yet
+                    gScoreIsBest = true;
+                    neighbor.h = calcHeuristic({x: neighbor.x, y: neighbor.y}, {x: end.x, y: end.y});
+                    neighbor.visited = true;
+                    openList.push(neighbor);
+
+                }else if(gScore < neighbor.g) {
+                    // We have already seen the node, but last time it had a worse g (distance from start)
+                    gScoreIsBest = true;
+                }
+    
+                if(gScoreIsBest) {
+                    // Found an optimal (so far) path to this node.  Store info on how we got here and
+                    //  just how good it really is...
+                    neighbor.parent = currentNode;
+                    neighbor.g = gScore;
+                    neighbor.f = neighbor.g + neighbor.h;
+                    neighbor.debug = "F: " + neighbor.f + "<br />G: " + neighbor.g + "<br />H: " + neighbor.h;
+                }
+            }
+        }
+    
+        // No result was found -- empty array signifies failure to find path
+        return [];
     
             
-        }
+    }
     
-        function startSearch(startX, startY, endX, endY){
-            let grid = setupGrid();
-            let start = grid[startX][startY];
-            let end = grid[endX][endY];
-            let result = search(grid, start, end);
-            return result;
-        }
+    function startSearch(startX, startY, endX, endY){
+        let grid = setupGrid();
+        let start = grid[startX][startY];
+        let end = grid[endX][endY];
+        let result = search(grid, start, end);
+        return result;
+    }
+
+    //takes a surface object and a health modifier amount and returns the object with the property changed
+    function updateHealth(obj, amount){
+        //if(returnSurfaceObject(obj.type).maxHealth <)
+
+        //call gameconsole here to display this update
+        obj.health = obj.health + amount;
+        return obj;
+    }
+
+    function removeFromArrayByIndex(arr, index){
+        return arr.splice(index, 1);
+    }
 
     function updateSurfaceObjects(secondsPassed){
         let update = [...surfaceObjects];
@@ -330,34 +363,47 @@ function Simulation() {
         for(let i = 0; i < update.length; i++){
             let brainN = getBrainObjectById(i);
 
+            update[i] = updateHealth(update[i], -1);
+            
             //thinking
-            if(brainN.action === "Idle"){
-                //add brain variable of path to find array
-                //here pop out the next point to travel to and set endX and endY to that point
-
-                //check if path exists, if not generate one to 250, 250
-                if(brainN.path === undefined){
-                    brainN.path = startSearch(update[i].x, update[i].y, 250, 250);
-                    let nextPoint = brainN.path.shift();
-
-                    if(nextPoint === undefined){
-                        console.log("no path found");
-                    }else{
-                        //set endX and endY to the x and y from this
-                        //console.log(brainN);
-                        brainN.movement.endX = nextPoint.x;
-                        brainN.movement.endY = nextPoint.y;
-                        brainN.movement.startX = update[i].x;
-                        brainN.movement.startY = update[i].y;
-                        brainN.action = "Moving";
+            //should first be a check for survival needs ie water/food/health, then check other actions to do
+            if(update[i].health <= 0){
+                brainN.action = "Dying";
+            }else{
+                if(brainN.action === "Idle"){
+                    //if dead
+                    //add brain variable of path to find array
+                    //here pop out the next point to travel to and set endX and endY to that point
+                    //check if path exists, if not generate one to 250, 250
+                    if(brainN.path === undefined){
+                        brainN.path = startSearch(update[i].x, update[i].y, 250, 250);
+                        let nextPoint = brainN.path.shift();
+    
+                        if(nextPoint === undefined){
+                            console.log("no path found");
+                        }else{
+                            //set endX and endY to the x and y from this
+                            //console.log(brainN);
+                            brainN.movement.endX = nextPoint.x;
+                            brainN.movement.endY = nextPoint.y;
+                            brainN.movement.startX = update[i].x;
+                            brainN.movement.startY = update[i].y;
+                            brainN.action = "Moving";
+                        }
                     }
-                    
                 }
-
-                
             }
 
+            //convert this to a switch with a function for each action
             //actions
+            if(brainN.action === "Dying"){
+                //remove from surfaceObjects
+                removeFromArrayByIndex(update, i);
+                //cant forget to remove the linked brainObj
+                deleteBrainObjById(i); 
+                console.log("I have died");
+            }
+
             if(brainN.action === "Moving"){
                 
                 //init movement
