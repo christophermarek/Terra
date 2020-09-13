@@ -122,11 +122,11 @@ function Simulation() {
         setBrain(brain => (brainCopy));
         
         if(!updated){
-            console.log("error updating brain object by id");
+            //console.log("error updating brain object by id");
         }
     }
 
-    function deleteBrainObjById(id, brainObj){
+    function deleteBrainObjById(id){
         let brainCopy = [...brain];
         let updated = false;
         let index = 0;
@@ -136,13 +136,17 @@ function Simulation() {
                 index = i;
             }    
         }
+        
 
+        //console.log("pre remove");
+        //console.log(brainCopy);
+        //console.log("want to remove brain at index: " + index);
         brainCopy.splice(index, 1);
-
+        //console.log(brainCopy);
         setBrain(brain => (brainCopy));
         
         if(!updated){
-            console.log("error updating brain object by id");
+            //console.log("error deleting brain object by id: " + id);
         }
     }
 
@@ -343,31 +347,52 @@ function Simulation() {
 
     //takes a surface object and a health modifier amount and returns the object with the property changed
     function updateHealth(obj, amount){
-        //if(returnSurfaceObject(obj.type).maxHealth <)
-
-        //call gameconsole here to display this update
         obj.health = obj.health + amount;
+
+        if(obj.health >= returnSurfaceObject(obj.type).maxHealth){
+            obj.health = returnSurfaceObject(obj.type).maxHealth;
+            //overheal message to console?
+        }
+
+        if(obj.health <= 0){
+            obj.health = 0;
+            //no health message to console
+        }
+
         return obj;
     }
 
-    function removeFromArrayByIndex(arr, index){
-        return arr.splice(index, 1);
+    async function removeFromArrayByIndex(arr, index){
+        arr.splice(index, 1);
+        return arr;
     }
 
     function updateSurfaceObjects(secondsPassed){
-        let update = [...surfaceObjects];
 
+        //no surfaceObjects exist
+        if(surfaceObjects.length === undefined){
+            return;
+        }
+
+        let update = [...surfaceObjects];
+        
         //its calculated as x += movementspeed * secondspassed
         //where movement speed is in pixels per second
-
         for(let i = 0; i < update.length; i++){
             let brainN = getBrainObjectById(i);
 
-            update[i] = updateHealth(update[i], -1);
+            //object does not exist, it is just awaiting the delete from the state variable
+            if(brainN.isAlive != undefined && !brainN.isAlive){
+                console.log("he dead");
+                
+            }
+
+            
+
             
             //thinking
             //should first be a check for survival needs ie water/food/health, then check other actions to do
-            if(update[i].health <= 0){
+            if(update[i].health <= 0 && brainN.action != "Dying"){
                 brainN.action = "Dying";
             }else{
                 if(brainN.action === "Idle"){
@@ -398,14 +423,16 @@ function Simulation() {
             //actions
             if(brainN.action === "Dying"){
                 //remove from surfaceObjects
-                removeFromArrayByIndex(update, i);
+                update = removeFromArrayByIndex(update, i);
                 //cant forget to remove the linked brainObj
                 deleteBrainObjById(i); 
-                console.log("I have died");
+                brainN.isAlive = false;
+                //console.log("I have died");
             }
 
             if(brainN.action === "Moving"){
-                
+                update[i] = updateHealth(update[i], -1);
+
                 //init movement
                 if(!brainN.isMoving){
                     brainN.movement.distanceToPoint = getDistanceToPoint(update[i].x, update[i].y, brainN.movement.endX, brainN.movement.endY);
@@ -438,12 +465,14 @@ function Simulation() {
                     
                 }
                 
-            }
+            
             //update brain object when done with it
             updateBrainObjById(brainN.surfaceObjectId, brainN);
-            
+            }
         }
         
+        //console.log("updating surfaceObjects");
+        //console.log(update);
         setSurfaceObjects(surfaceObjects => (update));
 
         
@@ -500,6 +529,21 @@ function Simulation() {
                          startClicked={startClicked}
                          started={started}
                     />
+
+                    <div className="gameConsole">
+                        <div className="consoleButtons">
+                            <button>General</button>
+                            <button>Battle</button>
+                            <button>Action</button>
+                        </div>
+                        <div className="consoleMessages">
+                            <ul>
+                                <li>Rabbit has gained 2 health</li>
+                                <li>Tree has fallen</li>
+                                <li>Rabbit is searching for food</li>
+                            </ul>
+                        </div>
+                    </div>
                 </>
             )}
 
