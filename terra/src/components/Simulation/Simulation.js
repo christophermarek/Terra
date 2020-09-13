@@ -126,9 +126,8 @@ function Simulation() {
         }
     }
 
-    function deleteBrainObjById(id){
-        let brainCopy = [...brain];
-        let updated = false;
+    function deleteBrainObjById(arr, id){
+        let brainCopy = arr;
         let index = 0;
 
         for(let i = 0; i < brainCopy.length; i++){
@@ -137,17 +136,9 @@ function Simulation() {
             }    
         }
         
+        brainCopy.splice(index, 1); 
 
-        //console.log("pre remove");
-        //console.log(brainCopy);
-        //console.log("want to remove brain at index: " + index);
-        brainCopy.splice(index, 1);
-        //console.log(brainCopy);
-        setBrain(brain => (brainCopy));
-        
-        if(!updated){
-            //console.log("error deleting brain object by id: " + id);
-        }
+        return brainCopy;
     }
 
         //Cells that go inside the grid
@@ -362,7 +353,7 @@ function Simulation() {
         return obj;
     }
 
-    async function removeFromArrayByIndex(arr, index){
+    function removeFromArrayByIndex(arr, index){
         arr.splice(index, 1);
         return arr;
     }
@@ -375,21 +366,14 @@ function Simulation() {
         }
 
         let update = [...surfaceObjects];
-        
+        let brainUpdate = [...brain];
+
         //its calculated as x += movementspeed * secondspassed
         //where movement speed is in pixels per second
         for(let i = 0; i < update.length; i++){
-            let brainN = getBrainObjectById(i);
+            //brainN has a one to one relationship with a surfaceObject, and it is linked with the surfaceObject id
+            let brainN = brainUpdate[brainUpdate.findIndex(x => x.surfaceObjectId === i)];
 
-            //object does not exist, it is just awaiting the delete from the state variable
-            if(brainN.isAlive != undefined && !brainN.isAlive){
-                console.log("he dead");
-                
-            }
-
-            
-
-            
             //thinking
             //should first be a check for survival needs ie water/food/health, then check other actions to do
             if(update[i].health <= 0 && brainN.action != "Dying"){
@@ -424,10 +408,7 @@ function Simulation() {
             if(brainN.action === "Dying"){
                 //remove from surfaceObjects
                 update = removeFromArrayByIndex(update, i);
-                //cant forget to remove the linked brainObj
-                deleteBrainObjById(i); 
-                brainN.isAlive = false;
-                //console.log("I have died");
+                brainUpdate = deleteBrainObjById(brainUpdate, i); 
             }
 
             if(brainN.action === "Moving"){
@@ -466,20 +447,17 @@ function Simulation() {
                 }
                 
             
-            //update brain object when done with it
-            updateBrainObjById(brainN.surfaceObjectId, brainN);
             }
         }
         
-        //console.log("updating surfaceObjects");
-        //console.log(update);
+        setBrain(brain => (brainUpdate));
         setSurfaceObjects(surfaceObjects => (update));
 
         
     }
 
     function update(secondsPassed){
-        updateSurfaceObjects(secondsPassed)
+        updateSurfaceObjects(secondsPassed, surfaceObjects)
     }
 
     function gameLoop(timeStamp){

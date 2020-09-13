@@ -8,6 +8,7 @@ What I can think of so far:
 * Plant regeneration
 * Combat (For carnivores)
 * Eating from plants 
+* AI Logic refractor
 
 I also want a better display to visualize what is happening in the world.
 
@@ -38,3 +39,18 @@ This is going to be a helper function for our game loop. It doesnt modify the su
 
 The last part of health management is death mechanics. If a surfaceObject has no health then it must be dead. This has a related action "Dying" since things don't just disappear, we want the surfaceObject to go from "Previous Action" -> "Dying" then it will be removed from the simulation. This is so we can keep track of what dies.
 
+![image](kill)
+
+To test out the dying I decrement the health by 1 every time the surfaceObject moves. The health should reach 0 in a second or two.
+
+![image](thinking)
+
+I have added a check when the ai is thinking, and the check is if the object is at 0 health but not dying yet. If this is the case we flag its action as dying so we can remove it from the simulation.
+
+![image](dying)
+
+Now all I do is remove the surfaceObject from the surfaceObjects array and brainN from the brainArray
+
+![image](death.gif)
+
+Here is a video of the surfaceObject getting deleted.
