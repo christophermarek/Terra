@@ -13,6 +13,11 @@ function Simulation() {
     const [started, setStarted] = useState(false);
     const [requestAnimationFrameID, setRequestAnimationFrameID] = useState(undefined); 
     const [brain, setBrain] = useState([]);
+    const [consoleType, setConsoleType] = useState('General');
+    const [generalMessages, setGeneralMessages] = useState([]);
+    const [battleMessages, setBattleMessages] = useState([]);
+    const [actionMessages, setActionMessages] = useState([]);
+
 
     let secondsPassed = 0;
     let oldTimeStamp = 0;
@@ -20,6 +25,7 @@ function Simulation() {
 
     function mapLoaded(){
         setIsLoaded(true);
+
     }
 
     function loadMap(importedData){
@@ -378,6 +384,7 @@ function Simulation() {
             //should first be a check for survival needs ie water/food/health, then check other actions to do
             if(update[i].health <= 0 && brainN.action != "Dying"){
                 brainN.action = "Dying";
+                addConsoleMessage(i, "Rabbit dying", 'General');
             }else{
                 if(brainN.action === "Idle"){
                     //if dead
@@ -385,6 +392,7 @@ function Simulation() {
                     //here pop out the next point to travel to and set endX and endY to that point
                     //check if path exists, if not generate one to 250, 250
                     if(brainN.path === undefined){
+                        addConsoleMessage(1, "Looking for path", "General");
                         brainN.path = startSearch(update[i].x, update[i].y, 250, 250);
                         let nextPoint = brainN.path.shift();
     
@@ -477,7 +485,100 @@ function Simulation() {
         startLoop();
     }
 
+    function changeConsoleType(type){
+        setConsoleType(type);
+    }
 
+    //returns a copy of the array of console messages for that type
+    function getSelectedConsoleMessages(consoleType){
+        let consoleMessages = [];
+
+        switch(consoleType){
+            case 'General':
+                consoleMessages = [...generalMessages];
+                break;
+            case 'Battle':
+                consoleMessages = [...battleMessages];
+                break;
+            case 'Action':
+                consoleMessages = [...actionMessages];
+                break;
+            default:
+                consoleMessages = [...generalMessages];
+        }
+
+        return consoleMessages;
+
+    }
+
+    function addConsoleMessage(surfObjId, message, type){
+
+        /*
+        consoleMessage Schema
+        {time, surfObjId, message}
+        */
+
+        
+        let date = new Date(); 
+        let timeString = date.getHours() + " : " + date.getMinutes() + " : " + date.getSeconds();
+
+        let consoleString =  {
+            timeStamp: timeString,
+            surfaceObjectId: surfObjId,
+            message: message
+        };
+
+        //updateSelectedConsoleMessages(type, consoleMessagesUpdate);
+        
+        switch(type){
+            case 'General':
+                setGeneralMessages(generalMessages => [...generalMessages, consoleString]);
+                break;
+            case 'Battle':
+                setBattleMessages(battleMessages => [...battleMessages, consoleString]);
+                break;
+            case 'Action':
+                setActionMessages(actionMessages => [...actionMessages, consoleString]);
+                break;
+            default:
+                setGeneralMessages(generalMessages => [...generalMessages, consoleString]);
+            }
+        
+    }
+
+    function renderConsoleMessages(){        
+        
+        let consoleMessages = [];
+
+        switch(consoleType){
+            case 'General':
+                consoleMessages = getSelectedConsoleMessages('General');
+                break;
+            case 'Battle':
+                consoleMessages = getSelectedConsoleMessages('Battle');
+                break;
+            case 'Action':
+                consoleMessages = getSelectedConsoleMessages('Action');
+                break;
+            default:
+                consoleMessages = getSelectedConsoleMessages('General');
+                break;
+
+        }
+        
+
+        //console.log(generalMessages);
+        
+        return(
+            consoleMessages.map((item, index) =>
+                <li key={index}>
+                    {item.timeStamp + " " + item.message}
+                </li>
+            )
+        )
+        
+        
+    }
 
 
     return(
@@ -510,15 +611,13 @@ function Simulation() {
 
                     <div className="gameConsole">
                         <div className="consoleButtons">
-                            <button>General</button>
-                            <button>Battle</button>
-                            <button>Action</button>
+                            <button onClick={() => changeConsoleType('General')}>General</button>
+                            <button onClick={() => changeConsoleType('Battle')}>Battle</button>
+                            <button onClick={() => changeConsoleType('Action')}>Action</button>
                         </div>
                         <div className="consoleMessages">
                             <ul>
-                                <li>Rabbit has gained 2 health</li>
-                                <li>Tree has fallen</li>
-                                <li>Rabbit is searching for food</li>
+                                {renderConsoleMessages()}
                             </ul>
                         </div>
                     </div>
