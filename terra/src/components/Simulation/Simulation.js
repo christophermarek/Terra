@@ -380,6 +380,7 @@ function Simulation() {
         return obj;
     }
 
+
     function updateSurfaceObjects(secondsPassed){
 
         //no surfaceObjects exist
@@ -396,7 +397,7 @@ function Simulation() {
             let brainN = brainUpdate[brainUpdate.findIndex(x => x.surfaceObjectId === i)];
 
             update[i] = loseHungerOverTime(secondsPassed, update[i])
-
+            
             //thinking
             //should first be a check for survival needs ie water/food/health, then check other actions to do
             //add a way to know how they died, starved to death or health went to low, I would need
@@ -406,7 +407,6 @@ function Simulation() {
                 addConsoleMessage(i, "Rabbit dying", 'General');
             }else{
                 if(brainN.action === "Idle"){
-                    //if dead
                     //add brain variable of path to find array
                     //here pop out the next point to travel to and set endX and endY to that point
                     //check if path exists, if not generate one to 250, 250
@@ -431,6 +431,18 @@ function Simulation() {
                         }
                     }
                     */
+
+                    if(update[i].hunger <= 50){
+                        brainN.action = "Hungry";
+                    }
+
+                    if(update[i].hunger <= 20){
+                        brainN.action = "Starving";
+                    }
+
+                    if(update[i].hunger >= 100){
+                        brainN.action = "Full";
+                    }
                 }
             }
 
@@ -440,6 +452,17 @@ function Simulation() {
                 //remove from surfaceObjects
                 update = removeFromArrayByIndex(update, i);
                 brainUpdate = deleteBrainObjById(brainUpdate, i); 
+            }
+
+            if(brainN.action === "Hungry" || brainN.action === "Starving"){
+                //eat food
+                brainN.action = "Eating";
+            }
+
+            if(brainN.action === "Eating"){
+                if(update[i].hunger < 100){
+                    updateHunger(update[i], 1);
+                }
             }
 
             if(brainN.action === "Moving"){
@@ -490,6 +513,9 @@ function Simulation() {
     }
 
     function update(secondsPassed){
+        //need to update plants/then update ai
+        //need to filter array by sub-type alive boolean
+        //to get an array of plants and an array of ai surfaceObjects
         updateSurfaceObjects(secondsPassed, surfaceObjects)
     }
 

@@ -3,7 +3,14 @@ const tree = {
     color: "#42692f",
     type: 'tree',
     size: 30,
-    movementSpeed: 50
+    movementSpeed: 0
+}
+
+const bush = {
+    color: "green",
+    type: 'bush',
+    size: 10,
+    movementSpeed: 0
 }
 
 const rabbit = {
@@ -27,6 +34,8 @@ export function returnSurfaceObject(type){
     switch(type){
         case "tree":
             return tree;
+        case "bush":
+            return bush;
         case "rabbit":
             return rabbit;
         case "wolf":

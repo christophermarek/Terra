@@ -140,5 +140,41 @@ To get the surfaceObject to starve to death, I can just modify the check for hea
 
 ![image](starvedToDeath)
 
+Now I need to add logic so that the ai wants to eat food when its hunger level gets low enough. I think if the hunger is < 50 then it will become "Hungry" and search for food. If its hunger drops below 20 then it will become "Starving"
+
+![image](getHungry)
+
+Now when the ai is making decisions, if its hunger is low it will set its action to Hungry, which will execute when the AI is on the action statements.
+
+I also want to check when the AI is full, since that is when it will stop eating. To do this we just check if the hunger is at 100.
+
+![image](full)
+
+Now we just need an action for Hungry/Starving, and this action will include eating food until "full".
+
+![image](eating)
+
+There are two new actions now, one to start eating when hungry. This is only a temporary state as the actual ai will go more like
+Hungry -> Look for food -> Go to food -> Eat food -> Full
+
+Then to test it works I have an action for Eating that increases the hunger by 1 until it is full.
+
 ## Plants depletion/regeneration
+
+I am going to make rabbits eat bushes. Rabbits eat grass in the wild and bushes can just have a food property.
+
+before I can make the rabbits eat I have to make the bushes have this food property and I want the bushes food property to replenish over time.
+
+This also means that I have to create a second update loop to loop through plant surfaceObjects. Since they still need a loop but no ai.
+
+I dont want to type up much about me adding the bush to the map editor and making it a valid surfaceObject because I have already done it for other surfaceObjects earlier.
+
+This is going to be very similar to hunger.
+
+The steps I have right now are:
+-Add bush to map editor
+-add food property to bush
+-Add loop to loop over non ai surfaceObjects
+-create a modify food property for the bush
+-write a function that increases a bushes food property over time
 
