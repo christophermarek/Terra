@@ -364,6 +364,22 @@ function Simulation() {
         return arr;
     }
 
+    //takes a surfaceObject and a hunger modifier and returns the object with the property changed
+    function updateHunger(obj, amount){
+        obj.hunger = obj.hunger + amount;
+
+        return obj;
+    }
+
+    //takes surfaceObject and time elapsed and updates the objects hunger to the amount lost over the secondsPassed
+    function loseHungerOverTime(secondsPassed, obj){
+        //where the rate is hunger depletion speed * time elapsed
+        let hungerDepletionAmount = 5 * secondsPassed * -1;
+        obj = updateHunger(obj, hungerDepletionAmount);
+        
+        return obj;
+    }
+
     function updateSurfaceObjects(secondsPassed){
 
         //no surfaceObjects exist
@@ -374,15 +390,18 @@ function Simulation() {
         let update = [...surfaceObjects];
         let brainUpdate = [...brain];
 
-        //its calculated as x += movementspeed * secondspassed
-        //where movement speed is in pixels per second
+        
         for(let i = 0; i < update.length; i++){
             //brainN has a one to one relationship with a surfaceObject, and it is linked with the surfaceObject id
             let brainN = brainUpdate[brainUpdate.findIndex(x => x.surfaceObjectId === i)];
 
+            update[i] = loseHungerOverTime(secondsPassed, update[i])
+
             //thinking
             //should first be a check for survival needs ie water/food/health, then check other actions to do
-            if(update[i].health <= 0 && brainN.action != "Dying"){
+            //add a way to know how they died, starved to death or health went to low, I would need
+            //to remember the last state and check if it was combat or hungry/starving
+            if((update[i].health <= 0 || update[i].hunger <= 0) && brainN.action != "Dying"){
                 brainN.action = "Dying";
                 addConsoleMessage(i, "Rabbit dying", 'General');
             }else{
@@ -391,6 +410,9 @@ function Simulation() {
                     //add brain variable of path to find array
                     //here pop out the next point to travel to and set endX and endY to that point
                     //check if path exists, if not generate one to 250, 250
+
+                    //needs to be removed and integrated into a function that needs pathfinding
+                    /*
                     if(brainN.path === undefined){
                         addConsoleMessage(1, "Looking for path", "General");
                         brainN.path = startSearch(update[i].x, update[i].y, 250, 250);
@@ -408,6 +430,7 @@ function Simulation() {
                             brainN.action = "Moving";
                         }
                     }
+                    */
                 }
             }
 
@@ -430,6 +453,8 @@ function Simulation() {
                     brainN.movement.directionY = direction.y;
                     brainN.isMoving = true;
                 }else{
+                    //its calculated as x += movementspeed * secondspassed
+                    //where movement speed is in pixels per second
                     update[i].x = update[i].x + (brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
                     update[i].y = update[i].y + (brainN.movement.directionY * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
                 }
@@ -527,8 +552,6 @@ function Simulation() {
             surfaceObjectId: surfObjId,
             message: message
         };
-
-        //updateSelectedConsoleMessages(type, consoleMessagesUpdate);
         
         switch(type){
             case 'General':
@@ -565,10 +588,7 @@ function Simulation() {
                 break;
 
         }
-        
-
-        //console.log(generalMessages);
-        
+                
         return(
             consoleMessages.map((item, index) =>
                 <li key={index}>

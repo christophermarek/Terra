@@ -93,6 +93,7 @@ function MapEditor() {
 
 
             newObj.health = objData.maxHealth;
+            newObj.hunger = 100;
             newObj.type = objData.type;
             
             //add id for ai link
