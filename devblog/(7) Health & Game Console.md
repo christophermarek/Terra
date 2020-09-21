@@ -178,3 +178,22 @@ The steps I have right now are:
 -create a modify food property for the bush
 -write a function that increases a bushes food property over time
 
+![image](bush)
+
+Now bushes are a surfaceObject.
+
+![image](foodproperty)
+
+![image](statefood)
+
+now that we have this data for our bushes, we need to iterate over the bushes
+
+![image](noBrainUpdate)
+
+I created a filter in our update function to apply different logic if the surfaceObject is a bush.
+
+![image](updateFood)
+
+Now we have a food modifier helper function aswell, now we just need to make our bushes food increase over time if they are less than 100.
+
+

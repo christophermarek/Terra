@@ -25,7 +25,6 @@ function Simulation() {
 
     function mapLoaded(){
         setIsLoaded(true);
-
     }
 
     function loadMap(importedData){
@@ -371,6 +370,12 @@ function Simulation() {
         return obj;
     }
 
+    function updateFood(obj, amount){
+        obj.food = obj.food + amount;
+
+        return obj;
+    }
+
     //takes surfaceObject and time elapsed and updates the objects hunger to the amount lost over the secondsPassed
     function loseHungerOverTime(secondsPassed, obj){
         //where the rate is hunger depletion speed * time elapsed
@@ -379,6 +384,18 @@ function Simulation() {
         
         return obj;
     }
+
+    function nonBrainObjectUpdate(update, i){
+        
+        //nested update logic
+        if(update.type === 'bush'){
+
+        }
+
+        return update;
+    }
+
+    //when refractor-ing add a brainObjectUpdate() 
 
 
     function updateSurfaceObjects(secondsPassed){
@@ -393,10 +410,14 @@ function Simulation() {
 
         
         for(let i = 0; i < update.length; i++){
-            //brainN has a one to one relationship with a surfaceObject, and it is linked with the surfaceObject id
-            let brainN = brainUpdate[brainUpdate.findIndex(x => x.surfaceObjectId === i)];
 
-            update[i] = loseHungerOverTime(secondsPassed, update[i])
+            if(update[i].type === 'bush'){
+                update[i] = nonBrainObjectUpdate(update[i]);
+            }else{
+                //brainN has a one to one relationship with a surfaceObject, and it is linked with the surfaceObject id
+                let brainN = brainUpdate[brainUpdate.findIndex(x => x.surfaceObjectId === i)];
+
+                update[i] = loseHungerOverTime(secondsPassed, update[i])
             
             //thinking
             //should first be a check for survival needs ie water/food/health, then check other actions to do
@@ -509,6 +530,8 @@ function Simulation() {
         setBrain(brain => (brainUpdate));
         setSurfaceObjects(surfaceObjects => (update));
 
+            }
+            
         
     }
 

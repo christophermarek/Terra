@@ -90,12 +90,16 @@ function MapEditor() {
 
             let objData = returnSurfaceObject(selectedTile);
 
-
-
             newObj.health = objData.maxHealth;
-            if(objData.type === "rabbit"){
+
+            if(objData.type === 'rabbit'){
                 newObj.hunger = 100;
             }
+
+            if(objData.type === 'bush'){
+                newObj.food = 100;
+            }
+
             newObj.type = objData.type;
             
             //add id for ai link
