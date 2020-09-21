@@ -385,11 +385,21 @@ function Simulation() {
         return obj;
     }
 
-    function nonBrainObjectUpdate(update, i){
+    function plantFoodTickUpdate(secondsPassed, obj){
+        //where the food tick update rate is food tick rate * time elapsed
+        let foodTickRate = 3 * secondsPassed;
+        obj = updateFood(obj, foodTickRate);
+        
+        return obj;
+    }
+
+    
+
+    function nonBrainObjectUpdate(secondsPassed, update, i){
         
         //nested update logic
         if(update.type === 'bush'){
-
+            plantFoodTickUpdate(secondsPassed, update);
         }
 
         return update;
@@ -412,7 +422,7 @@ function Simulation() {
         for(let i = 0; i < update.length; i++){
 
             if(update[i].type === 'bush'){
-                update[i] = nonBrainObjectUpdate(update[i]);
+                update[i] = nonBrainObjectUpdate(secondsPassed, update[i], i);
             }else{
                 //brainN has a one to one relationship with a surfaceObject, and it is linked with the surfaceObject id
                 let brainN = brainUpdate[brainUpdate.findIndex(x => x.surfaceObjectId === i)];

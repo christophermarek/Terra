@@ -196,4 +196,16 @@ I created a filter in our update function to apply different logic if the surfac
 
 Now we have a food modifier helper function aswell, now we just need to make our bushes food increase over time if they are less than 100.
 
+![image](plantTick)
+
+This is how the plant replenishes its food property, it just increases by a simple rate.
+
+
+## Afterthoughts
+
+This series of updates has added a lot to the simulation, the code base has grown really large. I also have many more thinking states and action states for the Ai, so I can implement a better system for the AI logic now.
+
+So before I implement pathing to food and eating it, I need to refractor the code and pull out a lot of helper functions to make the simulation.js file less lines of code.
+
+I am getting close to a demo-able product. I 
 
