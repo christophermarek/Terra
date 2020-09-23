@@ -10,9 +10,13 @@ I need to pull out a lot of functions from the Simulation, and organize my codeb
 
 I need to look at some neglected issues in pathfinding.
 
+First thing I noticed is that I need to make more react components, the game console isnt even a component yet. 
+
 ## AI design
 
 The ai system needs a more concrete design. I wanted to do a POC first, and now that I understand how it can be implemented I can design it properly.
 
 I think I need to design a behavior tree system and there will be general behaviors and animal specific behaviors.
+
+Scoring system too
 
