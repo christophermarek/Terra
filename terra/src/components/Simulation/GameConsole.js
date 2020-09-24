@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-export function GameConsole( {generalMessages, battleMessages, actionMessages, consoleType, changeConsoleType}){
+export function GameConsole( {generalMessages, battleMessages, actionMessages}){
 
-    console.log(generalMessages);
+    const [consoleType, setConsoleType] = useState('General');
+
+    function changeConsoleType(type){
+        setConsoleType(type);
+    }
 
     //returns a copy of the array of console messages for that type
     function getSelectedConsoleMessages(consoleType){

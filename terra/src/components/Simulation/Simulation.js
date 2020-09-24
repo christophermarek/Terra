@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import Map from '../Map/Map';
 import './styles.css';
-import { returnSurfaceObject } from '../../data/map/surfaceObjects'
+import { returnSurfaceObject } from '../../data/map/surfaceObjects';
 import { GameConsole } from './GameConsole';
+import { setupGrid, getNeighbors } from '../../Simulation Logic/grid';
+import { getBrainObjectById, deleteBrainObjById } from '../../Simulation Logic/helpers/brain';
+import { updateHunger, loseHungerOverTime } from '../../Simulation Logic/helpers/hunger';
+import { updateFood, plantFoodTickUpdate } from '../../Simulation Logic/helpers/food';
+import { updateHealth } from '../../Simulation Logic/helpers/health';
 
 function Simulation() {
 
@@ -14,7 +19,6 @@ function Simulation() {
     const [started, setStarted] = useState(false);
     const [requestAnimationFrameID, setRequestAnimationFrameID] = useState(undefined); 
     const [brain, setBrain] = useState([]);
-    const [consoleType, setConsoleType] = useState('General');
     const [generalMessages, setGeneralMessages] = useState([]);
     const [battleMessages, setBattleMessages] = useState([]);
     const [actionMessages, setActionMessages] = useState([]);
@@ -100,67 +104,8 @@ function Simulation() {
         
         return {x: xDir, y: yDir};
     }
-
-    function getBrainObjectById(id){
-        let brainCopy = [...brain];
-        let brainObjCopy = false;
-
-        for(let i = 0; i < brainCopy.length; i++){
-            if(brainCopy[i].surfaceObjectId === id){
-                brainObjCopy = brainCopy[i];
-            }    
-        }
-
-        return brainObjCopy;
-    }
-
-    function updateBrainObjById(id, brainObj){
-        let brainCopy = [...brain];
-        let updated = false;
-
-        for(let i = 0; i < brainCopy.length; i++){
-            if(brainCopy[i].surfaceObjectId === id){
-                brainCopy[i] = brainObj;
-                updated = true;
-            }    
-        }
-
-        setBrain(brain => (brainCopy));
         
-        if(!updated){
-            //console.log("error updating brain object by id");
-        }
-    }
-
-    function deleteBrainObjById(arr, id){
-        let brainCopy = arr;
-        let index = 0;
-
-        for(let i = 0; i < brainCopy.length; i++){
-            if(brainCopy[i].surfaceObjectId === id){
-                index = i;
-            }    
-        }
-        
-        brainCopy.splice(index, 1); 
-
-        return brainCopy;
-    }
-
-        //Cells that go inside the grid
-        function Cell(x, y){
-            this.x = x;
-            this.y = y;
-            this.f = 0;
-            this.g = 0;
-            this.h = 0;
-            this.visited = false;
-            this.parent = null;
-            this.visited = false;
-            this.closed = false;
-            this.isWall = false;
-        }
-    
+    //need these for pathfinding
         if (!Array.prototype.indexOf) {
             Array.prototype.indexOf = function(elt /*, from*/) {
                 var len = this.length;
@@ -184,72 +129,6 @@ function Simulation() {
                 this.length = from < 0 ? this.length + from : from;
                 return this.push.apply(this, rest);
             };
-        }
-    
-    
-        //grid for pathfinding
-        function setupGrid(){
-    
-            //the grid will have map.length * 100 elements since there are that many co-ordinates
-    
-            let size = map.length * 100;
-            let grid = [];
-    
-           
-            for(let i = 0; i < size; i++){
-                let columns = [];
-                for(let j = 0; j < size; j++){
-                    columns.push(new Cell(i, j));
-                }
-                grid.push(columns);
-            }
-
-            //go through surface objects and calculate the walls for this grid.
-            for(let k = 0; k < surfaceObjects.length; k++){
-                let fetchedData = returnSurfaceObject(surfaceObjects[k].type);
-                let radius = fetchedData.size;
-                //these two loops create a square around the circle which will be the bounding box for the surfaceObject
-
-                for(let n = (surfaceObjects[k].x - radius);  n < (surfaceObjects[k].x + radius); n++){
-                  for(let m = (surfaceObjects[k].y - radius);  m < (surfaceObjects[k].y + radius); m++){
-                    //skip if out of grid bounds
-                        if(surfaceObjects[k].type === "tree"){
-                            if(n >= 0 && m >=0 && n < map.length * 100 && m < map.length * 100 ){
-                                //we cannot set isWall for surfaceObjects that need to 
-                                //pathfind since there is a wall all around each surface object as the bounding box 
-                                grid[n][m].isWall = true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return grid;
-        }
-    
-        function getNeighbors(grid, node){
-            let ret = [];
-            let x = node.x;
-            let y = node.y;
-        
-            if(grid[x-1] && grid[x-1][y]) {
-                ret.push(grid[x-1][y]);
-            }
-    
-            if(grid[x+1] && grid[x+1][y]) {
-                ret.push(grid[x+1][y]);
-            }
-    
-            if(grid[x][y-1] && grid[x][y-1]) {
-                ret.push(grid[x][y-1]);
-            }
-    
-            if(grid[x][y+1] && grid[x][y+1]) {
-                ret.push(grid[x][y+1]);
-            }
-    
-            return ret;
-            
         }
     
     function calcHeuristic(pos0, pos1){
@@ -335,63 +214,18 @@ function Simulation() {
     }
     
     function startSearch(startX, startY, endX, endY){
-        let grid = setupGrid();
+        let grid = setupGrid(map, surfaceObjects);
         let start = grid[startX][startY];
         let end = grid[endX][endY];
         let result = search(grid, start, end);
         return result;
     }
 
-    //takes a surface object and a health modifier amount and returns the object with the property changed
-    function updateHealth(obj, amount){
-        obj.health = obj.health + amount;
-
-        if(obj.health >= returnSurfaceObject(obj.type).maxHealth){
-            obj.health = returnSurfaceObject(obj.type).maxHealth;
-            //overheal message to console?
-        }
-
-        if(obj.health <= 0){
-            obj.health = 0;
-            //no health message to console
-        }
-
-        return obj;
-    }
+    
 
     function removeFromArrayByIndex(arr, index){
         arr.splice(index, 1);
         return arr;
-    }
-
-    //takes a surfaceObject and a hunger modifier and returns the object with the property changed
-    function updateHunger(obj, amount){
-        obj.hunger = obj.hunger + amount;
-
-        return obj;
-    }
-
-    function updateFood(obj, amount){
-        obj.food = obj.food + amount;
-
-        return obj;
-    }
-
-    //takes surfaceObject and time elapsed and updates the objects hunger to the amount lost over the secondsPassed
-    function loseHungerOverTime(secondsPassed, obj){
-        //where the rate is hunger depletion speed * time elapsed
-        let hungerDepletionAmount = 5 * secondsPassed * -1;
-        obj = updateHunger(obj, hungerDepletionAmount);
-        
-        return obj;
-    }
-
-    function plantFoodTickUpdate(secondsPassed, obj){
-        //where the food tick update rate is food tick rate * time elapsed
-        let foodTickRate = 3 * secondsPassed;
-        obj = updateFood(obj, foodTickRate);
-        
-        return obj;
     }
 
 
@@ -528,7 +362,6 @@ function Simulation() {
                         update[i].y = brainN.movement.endY;
                         brainN.movement.endX = nextPoint.x;
                         brainN.movement.endY = nextPoint.y;
-                        
                     }
                     
                 }
@@ -566,13 +399,10 @@ function Simulation() {
         update(secondsPassed);
         
         //
+
         startLoop();
-    }
 
-    function changeConsoleType(type){
-        setConsoleType(type);
     }
-
     
 
     function addConsoleMessage(surfObjId, message, type){
@@ -608,9 +438,6 @@ function Simulation() {
         
     }
 
-    
-
-
     return(
         <div className="Simulation">
             {!isLoaded ? (
@@ -642,7 +469,6 @@ function Simulation() {
                     <GameConsole generalMessages={generalMessages}
                                  battleMessages={battleMessages}
                                  actionMessages={actionMessages}
-                                 consoleType={consoleType}
                     />
                     
                 </>
