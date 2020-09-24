@@ -24,6 +24,8 @@ The main focus of this refractor is that I want the Simulation.js to only have t
 
 I have pulled the helper functions for the simulation logic into their own files. So the hunger functions will be in there own folder, and health, etc. Good thing these functions dont directly access state and were designed to just take the input obj and return it modified. So its really easy to export out.
 
+Why am I writing all of this? Maybe delete this explanation not really needed.
+
 
 
 ## AI design
