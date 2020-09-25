@@ -1,4 +1,4 @@
-import { getNeighbors } from './grid';    
+import { getNeighbors, setupGrid } from './grid';    
 
 //need these for pathfinding
 if (!Array.prototype.indexOf) {
@@ -106,4 +106,12 @@ export function search(grid, start, end){
     return [];
 
         
+}
+
+export function startSearch(startX, startY, endX, endY, map, surfaceObjects){
+    let grid = setupGrid(map, surfaceObjects);
+    let start = grid[startX][startY];
+    let end = grid[endX][endY];
+    let result = search(grid, start, end);
+    return result;
 }

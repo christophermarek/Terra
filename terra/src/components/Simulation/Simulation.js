@@ -8,8 +8,8 @@ import { getBrainObjectById, deleteBrainObjById } from '../../Simulation Logic/h
 import { updateHunger, loseHungerOverTime } from '../../Simulation Logic/helpers/hunger';
 import { updateFood, plantFoodTickUpdate } from '../../Simulation Logic/helpers/food';
 import { updateHealth } from '../../Simulation Logic/helpers/health';
-import { calcHeuristic, search} from '../../Simulation Logic/pathfinding';
-
+import { calcHeuristic, search, startSearch } from '../../Simulation Logic/pathfinding';
+import { getDirectionToPoint, getDistanceToPoint } from '../../Simulation Logic/helpers/movement';
 
 function Simulation() {
 
@@ -93,31 +93,6 @@ function Simulation() {
          }
     }
 
-    function getDistanceToPoint(x, y, destX, destY){
-        //console.log(" x: " + x + " y: " + y + " destX: " + destX + " destY: " + destY);
-        let distance = Math.hypot(destX - x, destY - y);
-        return distance;
-    }
-
-    function getDirectionToPoint(x, y, destX, destY, distance){
-
-        let xDir = (destX - x) / distance
-        let yDir = (destY - y) / distance
-        
-        return {x: xDir, y: yDir};
-    }
-    
-    
-    function startSearch(startX, startY, endX, endY){
-        let grid = setupGrid(map, surfaceObjects);
-        let start = grid[startX][startY];
-        let end = grid[endX][endY];
-        let result = search(grid, start, end);
-        return result;
-    }
-
-    
-
     function removeFromArrayByIndex(arr, index){
         arr.splice(index, 1);
         return arr;
@@ -135,8 +110,6 @@ function Simulation() {
     }
 
     //when refractor-ing add a brainObjectUpdate() 
-
-
     function updateSurfaceObjects(secondsPassed){
 
         //no surfaceObjects exist
@@ -156,7 +129,7 @@ function Simulation() {
                 //brainN has a one to one relationship with a surfaceObject, and it is linked with the surfaceObject id
                 let brainN = brainUpdate[brainUpdate.findIndex(x => x.surfaceObjectId === i)];
 
-                update[i] = loseHungerOverTime(secondsPassed, update[i])
+                //update[i] = loseHungerOverTime(secondsPassed, update[i])
             
             //thinking
             //should first be a check for survival needs ie water/food/health, then check other actions to do
@@ -175,7 +148,7 @@ function Simulation() {
                     
                     if(brainN.path === undefined){
                         addConsoleMessage(1, "Looking for path", "General");
-                        brainN.path = startSearch(update[i].x, update[i].y, 250, 250);
+                        brainN.path = startSearch(update[i].x, update[i].y, 250, 250, map, surfaceObjects);
                         let nextPoint = brainN.path.shift();
     
                         if(nextPoint === undefined){
@@ -201,7 +174,7 @@ function Simulation() {
                     }
 
                     if(update[i].hunger >= 100){
-                        brainN.action = "Full";
+                        //brainN.action = "Full";
                     }
                 }
             }
@@ -226,7 +199,7 @@ function Simulation() {
             }
 
             if(brainN.action === "Moving"){
-                update[i] = updateHealth(update[i], -1);
+                //update[i] = updateHealth(update[i], -1);
 
                 //init movement
                 if(!brainN.isMoving){
@@ -274,9 +247,6 @@ function Simulation() {
     }
 
     function update(secondsPassed){
-        //need to update plants/then update ai
-        //need to filter array by sub-type alive boolean
-        //to get an array of plants and an array of ai surfaceObjects
         updateSurfaceObjects(secondsPassed, surfaceObjects)
     }
 
