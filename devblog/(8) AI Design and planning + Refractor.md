@@ -28,4 +28,28 @@ Im not sure if I want the rabbits to know if there is food or not in the bush wh
 
 Now that we have a function to find the closest bush I can implement the logic.
 
+![image](hungry)
+
+So first we check when the ai is thinking, to see if it is hungry. If it is we set the action to hungry.
+
+![image](hungryAction)
+
+So now when they are hungry, they find a bush and we set the pathing to that bush. I already built the pathfinding action so now I just have to code what happens when they reach the target.
+
+![image](reachedTarget)
+
+When the pathfinding reaches the target, it sets the action to "Reached Target". Before I started the pathfinding I stored the target and what the object intends to do when it reaches the target, this is like memory because we have to store what we want to do so we know we are going to eat once we reach the target.
+
+![image](eatTarget)
+
+Now that we are at the bush and are at the eat target action, we just need to deplete the food of the bush, and raise the hunger until the object is full.
+
+![image](full)
+
+When we loop back and are in the thinking part for the ai, we just check if hunger is 100 and we know the ai is full so we set the state to idle, since idle is the default or root state.
+
+I still need to add when a bush runs out of food, we need to remember that that bush ran out of food, and then look for the next closest bush.
+
+
+
 ## Ai design

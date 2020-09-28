@@ -51,27 +51,15 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
         if((update[i].health <= 0 || update[i].hunger <= 0) && brainN.action != "Dying"){
             brainN.action = "Dying";
         }else{
+            update[i] = loseHungerOverTime(secondsPassed, update[i])
+
             //root thinking
-            if(brainN.action === "Idle"){
-                update[i] = loseHungerOverTime(secondsPassed, update[i])
-
-                //add brain variable of path to find array
-                //here pop out the next point to travel to and set endX and endY to that point
-                //check if path exists, if not generate one to 250, 250
-
-                //needs to be removed and integrated into a function that needs pathfinding
-                
-                /*
-                if(brainN.path === undefined){
-                    
-                }
-                */
-               
+            if(brainN.action === "Idle"){                
                 //trigger functions
+                //if this is not in idle then hunger loop will reset
                 if(update[i].hunger <= 50){
                     brainN.action = "Hungry";
                 }
-    
                 
             }
 
@@ -84,13 +72,16 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
             }
             */
 
+            
+
             if(update[i].hunger >= 100){
-                //brainN.action = "Full";
+                brainN.action = "Idle";
             }
 
             if(brainN.action === "Reached Target"){
-                
-                //check target action and do that
+                if(brainN.targetAction === "Eat"){
+                    brainN.action = "Eat Target";
+                }
             }
             
         }
@@ -137,7 +128,17 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
             }
         }
         */
+        
+        if(brainN.action === "Eat Target"){
+            //decrease food & hunger by 1
+            for(let z = 0; z < update.length; z++){
+                if(update[z].id === brainN.target.id){
+                    updateFood(update[z], -1);
+                    updateHunger(update[i], 1);
+                }
+            }
 
+        }
         
 
         if(brainN.action === "Moving"){
