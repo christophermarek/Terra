@@ -123,7 +123,7 @@ function Simulation() {
     function update(secondsPassed){
 
         let update = updateSurfaceObjects(secondsPassed, map, surfaceObjects, brain)
-        setBrain(brain => (update.brainUpdate));
+        setBrain(brain => (update.brain));
         setSurfaceObjects(surfaceObjects => (update.surfaceObjects));
 
     }

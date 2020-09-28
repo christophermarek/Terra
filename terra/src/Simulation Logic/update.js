@@ -1,6 +1,6 @@
-import { getDirectionToPoint, getDistanceToPoint } from './helpers/movement';
+import { getDirectionToPoint, getDistanceToPoint, initPathfinding } from './helpers/movement';
 import { updateHunger, loseHungerOverTime } from './helpers/hunger';
-import { updateFood, plantFoodTickUpdate } from './helpers/food';
+import { updateFood, plantFoodTickUpdate, getClosestBush } from './helpers/food';
 import { updateHealth } from './helpers/health';
 import { getBrainObjectById, deleteBrainObjById } from './helpers/brain';
 import { returnSurfaceObject } from '../data/map/surfaceObjects';
@@ -22,6 +22,7 @@ function nonBrainObjectUpdate(secondsPassed, update, i){
 
 }
 
+
 //when refractor-ing add a brainObjectUpdate() 
 export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUpdate, brainPreUpdate){
 
@@ -42,7 +43,6 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
             //brainN has a one to one relationship with a surfaceObject, and it is linked with the surfaceObject id
             let brainN = brainUpdate[brainUpdate.findIndex(x => x.surfaceObjectId === i)];
 
-            //update[i] = loseHungerOverTime(secondsPassed, update[i])
         
         //thinking
         //should first be a check for survival needs ie water/food/health, then check other actions to do
@@ -51,43 +51,48 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
         if((update[i].health <= 0 || update[i].hunger <= 0) && brainN.action != "Dying"){
             brainN.action = "Dying";
         }else{
+            //root thinking
             if(brainN.action === "Idle"){
+                update[i] = loseHungerOverTime(secondsPassed, update[i])
+
                 //add brain variable of path to find array
                 //here pop out the next point to travel to and set endX and endY to that point
                 //check if path exists, if not generate one to 250, 250
 
                 //needs to be removed and integrated into a function that needs pathfinding
                 
+                /*
                 if(brainN.path === undefined){
-                    brainN.path = startSearch(update[i].x, update[i].y, 250, 250, mapCopy, surfaceObjectsPreUpdate);
-                    let nextPoint = brainN.path.shift();
-
-                    if(nextPoint === undefined){
-                        console.log("no path found");
-                    }else{
-                        //set endX and endY to the x and y from this
-                        //console.log(brainN);
-                        brainN.movement.endX = nextPoint.x;
-                        brainN.movement.endY = nextPoint.y;
-                        brainN.movement.startX = update[i].x;
-                        brainN.movement.startY = update[i].y;
-                        brainN.action = "Moving";
-                    }
+                    
                 }
-                
-
+                */
+               
+                //trigger functions
                 if(update[i].hunger <= 50){
                     brainN.action = "Hungry";
                 }
-
-                if(update[i].hunger <= 20){
-                    brainN.action = "Starving";
-                }
-
-                if(update[i].hunger >= 100){
-                    //brainN.action = "Full";
-                }
+    
+                
             }
+
+            //after idle thoughts
+            //maybe call it secondary thoughts
+            
+            /*
+            if(update[i].hunger <= 20){
+                brainN.action = "Starving";
+            }
+            */
+
+            if(update[i].hunger >= 100){
+                //brainN.action = "Full";
+            }
+
+            if(brainN.action === "Reached Target"){
+                
+                //check target action and do that
+            }
+            
         }
 
         //convert this to a switch with a function for each action
@@ -98,6 +103,29 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
             brainUpdate = deleteBrainObjById(brainUpdate, i); 
         }
 
+        if(brainN.action === "Hungry"){
+            let bush = getClosestBush(update, update[i]);
+            if(bush === null){
+                //stay hungry
+                console.log("no bush");
+            }
+
+            let target = {x: bush.x, y: bush.y};
+
+            //init pathfinding
+            let updatedData = initPathfinding(update[i], brainN, target, mapCopy, update);
+
+            update[i] = updatedData.surfaceObject;
+            brainN = updatedData.brain;
+
+            //set to moving, inits action
+            brainN.action = "Moving";
+            brainN.target = bush;
+            brainN.targetAction = "Eat";
+
+        }
+
+        /*
         if(brainN.action === "Hungry" || brainN.action === "Starving"){
             //eat food
             brainN.action = "Eating";
@@ -108,6 +136,9 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                 updateHunger(update[i], 1);
             }
         }
+        */
+
+        
 
         if(brainN.action === "Moving"){
             //update[i] = updateHealth(update[i], -1);
@@ -132,7 +163,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                 //if last point then set to done moving
                 if(brainN.path.length == 0){
                     brainN.isMoving = false;
-                    brainN.action = 'Done moving';
+                    brainN.action = "Reached Target";
                     update[i].x = brainN.movement.endX;
                     update[i].y = brainN.movement.endY;
                 }else{
@@ -147,6 +178,8 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
             
         
         }
+
+
     }
 
 

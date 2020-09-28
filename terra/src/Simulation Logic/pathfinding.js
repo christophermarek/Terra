@@ -28,6 +28,7 @@ if (!Array.prototype.remove) {
 
 export function calcHeuristic(pos0, pos1){
     // See list of heuristics: http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html
+    //this is just manhattan distance
     let d1 = Math.abs (pos1.x - pos0.x);
     let d2 = Math.abs (pos1.y - pos0.y);
     return d1 + d2;
