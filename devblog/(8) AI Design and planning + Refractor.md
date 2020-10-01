@@ -50,6 +50,19 @@ When we loop back and are in the thinking part for the ai, we just check if hung
 
 I still need to add when a bush runs out of food, we need to remember that that bush ran out of food, and then look for the next closest bush.
 
+Before this though, there are too many issues with pathfinding that need to be fixed.
 
+## Pathfinding updates
+
+Problems:
+- no diagonal paths
+- we dont care about barriers in the path and surface objects go ontop of eachother
+- surfaceObjects dont consider their own bounds when pathing.
+
+
+This eating system doesnt work properly. Still eats at constant rate even if no food.
 
 ## Ai design
+
+Need to have a brain properties file for each type of ai i guess because when I want a central place to store each ai property so I can load it when I spawn a new surfaceObject in
+

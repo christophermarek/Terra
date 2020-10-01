@@ -8,7 +8,7 @@ export function updateHunger(obj, amount){
 //takes surfaceObject and time elapsed and updates the objects hunger to the amount lost over the secondsPassed
 export function loseHungerOverTime(secondsPassed, obj){
     //where the rate is hunger depletion speed * time elapsed
-    let hungerDepletionAmount = 5 * secondsPassed * -1;
+    let hungerDepletionAmount = 20 * secondsPassed * -1;
     obj = updateHunger(obj, hungerDepletionAmount);
     
     return obj;

@@ -51,10 +51,11 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
         if((update[i].health <= 0 || update[i].hunger <= 0) && brainN.action != "Dying"){
             brainN.action = "Dying";
         }else{
-            update[i] = loseHungerOverTime(secondsPassed, update[i])
 
             //root thinking
-            if(brainN.action === "Idle"){                
+            if(brainN.action === "Idle"){            
+                update[i] = loseHungerOverTime(secondsPassed, update[i])
+    
                 //trigger functions
                 //if this is not in idle then hunger loop will reset
                 if(update[i].hunger <= 50){
@@ -75,6 +76,18 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
             
 
             if(update[i].hunger >= 100){
+                //move this property initialization somewhere else
+                brainN.depletedBushes = [];
+
+                //we push the current time in seconds so we can remove it from this data structure if its been more than
+                //a certain time
+                let currentTimeInSeconds = Math.floor(Date.now() / 1000);
+                let depletedBush = {id: brainN.target.id,
+                                    timestamp: currentTimeInSeconds
+                                   }
+
+                brainN.depletedBushes.push(depletedBush);
+
                 brainN.action = "Idle";
             }
 
@@ -95,7 +108,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
         }
 
         if(brainN.action === "Hungry"){
-            let bush = getClosestBush(update, update[i]);
+            let bush = getClosestBush(update, update[i], brainN);
             if(bush === null){
                 //stay hungry
                 console.log("no bush");
@@ -133,7 +146,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
             //decrease food & hunger by 1
             for(let z = 0; z < update.length; z++){
                 if(update[z].id === brainN.target.id){
-                    updateFood(update[z], -1);
+                    updateFood(update[z], -2);
                     updateHunger(update[i], 1);
                 }
             }
@@ -143,7 +156,6 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
 
         if(brainN.action === "Moving"){
             //update[i] = updateHealth(update[i], -1);
-
             //init movement
             if(!brainN.isMoving){
                 brainN.movement.distanceToPoint = getDistanceToPoint(update[i].x, update[i].y, brainN.movement.endX, brainN.movement.endY);
@@ -173,6 +185,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                     update[i].y = brainN.movement.endY;
                     brainN.movement.endX = nextPoint.x;
                     brainN.movement.endY = nextPoint.y;
+
                 }
                 
             }
