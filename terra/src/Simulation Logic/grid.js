@@ -26,27 +26,25 @@ export function getNeighbors(grid, node){
     }
 
     //top left
-    if(grid[x-1][y-1]){
+    if(grid[x-1] && grid[x-1][y-1]){
         ret.push(grid[x-1][y-1]);
     }
-
+    
     //top right
-    if(grid[x+1][y-1]){
+    if(grid[x+1] && grid[x+1][y-1]){
         ret.push(grid[x+1][y-1]);
     }
 
     //bottom left
-    if(grid[x-1][y+1]){
+    if(grid[x-1] && grid[x-1][y+1]){
         ret.push(grid[x-1][y+1]);
     }
 
     //bottom right
-    if(grid[x+1][y+1]){
+    if(grid[x+1] && grid[x+1][y+1]){
         ret.push(grid[x+1][y+1]);
     }
-
-    console.log(ret);
-
+    //console.table(ret);
     return ret;
     
 }

@@ -66,8 +66,8 @@ function isWallMyself(x, y, radius, neighbor){
     }
 }
 
-export function search(grid, start, end, self){
-
+export function search(grid, start, end, self, target){
+    //console.log(target);
     //extra data fetching
     let selfData = returnSurfaceObject(self.type);
     let selfRadius = selfData.size;
@@ -105,19 +105,22 @@ export function search(grid, start, end, self){
 
         for(let i = 0; i < neighbors.length; i++) {
             let neighbor = neighbors[i];
+
             if(neighbor.closed) {
                 continue;
             }
 
             if(neighbor.isWall){
-                let check = isWallMyself(self.x, self.y, selfRadius, neighbor);
-                //console.log("check is" + check);
-                if(check){
-                  //console.log("myself");
-                }
-                if(!check){
+                //get target surface object type to find radius
+                //check if we are going to a point or to a surfaceObject
+                let targetSize = returnSurfaceObject(target.type).size;
+                //check if current neighbour is the target or myself so we ignore the walls for pathfinding
+                if(!(isWallMyself(self.x, self.y, selfRadius, neighbor) || isWallMyself(target.x, target.y, targetSize, neighbor))){
+                    //console.log('b4 continue');
+                    //console.log(neighbor);
                     continue;
                 }
+
             }
 
             // g score is the shortest distance from start to current node, we need to check if
@@ -156,10 +159,10 @@ export function search(grid, start, end, self){
         
 }
 
-export function startSearch(startX, startY, endX, endY, map, surfaceObjects, self){
+export function startSearch(self, target, map, surfaceObjects){
     let grid = setupGrid(map, surfaceObjects);
-    let start = grid[startX][startY];
-    let end = grid[endX][endY];
-    let result = search(grid, start, end, self);
+    let start = grid[self.x][self.y];
+    let end = grid[target.x][target.y];
+    let result = search(grid, start, end, self, target);
     return result;
 }

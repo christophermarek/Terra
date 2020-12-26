@@ -167,11 +167,10 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                 //stay hungry
                 console.log("no bush");
             }else{
-                let target = {x: bush.x, y: bush.y};
-                target = {x: 101, y: 298};
+                let target = {x: 101, y: 298};
                 //console.log(target);
                 //init pathfinding
-                let updatedData = initPathfinding(update[i], brainN, target, mapCopy, update);
+                let updatedData = initPathfinding(update[i], brainN, bush, mapCopy, update);
                 
                 console.log(updatedData);
                 
