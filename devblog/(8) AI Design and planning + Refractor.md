@@ -54,21 +54,28 @@ Before this though, there are too many issues with pathfinding that need to be f
 
 ## engine work
 
-bounds drawing
-
-## Pathfinding updates
+bounds drawing is done we just set to wall all the surface objects
 
 Problems:
-- no diagonal paths
+- no diagonal paths (done)
 - we dont care about barriers in the path and surface objects go ontop of eachother
-- surfaceObjects dont consider their own bounds when pathing.
+- surfaceObjects dont consider their own bounds when pathing. (done)
 
+Diagonal paths is fixed. Tree barriers dont render properly I think it is svg issues.
 
-This eating system doesnt work properly. Still eats at constant rate even if no food.
+## back to pathing to food
 
-## Ai design
+Now that this is done, the ai paths to a bush properly.
 
-Need to have a brain properties file for each type of ai i guess because when I want a central place to store each ai property so I can load it when I spawn a new surfaceObject in
+Now I want the AI to path to bush then go idle
+
+So now we need an idle action
+
+Ai needs to be hungry,
+eat and get full
+once full wait until hungry again -> 
+path to another bush.
+
 
 ## Removing Game console
 
