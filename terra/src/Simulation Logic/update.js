@@ -11,6 +11,7 @@ function removeFromArrayByIndex(arr, index){
     return arr;
 }
 
+//rename, bushes still have a brain like for bounds
 function nonBrainObjectUpdate(secondsPassed, update, i){
     
     //nested update logic
@@ -22,9 +23,59 @@ function nonBrainObjectUpdate(secondsPassed, update, i){
 
 }
 
+//checks current x,y for surfaceObj and updates the bounds[] accordingly
+function updateBounds(obj, map){
+
+    //i could calculate bounds all around the circle accurately but this would be very expensive
+    //i can do a square around it instead for now.
+
+    //bounds will hold the x,y for the corner
+
+    //bounds init
+    let bounds = {
+        topLeft: {x:0, y:0},
+        topRight: {x:0, y:0},
+        bottomLeft: {x:0, y:0},
+        bottomRight: {x:0, y:0}
+    };
+
+    let fetchedData = returnSurfaceObject(obj.type);
+    let radius = fetchedData.size;
+
+
+    //the x,y in a <circle> is the center of the object, so the bounds would be that x,y 
+    //+- the radius for each direction.
+
+    //not sure if bounds being out of the map will break anything?
+    //I can check for it
+
+    //can two objects occupy the same space?
+
+    bounds.topLeft = {x: obj.x - radius, y: obj.y - radius};
+
+    
+    /*
+    //calculate bounds
+    for(let n = (obj.x - radius);  n < (obj.x + radius); n++){
+        for(let m = (obj.y - radius);  m < (obj.y + radius) + 1; m++){
+            //skip if out of grid bounds
+            if(n >= 0 && m >=0 && n < map.length * 100 && m < map.length * 100 ){
+                //add point to bounds
+                bounds.push({x: n, y: m});
+            }
+        }
+    }
+
+   */
+
+    obj.bounds = bounds;
+   
+    return obj;
+}
+
 
 //when refractor-ing add a brainObjectUpdate() 
-export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUpdate, brainPreUpdate){
+export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUpdate, brainPreUpdate, map){
 
     //no surfaceObjects exist
     if(surfaceObjectsPreUpdate.length === undefined){
@@ -37,13 +88,16 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
     
     for(let i = 0; i < update.length; i++){
 
+        //brainN has a one to one relationship with a surfaceObject, and it is linked with the surfaceObject id
+
+        let brainN = brainUpdate[brainUpdate.findIndex(x => x.surfaceObjectId === i)];
+        //let boundsUpdate = updateBounds(update[i], map);
+        //update[i] = boundsUpdate;
+
         if(update[i].type === 'bush'){
             update[i] = nonBrainObjectUpdate(secondsPassed, update[i], i);
         }else{
-            //brainN has a one to one relationship with a surfaceObject, and it is linked with the surfaceObject id
-            let brainN = brainUpdate[brainUpdate.findIndex(x => x.surfaceObjectId === i)];
 
-        
         //thinking
         //should first be a check for survival needs ie water/food/health, then check other actions to do
         //add a way to know how they died, starved to death or health went to low, I would need
@@ -112,21 +166,33 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
             if(bush === null){
                 //stay hungry
                 console.log("no bush");
+            }else{
+                let target = {x: bush.x, y: bush.y};
+                target = {x: 101, y: 298};
+                //console.log(target);
+                //init pathfinding
+                let updatedData = initPathfinding(update[i], brainN, target, mapCopy, update);
+                
+                console.log(updatedData);
+                
+                //no path found, set state to idle
+                if(!updatedData){
+                    brainN.action = "Idle";
+                }else{
+                    //attach path details to object
+                    update[i] = updatedData.surfaceObject;
+                    brainN = updatedData.brain;
+
+                    //set to moving, inits action
+                    brainN.action = "Moving";
+                    brainN.target = bush;
+                    brainN.targetAction = "Eat";
+                }
+                
+
             }
 
-            let target = {x: bush.x, y: bush.y};
-
-            //init pathfinding
-            let updatedData = initPathfinding(update[i], brainN, target, mapCopy, update);
-
-            update[i] = updatedData.surfaceObject;
-            brainN = updatedData.brain;
-
-            //set to moving, inits action
-            brainN.action = "Moving";
-            brainN.target = bush;
-            brainN.targetAction = "Eat";
-
+            
         }
 
         /*

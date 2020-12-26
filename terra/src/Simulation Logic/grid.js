@@ -5,21 +5,47 @@ export function getNeighbors(grid, node){
     let x = node.x;
     let y = node.y;
 
+    //left
     if(grid[x-1] && grid[x-1][y]) {
         ret.push(grid[x-1][y]);
     }
 
+    //right
     if(grid[x+1] && grid[x+1][y]) {
         ret.push(grid[x+1][y]);
     }
 
+    //top
     if(grid[x][y-1] && grid[x][y-1]) {
         ret.push(grid[x][y-1]);
     }
 
+    //bottom
     if(grid[x][y+1] && grid[x][y+1]) {
         ret.push(grid[x][y+1]);
     }
+
+    //top left
+    if(grid[x-1][y-1]){
+        ret.push(grid[x-1][y-1]);
+    }
+
+    //top right
+    if(grid[x+1][y-1]){
+        ret.push(grid[x+1][y-1]);
+    }
+
+    //bottom left
+    if(grid[x-1][y+1]){
+        ret.push(grid[x-1][y+1]);
+    }
+
+    //bottom right
+    if(grid[x+1][y+1]){
+        ret.push(grid[x+1][y+1]);
+    }
+
+    console.log(ret);
 
     return ret;
     
@@ -56,6 +82,7 @@ export function setupGrid(map, surfaceObjects){
     }
 
     //go through surface objects and calculate the walls for this grid.
+    //each surfaceObject has a wall around it as a bounding box
     for(let k = 0; k < surfaceObjects.length; k++){
         let fetchedData = returnSurfaceObject(surfaceObjects[k].type);
         let radius = fetchedData.size;
@@ -64,13 +91,12 @@ export function setupGrid(map, surfaceObjects){
         for(let n = (surfaceObjects[k].x - radius);  n < (surfaceObjects[k].x + radius); n++){
           for(let m = (surfaceObjects[k].y - radius);  m < (surfaceObjects[k].y + radius); m++){
             //skip if out of grid bounds
-                if(surfaceObjects[k].type === "tree"){
+                //if(surfaceObjects[k].type === "tree"){
                     if(n >= 0 && m >=0 && n < map.length * 100 && m < map.length * 100 ){
-                        //we cannot set isWall for surfaceObjects that need to 
-                        //pathfind since there is a wall all around each surface object as the bounding box 
+
                         grid[n][m].isWall = true;
                     }
-                }
+                //}
             }
         }
     }

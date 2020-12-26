@@ -1,4 +1,5 @@
 import { getNeighbors, setupGrid } from './grid';    
+import { returnSurfaceObject } from '../data/map/surfaceObjects';
 
 //need these for pathfinding
 if (!Array.prototype.indexOf) {
@@ -34,10 +35,47 @@ export function calcHeuristic(pos0, pos1){
     return d1 + d2;
 }
 
-export function search(grid, start, end){        
+function isWallMyself(x, y, radius, neighbor){
+
+    //console.log("checking if wall is myself");
+    //console.log("self x/y: " + x + "," + y)
+    let leftX = x - radius;
+    let lowY = y - radius
+    let rightX = x + radius;
+    let highY = y + radius;
+    /*
+    console.log("bounds of self at x: " + leftX + " to " + rightX);
+    console.log("bounds of self at y: " + lowY + " to " + highY);
+
+
+    console.log(neighbor.x + "," + neighbor.y);
+    console.log(neighbor.x);
+    console.log(leftX);
+    console.log(neighbor.x >= leftX);
+    console.log((rightX >= neighbor.x));
+    console.log((neighbor.y >= lowY));
+    console.log((highY >= neighbor.y));
+    */
+    //check if exists in own bounds
+    if (((neighbor.x >= leftX) && (rightX >= neighbor.x)) && ((neighbor.y >= lowY) && (highY >= neighbor.y))){
+        //console.log("exists in bounds");
+        return true;
+    }else{
+        //console.log("not in bounds")
+        return false;
+    }
+}
+
+export function search(grid, start, end, self){
+
+    //extra data fetching
+    let selfData = returnSurfaceObject(self.type);
+    let selfRadius = selfData.size;
+    //want to get bottom left and top right of the self obj
+    //so we can see if the xy we are iterating on is ourself
+    //console.log("starting search");
     let openList = [];
     openList.push(start);
-
     while(openList.length > 0){
         // Grab the lowest f(x) to process next
         let lowInd = 0;
@@ -48,7 +86,6 @@ export function search(grid, start, end){
         }
             
         let currentNode = openList[lowInd];
-
         // End case -- result has been found, return the traced path
         if(currentNode.x == end.x && currentNode.y == end.y) {
             let curr = currentNode;
@@ -68,10 +105,19 @@ export function search(grid, start, end){
 
         for(let i = 0; i < neighbors.length; i++) {
             let neighbor = neighbors[i];
-
-            if(neighbor.closed || neighbor.isWall) {
-                // not a valid node to process, skip to next neighbor
+            if(neighbor.closed) {
                 continue;
+            }
+
+            if(neighbor.isWall){
+                let check = isWallMyself(self.x, self.y, selfRadius, neighbor);
+                //console.log("check is" + check);
+                if(check){
+                  //console.log("myself");
+                }
+                if(!check){
+                    continue;
+                }
             }
 
             // g score is the shortest distance from start to current node, we need to check if
@@ -104,15 +150,16 @@ export function search(grid, start, end){
     }
 
     // No result was found -- empty array signifies failure to find path
+    //console.log("Unable to find path for :" + start.x + "," + start.y + " to dest " + end.x + "," + end.y);
     return [];
 
         
 }
 
-export function startSearch(startX, startY, endX, endY, map, surfaceObjects){
+export function startSearch(startX, startY, endX, endY, map, surfaceObjects, self){
     let grid = setupGrid(map, surfaceObjects);
     let start = grid[startX][startY];
     let end = grid[endX][endY];
-    let result = search(grid, start, end);
+    let result = search(grid, start, end, self);
     return result;
 }

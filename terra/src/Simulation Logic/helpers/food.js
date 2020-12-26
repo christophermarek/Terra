@@ -52,7 +52,6 @@ export function getClosestBush(surfaceObjects, obj, brainN){
     let closestBushDistance = -1;
     let closestBush = null;
 
-    bushLoop:
         for(let i = 0; i < bushes.length; i++){
             
             for(let j = 0; j < brainN.depletedBushes.length; j++){
@@ -65,7 +64,6 @@ export function getClosestBush(surfaceObjects, obj, brainN){
                         //anyways or else deplete bushes will never empty.
                     }else{
                         //skip searching this bush
-                        continue bushLoop;
                     }
                 }
             }

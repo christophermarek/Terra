@@ -18,14 +18,15 @@ export function getDirectionToPoint(x, y, destX, destY, distance){
 //creates a new path to destination for obj, and sets state it needs to start the "Moving" action
 //takes surfaceObject and brainObject
 export function initPathfinding(obj, brainN, dest, map, surfaceObjects){
-    brainN.path = startSearch(obj.x, obj.y, dest.x, dest.y, map, surfaceObjects);
+    //i pass obj.x obj.y and obj. Refractor to just pass obj instead and pull properties
+    brainN.path = startSearch(obj.x, obj.y, dest.x, dest.y, map, surfaceObjects, obj);
     let nextPoint = brainN.path.shift();
-
+    //console.log(brainN)
     if(nextPoint === undefined){
-        console.log("no path found");
+        return false;
     }else{
         //set endX and endY to the x and y from this
-        //console.log(brainN);
+        console.log(brainN);
         brainN.movement.endX = nextPoint.x;
         brainN.movement.endY = nextPoint.y;
         brainN.movement.startX = obj.x;

@@ -52,6 +52,10 @@ I still need to add when a bush runs out of food, we need to remember that that 
 
 Before this though, there are too many issues with pathfinding that need to be fixed.
 
+## engine work
+
+bounds drawing
+
 ## Pathfinding updates
 
 Problems:
@@ -66,3 +70,9 @@ This eating system doesnt work properly. Still eats at constant rate even if no 
 
 Need to have a brain properties file for each type of ai i guess because when I want a central place to store each ai property so I can load it when I spawn a new surfaceObject in
 
+## Removing Game console
+
+Replace game console with a list of all the entities in the game and their states so you can expand and view there instead,
+probably better than game console because there will be tons of updates in the game console. Or can have both.
+
+Im not really sure yet
