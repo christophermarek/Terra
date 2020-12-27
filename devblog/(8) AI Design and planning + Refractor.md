@@ -61,7 +61,7 @@ Problems:
 - we dont care about barriers in the path and surface objects go ontop of eachother
 - surfaceObjects dont consider their own bounds when pathing. (done)
 
-Diagonal paths is fixed. Tree barriers dont render properly I think it is svg issues.
+Diagonal paths is fixed. Tree barriers dont render properly I think it is svg issues, but it could be my math issues too.
 
 ## back to pathing to food
 
