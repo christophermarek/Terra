@@ -186,8 +186,13 @@ export function search(grid, start, end, self, target){
 
 export function startSearch(self, target, map, surfaceObjects){
     let grid = setupGrid(map, surfaceObjects);
-    let start = grid[self.x][self.y];
-    let end = grid[target.x][target.y];
-    let result = search(grid, start, end, self, target);
-    return result;
+    try{
+        let start = grid[self.x][self.y];
+        let end = grid[target.x][target.y];
+        let result = search(grid, start, end, self, target);
+        return result;
+    }catch{
+        //console.log(self);
+    }
+    
 }

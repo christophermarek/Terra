@@ -91,8 +91,13 @@ export function setupGrid(map, surfaceObjects){
             //skip if out of grid bounds
                 //if(surfaceObjects[k].type === "tree"){
                     if(n >= 0 && m >=0 && n < map.length * 100 && m < map.length * 100 ){
+                        try{
+                            grid[n][m].isWall = true;
+                        }catch{
+                            //console.log(n);
+                            //console.log(m);
 
-                        grid[n][m].isWall = true;
+                        }
                     }
                 //}
             }

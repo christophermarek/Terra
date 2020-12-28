@@ -94,8 +94,8 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
         let brainN = brainUpdate[brainUpdate.findIndex(x => x.surfaceObjectId === i)];
         //let boundsUpdate = updateBounds(update[i], map);
         //update[i] = boundsUpdate;
-
-        if(update[i].type === 'bush'){
+        //need a bool property for this
+        if(update[i].type === 'bush' || update[i].type === 'tree'){
             update[i] = nonBrainObjectUpdate(secondsPassed, update[i], i);
         }else{
 
@@ -108,16 +108,63 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
         }else{
 
             //always loses hunger no matter what
-            update[i] = loseHungerOverTime(secondsPassed, update[i])
+            update[i] = loseHungerOverTime(secondsPassed, update[i]);
+
+            //Movement Disruptor
+            if(brainN.action === "Moving" && update[i].hunger <= 50){
+                brainN.action = "Hungry";
+            }
 
             //root thinking
             if(brainN.action === "Idle"){            
     
                 //trigger functions
                 //if this is not in idle then hunger loop will reset
+                //should be a switch
                 if(update[i].hunger <= 50){
                     brainN.action = "Hungry";
                 }
+
+                //default action, pick a random point and move to it.
+
+                //for wander movement
+                //pick a random point 50px any direction from surface object
+                let leftRange = update[i].x - 50;
+                let rightRange = update[i].x + 50;
+                let upperRange = update[i].y - 50;
+                let bottomRange = update[i].y + 50;
+                
+                let randomX = -1;
+                let randomY = -1;
+                
+                //do it until valid co ords are found
+                //if path is a wall that is ok because this will just run again
+                //the next frame
+                while(randomX < 0 || randomY < 0){
+                    //in range
+                    randomX = Math.floor(Math.random() * (rightRange - leftRange + 1)) + leftRange;
+                    randomY = Math.floor(Math.random() * (upperRange - bottomRange + 1)) + bottomRange;
+                }
+                
+                let randomPoint = {x: randomX, y: randomY};
+
+                let updatedData = initPathfinding(update[i], brainN, randomPoint, mapCopy, update);
+                                
+                //no path found, set state to idle
+                if(!updatedData){
+                    brainN.action = "Idle";
+                }else{
+                    //attach path details to object
+                    update[i] = updatedData.surfaceObject;
+                    brainN = updatedData.brain;
+
+                    //set to moving, inits action
+                    brainN.action = "Moving";
+                    brainN.targetAction = "Wander";
+                }
+
+                                
+
                 
             }
 
@@ -176,9 +223,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                 //console.log(target);
                 //init pathfinding
                 let updatedData = initPathfinding(update[i], brainN, bush, mapCopy, update);
-                
-                console.log(updatedData);
-                
+                                
                 //no path found, set state to idle
                 if(!updatedData){
                     brainN.action = "Idle";
@@ -221,12 +266,6 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                 }
             }
 
-        }
-        
-        //default action when nothing else is chosen
-        if(brainN.action === "Idle"){
-            //get a random point somewhere
-            //set to moving right like how we do when we get a random bush
         }
         
 
