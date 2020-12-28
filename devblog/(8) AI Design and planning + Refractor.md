@@ -63,6 +63,10 @@ Problems:
 
 Diagonal paths is fixed. Tree barriers dont render properly I think it is svg issues, but it could be my math issues too.
 
+To fix the tree bounds issue, I think I need to 
+- When checking is wall neighbour I need to check not just distance to point but if distance + radius to the point
+- This solution above doesnt really work that well
+
 ## back to pathing to food
 
 Now that this is done, the ai paths to a bush properly.
@@ -76,10 +80,8 @@ eat and get full
 once full wait until hungry again -> 
 path to another bush.
 
+So we just need a default idle action now.
 
-## Removing Game console
+&&
 
-Replace game console with a list of all the entities in the game and their states so you can expand and view there instead,
-probably better than game console because there will be tons of updates in the game console. Or can have both.
-
-Im not really sure yet
+I still need to add when a bush runs out of food, we need to remember that that bush ran out of food, and then look for the next closest bush.

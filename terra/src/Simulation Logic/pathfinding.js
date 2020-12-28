@@ -123,6 +123,31 @@ export function search(grid, start, end, self, target){
 
             }
 
+            //check if path is in bounds of surfaaceObject
+            //need to calculate if at this neighbour, will our bounds hit a wall
+            //MIGHT BE EXPENSIVE
+            /*
+            let left = neighbor.x - selfRadius;
+            let right = neighbor.x + selfRadius;
+            let top = neighbor.y - selfRadius;
+            let bottom = neighbor.y + selfRadius;
+            let flag = false;
+            //want to check all elements in left-right[top-bottom] to see if they are a wall so we dont collide
+            for(let q = left; q < right; q++){
+                for(let w = top; w < bottom; w++){
+                    if(grid[q][w].isWall){
+                        if(!isWallMyself(q, w, selfRadius, neighbor)){}
+                        //if its a wall that means moving to this neighbor made us collide.
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+            if(flag){
+                continue
+            }
+            */
+
             // g score is the shortest distance from start to current node, we need to check if
             //   the path we have arrived at this neighbor is the shortest one we have seen yet
             let gScore = currentNode.g + 1; // 1 is the distance from a node to it's neighbor

@@ -23,6 +23,7 @@ function nonBrainObjectUpdate(secondsPassed, update, i){
 
 }
 
+//unsure if used
 //checks current x,y for surfaceObj and updates the bounds[] accordingly
 function updateBounds(obj, map){
 
@@ -106,9 +107,11 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
             brainN.action = "Dying";
         }else{
 
+            //always loses hunger no matter what
+            update[i] = loseHungerOverTime(secondsPassed, update[i])
+
             //root thinking
             if(brainN.action === "Idle"){            
-                update[i] = loseHungerOverTime(secondsPassed, update[i])
     
                 //trigger functions
                 //if this is not in idle then hunger loop will reset
@@ -148,6 +151,8 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
             if(brainN.action === "Reached Target"){
                 if(brainN.targetAction === "Eat"){
                     brainN.action = "Eat Target";
+                }else{
+                    brainN.action = "Idle";
                 }
             }
             
@@ -167,7 +172,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                 //stay hungry
                 console.log("no bush");
             }else{
-                let target = {x: 101, y: 298};
+                //let target = {x: 101, y: 298};
                 //console.log(target);
                 //init pathfinding
                 let updatedData = initPathfinding(update[i], brainN, bush, mapCopy, update);
@@ -216,6 +221,12 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                 }
             }
 
+        }
+        
+        //default action when nothing else is chosen
+        if(brainN.action === "Idle"){
+            //get a random point somewhere
+            //set to moving right like how we do when we get a random bush
         }
         
 
