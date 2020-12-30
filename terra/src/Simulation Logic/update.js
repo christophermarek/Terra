@@ -76,7 +76,7 @@ function updateBounds(obj, map){
 
 
 //when refractor-ing add a brainObjectUpdate() 
-export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUpdate, brainPreUpdate, map){
+export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUpdate, brainPreUpdate, grid){
 
     //no surfaceObjects exist
     if(surfaceObjectsPreUpdate.length === undefined){
@@ -112,7 +112,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
 
             //Movement Disruptor
             if(brainN.action === "Moving" && update[i].hunger <= 50){
-                brainN.action = "Hungry";
+                brainN.action = "Hungry"
             }
 
             //root thinking
@@ -148,7 +148,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                 
                 let randomPoint = {x: randomX, y: randomY};
 
-                let updatedData = initPathfinding(update[i], brainN, randomPoint, mapCopy, update);
+                let updatedData = initPathfinding(update[i], brainN, randomPoint, mapCopy, update, grid);
                                 
                 //no path found, set state to idle
                 if(!updatedData){
@@ -222,7 +222,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                 //let target = {x: 101, y: 298};
                 //console.log(target);
                 //init pathfinding
-                let updatedData = initPathfinding(update[i], brainN, bush, mapCopy, update);
+                let updatedData = initPathfinding(update[i], brainN, bush, mapCopy, update, grid);
                                 
                 //no path found, set state to idle
                 if(!updatedData){

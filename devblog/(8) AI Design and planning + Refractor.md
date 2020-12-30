@@ -85,3 +85,9 @@ So we just need a default idle action now.
 &&
 
 I still need to add when a bush runs out of food, we need to remember that that bush ran out of food, and then look for the next closest bush.
+
+## After
+
+Path visualizer??
+Seems simple just render more circles,
+we already iterate over surfaceobjects so surfaceobjects[i].path is prob easy

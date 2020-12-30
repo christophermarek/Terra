@@ -1,4 +1,4 @@
-import { getNeighbors, setupGrid } from './grid';    
+import { getNeighbors, getGrid, updateWallsOnGrid } from './grid';    
 import { returnSurfaceObject } from '../data/map/surfaceObjects';
 
 //need these for pathfinding
@@ -66,133 +66,41 @@ function isWallMyself(x, y, radius, neighbor){
     }
 }
 
+//Cells that go inside the grid
+function Cell(x, y){
+    this.x = x;
+    this.y = y;
+    this.f = 0;
+    this.g = 0;
+    this.h = 0;
+    this.parent = null;
+    this.isWall = false;
+    this.closed = false;
+}
+
 export function search(grid, start, end, self, target){
-    //console.log(target);
-    //extra data fetching
-    let selfData = returnSurfaceObject(self.type);
-    let selfRadius = selfData.size;
-    //want to get bottom left and top right of the self obj
-    //so we can see if the xy we are iterating on is ourself
-    //console.log("starting search");
-    let openList = [];
-    openList.push(start);
-    while(openList.length > 0){
-        // Grab the lowest f(x) to process next
-        let lowInd = 0;
-        for(let i = 0; i < openList.length; i++) {
-            if(openList[i].f < openList[lowInd].f) { 
-                lowInd = i; 
-            }
-        }
-            
-        let currentNode = openList[lowInd];
-        // End case -- result has been found, return the traced path
-        if(currentNode.x == end.x && currentNode.y == end.y) {
-            let curr = currentNode;
-            let ret = [];
-            while(curr.parent) {
-                ret.push(curr);
-                curr = curr.parent;
-            }
-            return ret.reverse();
-        }
-            
-        // Normal case -- move currentNode from open to closed, process each of its neighbors
-        openList.remove(lowInd);
-        currentNode.closed = true;
-
-        let neighbors = getNeighbors(grid, currentNode);
-
-        for(let i = 0; i < neighbors.length; i++) {
-            let neighbor = neighbors[i];
-
-            if(neighbor.closed) {
-                continue;
-            }
-
-            if(neighbor.isWall){
-                //get target surface object type to find radius
-                //check if we are going to a point or to a surfaceObject
-                let targetSize = returnSurfaceObject(target.type).size;
-                //check if current neighbour is the target or myself so we ignore the walls for pathfinding
-                if(!(isWallMyself(self.x, self.y, selfRadius, neighbor) || isWallMyself(target.x, target.y, targetSize, neighbor))){
-                    //console.log('b4 continue');
-                    //console.log(neighbor);
-                    continue;
-                }
-
-            }
-
-            //check if path is in bounds of surfaaceObject
-            //need to calculate if at this neighbour, will our bounds hit a wall
-            //MIGHT BE EXPENSIVE
-            /*
-            let left = neighbor.x - selfRadius;
-            let right = neighbor.x + selfRadius;
-            let top = neighbor.y - selfRadius;
-            let bottom = neighbor.y + selfRadius;
-            let flag = false;
-            //want to check all elements in left-right[top-bottom] to see if they are a wall so we dont collide
-            for(let q = left; q < right; q++){
-                for(let w = top; w < bottom; w++){
-                    if(grid[q][w].isWall){
-                        if(!isWallMyself(q, w, selfRadius, neighbor)){}
-                        //if its a wall that means moving to this neighbor made us collide.
-                        flag = true;
-                        break;
-                    }
-                }
-            }
-            if(flag){
-                continue
-            }
-            */
-
-            // g score is the shortest distance from start to current node, we need to check if
-            //   the path we have arrived at this neighbor is the shortest one we have seen yet
-            let gScore = currentNode.g + 1; // 1 is the distance from a node to it's neighbor
-            let gScoreIsBest = false;
-
-            if(!neighbor.visited) {
-                // This the the first time we have arrived at this node, it must be the best
-                // Also, we need to take the h (heuristic) score since we haven't done so yet
-                gScoreIsBest = true;
-                neighbor.h = calcHeuristic({x: neighbor.x, y: neighbor.y}, {x: end.x, y: end.y});
-                neighbor.visited = true;
-                openList.push(neighbor);
-
-            }else if(gScore < neighbor.g) {
-                // We have already seen the node, but last time it had a worse g (distance from start)
-                gScoreIsBest = true;
-            }
-
-            if(gScoreIsBest) {
-                // Found an optimal (so far) path to this node.  Store info on how we got here and
-                //  just how good it really is...
-                neighbor.parent = currentNode;
-                neighbor.g = gScore;
-                neighbor.f = neighbor.g + neighbor.h;
-                neighbor.debug = "F: " + neighbor.f + "<br />G: " + neighbor.g + "<br />H: " + neighbor.h;
-            }
-        }
-    }
-
-    // No result was found -- empty array signifies failure to find path
-    //console.log("Unable to find path for :" + start.x + "," + start.y + " to dest " + end.x + "," + end.y);
-    return [];
-
-        
+    
+    let result = [];
+    return result;
 }
 
 export function startSearch(self, target, map, surfaceObjects){
-    let grid = setupGrid(map, surfaceObjects);
-    try{
-        let start = grid[self.x][self.y];
-        let end = grid[target.x][target.y];
-        let result = search(grid, start, end, self, target);
-        return result;
-    }catch{
-        //console.log(self);
-    }
+    
+    
+    let grid = getGrid(map, surfaceObjects);
+
+    //updateWallsOnGrid(map, surfaceObjects, true);
+
+    let start = {x: self.x, y: self.y};
+    console.log("started search at ", start);
+    let end = {x: target.x, y: target.y};
+    console.log("end search at ", end);
+    let result = search(grid, start, end, self, target);
+    console.log(result);
+
+    //updateWallsOnGrid(map, surfaceObjects, false);
+    
+    return result;
+    
     
 }
