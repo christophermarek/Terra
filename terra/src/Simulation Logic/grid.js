@@ -4,49 +4,55 @@ let grid = [];
 
 export function getNeighbors(grid, node){
     let ret = [];
+    //console.log(node);
     let x = node.x;
     let y = node.y;
 
-    //left
-    if(grid[x-1] && grid[x-1][y]) {
-        ret.push({x: x-1, y: y});
-    }
+    //okay neighbours are the 8 x,y pairs around.
+    //to the left it is x-1
 
+    //left
+    //check if no left neighbours exist
+    if(x - 1 >= 0){
+        //they do
+        ret.push({x: x-1, y: y})
+    }
+    
     //right
-    if(grid[x+1] && grid[x+1][y]) {
+    //check if valid right neighbour
+    if(x + 1 < grid.size * 100){
         ret.push({x: x+1, y: y});
     }
 
     //top
-    if(grid[x][y-1] && grid[x][y-1]) {
+    if(y - 1 >= 0) {
         ret.push({x: x, y: y-1});
     }
 
     //bottom
-    if(grid[x][y+1] && grid[x][y+1]) {
+    if(y + 1 < grid.size * 100) {
         ret.push({x: x, y: y+1});
     }
 
     //top left
-    if(grid[x-1] && grid[x-1][y-1]){
+    if(y - 1 >= 0 && x - 1 >= 0){
         ret.push({x: x-1, y: y-1});
     }
     
     //top right
-    if(grid[x+1] && grid[x+1][y-1]){
+    if(y - 1 >= 0 && x + 1 < grid.size * 100){
         ret.push({x: x+1, y: y-1});
     }
 
     //bottom left
-    if(grid[x-1] && grid[x-1][y+1]){
+    if(y + 1 < grid.size * 100 && x - 1 >= 0){
         ret.push({x: x-1, y: y+1});
     }
 
     //bottom right
-    if(grid[x+1] && grid[x+1][y+1]){
+    if(y + 1 < grid.size * 100 && x + 1 < grid.size * 100){
         ret.push({x: x+1, y: y+1});
     }
-    //console.table(ret);
     return ret;
     
 }

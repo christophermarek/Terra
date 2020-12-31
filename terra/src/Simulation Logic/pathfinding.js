@@ -108,29 +108,35 @@ export function search(grid, start, end, self, target){
        //# remove lowest priority node
        //node = queue.pop()
        let node = queue.dequeue();
-       console.log(node);
 
        //# check if goal reached
        //if problem.isGoalState(node[0]):
            //return node[1]
+        if(node.element[0].x === end.x && node.element[0].y === end.y){
+            console.log("{ath found")
+            return node.element[1];
+        }
 
        //# get next nodes to search
        //successors = problem.getSuccessors(node[0])
-       //for successor, sucAction, sucCost in successors:
-           //# insert into queue if we havent visited it yet
-           //# or if the successor is a goal state.
-           //# we need the goalState check here or the algorithm sometimes skips
-           //# the goal state since it is possible it has been reached by a different path already
-           //# and would exist in visited
-           //if successor not in visited or problem.isGoalState(successor):
+       let neighbors = getNeighbors(grid, node.element[0]);
+       //console.log(neighbors);
+       for(let i = 0; i < neighbors.length; i++) {
+            let neighbor = neighbors[i];
+            //console.log(neighbor);
+            if (!visited.includes(neighbor) || neighbor.x === end.x && neighbor.y === end.y){
                //# push into the stack the successors position
                //# and concatenate its direction with the current path
                //# increase the total path cost with successor cost and make the priority queues value the path cost
                //# + the heuristic so it prioritizes shorter cost and distance paths
-               //visited.append(successor)
-               //queue.push((successor, node[1] + [sucAction], node[2] + sucCost), node[2] + sucCost + heuristic(successor, problem))
+               visited.push(neighbor);
+               //console.log('pushing to queue');
+               queue.enqueue([neighbor, node.element[1] + [neighbor], node.element[2] + 1], node.element[2] + 1 + calcHeuristic(neighbor, end));
                //# append all successors onto the visited stack since they
                //# are going to be iterated over now that we pushed them onto the queue
+            }
+       }
+       console.log(queue.front());
     }
     //console.log(queue.pop())
     //util.raiseNotDefined()
@@ -146,11 +152,11 @@ export function startSearch(self, target, map, surfaceObjects){
     //updateWallsOnGrid(map, surfaceObjects, true);
 
     let start = {x: self.x, y: self.y};
-    //console.log("started search at ", start);
+    console.log("started search at ", start);
     let end = {x: target.x, y: target.y};
-    //console.log("end search at ", end);
+    console.log("end search at ", end);
     let result = search(grid, start, end, self, target);
-    //console.log(result);
+    console.log(result);
 
     //updateWallsOnGrid(map, surfaceObjects, false);
 
