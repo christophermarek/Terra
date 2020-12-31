@@ -1,5 +1,7 @@
 import { getNeighbors, getGrid, updateWallsOnGrid } from './grid';    
 import { returnSurfaceObject } from '../data/map/surfaceObjects';
+import { MinPriorityQueue, MaxPriorityQueue } from '@datastructures-js/priority-queue';
+
 
 //need these for pathfinding
 if (!Array.prototype.indexOf) {
@@ -79,8 +81,60 @@ function Cell(x, y){
 }
 
 export function search(grid, start, end, self, target){
-    
+
     let result = [];
+
+    //# keep track of where we already checked
+    //visited = []
+    let visited = [];
+
+    //# create priority queue
+    //queue = util.PriorityQueue()
+    const queue = new MinPriorityQueue();
+    
+
+    //# initial state has 0 cost and 0 priority
+    //queue.push((problem.getStartState(), [], 0), 0)
+    //initial queue state is an array
+    //[0][0] is start x,y [0][1] is path [0][2] is cost 
+    queue.enqueue([start, [], 0], 0);
+    //# insert initialNode into visited now since we only
+    //# insert into visited when we iterate over successors
+    //visited.append(problem.getStartState())
+    visited.push(start);
+
+    //while not queue.isEmpty():
+    while(!queue.isEmpty()){
+       //# remove lowest priority node
+       //node = queue.pop()
+       let node = queue.dequeue();
+       console.log(node);
+
+       //# check if goal reached
+       //if problem.isGoalState(node[0]):
+           //return node[1]
+
+       //# get next nodes to search
+       //successors = problem.getSuccessors(node[0])
+       //for successor, sucAction, sucCost in successors:
+           //# insert into queue if we havent visited it yet
+           //# or if the successor is a goal state.
+           //# we need the goalState check here or the algorithm sometimes skips
+           //# the goal state since it is possible it has been reached by a different path already
+           //# and would exist in visited
+           //if successor not in visited or problem.isGoalState(successor):
+               //# push into the stack the successors position
+               //# and concatenate its direction with the current path
+               //# increase the total path cost with successor cost and make the priority queues value the path cost
+               //# + the heuristic so it prioritizes shorter cost and distance paths
+               //visited.append(successor)
+               //queue.push((successor, node[1] + [sucAction], node[2] + sucCost), node[2] + sucCost + heuristic(successor, problem))
+               //# append all successors onto the visited stack since they
+               //# are going to be iterated over now that we pushed them onto the queue
+    }
+    //console.log(queue.pop())
+    //util.raiseNotDefined()
+    console.log("------------------")
     return result;
 }
 
@@ -92,14 +146,14 @@ export function startSearch(self, target, map, surfaceObjects){
     //updateWallsOnGrid(map, surfaceObjects, true);
 
     let start = {x: self.x, y: self.y};
-    console.log("started search at ", start);
+    //console.log("started search at ", start);
     let end = {x: target.x, y: target.y};
-    console.log("end search at ", end);
+    //console.log("end search at ", end);
     let result = search(grid, start, end, self, target);
-    console.log(result);
+    //console.log(result);
 
     //updateWallsOnGrid(map, surfaceObjects, false);
-    
+
     return result;
     
     
