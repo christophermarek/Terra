@@ -114,6 +114,7 @@ export function search(grid, start, end, self, target){
            //return node[1]
         if(node.element[0].x === end.x && node.element[0].y === end.y){
             console.log("{ath found")
+            console.log(node);
             return node.element[1];
         }
 
@@ -131,16 +132,14 @@ export function search(grid, start, end, self, target){
                //# + the heuristic so it prioritizes shorter cost and distance paths
                visited.push(neighbor);
                //console.log('pushing to queue');
-               queue.enqueue([neighbor, node.element[1] + [neighbor], node.element[2] + 1], node.element[2] + 1 + calcHeuristic(neighbor, end));
+               queue.enqueue([neighbor, node.element[1].concat(neighbor), node.element[2] + 1], node.element[2] + 1 + calcHeuristic(neighbor, end));
                //# append all successors onto the visited stack since they
                //# are going to be iterated over now that we pushed them onto the queue
             }
        }
-       console.log(queue.front());
     }
     //console.log(queue.pop())
     //util.raiseNotDefined()
-    console.log("------------------")
     return result;
 }
 
@@ -156,7 +155,7 @@ export function startSearch(self, target, map, surfaceObjects){
     let end = {x: target.x, y: target.y};
     console.log("end search at ", end);
     let result = search(grid, start, end, self, target);
-    console.log(result);
+    console.log(JSON.stringify(result));
 
     //updateWallsOnGrid(map, surfaceObjects, false);
 

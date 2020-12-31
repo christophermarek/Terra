@@ -20,7 +20,7 @@ export function getNeighbors(grid, node){
     
     //right
     //check if valid right neighbour
-    if(x + 1 < grid.size * 100){
+    if(x + 1 < grid.length * 100){
         ret.push({x: x+1, y: y});
     }
 
@@ -30,7 +30,7 @@ export function getNeighbors(grid, node){
     }
 
     //bottom
-    if(y + 1 < grid.size * 100) {
+    if(y + 1 < grid.length * 100) {
         ret.push({x: x, y: y+1});
     }
 
@@ -40,17 +40,17 @@ export function getNeighbors(grid, node){
     }
     
     //top right
-    if(y - 1 >= 0 && x + 1 < grid.size * 100){
+    if(y - 1 >= 0 && x + 1 < grid.length * 100){
         ret.push({x: x+1, y: y-1});
     }
 
     //bottom left
-    if(y + 1 < grid.size * 100 && x - 1 >= 0){
+    if(y + 1 < grid.length * 100 && x - 1 >= 0){
         ret.push({x: x-1, y: y+1});
     }
 
     //bottom right
-    if(y + 1 < grid.size * 100 && x + 1 < grid.size * 100){
+    if(y + 1 < grid.length * 100 && x + 1 < grid.length * 100){
         ret.push({x: x+1, y: y+1});
     }
     return ret;
