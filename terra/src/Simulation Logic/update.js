@@ -1,10 +1,10 @@
 import { getDirectionToPoint, getDistanceToPoint, initPathfinding } from './helpers/movement';
 import { updateHunger, loseHungerOverTime } from './helpers/hunger';
 import { updateFood, plantFoodTickUpdate, getClosestBush } from './helpers/food';
-import { updateHealth } from './helpers/health';
+//import { updateHealth } from './helpers/health';
 import { getBrainObjectById, deleteBrainObjById } from './helpers/brain';
 import { returnSurfaceObject } from '../data/map/surfaceObjects';
-import { calcHeuristic, search, startSearch } from './pathfinding';
+//import { calcHeuristic, search, startSearch } from './pathfinding';
 
 function removeFromArrayByIndex(arr, index){
     arr.splice(index, 1);
@@ -111,6 +111,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                 update[i] = loseHungerOverTime(secondsPassed, update[i]);
 
                 if(update[i].hunger >= 100){
+                    /*
                     //move this property initialization somewhere else
                     brainN.depletedBushes = [];
 
@@ -123,28 +124,36 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
 
                     brainN.depletedBushes.push(depletedBush);
                     //done eating
+                    */
+                    console.log("done eating, setting to idle");
                     brainN.action = "Idle";
+                    continue;
                 }
 
-                //MOVEMENT DISRUPTORS
-                //Call for a frame to check for food, maybe shouldnt reset like this?
+                 //Movement Disruptor
                 if(brainN.action === "Moving" && update[i].hunger <= 50){
+                    console.log("Moving and hunger < 50, setting to hungry");
                     brainN.action = "Hungry"
+                    continue;
                 }
 
                 //THINKING
                 switch (brainN.action){
                     case "Idle":
+                        console.log("IDLE");
                         //trigger functions
                         //These get triggered to move ai to a state from idle to an action
                         //if this is not in idle then hunger loop will reset
                         //should be a switch
-                        if(update[i].hunger <= 50){
+                        console.log(update[i].hunger);
+                        if(update[i].hunger <= 90){
+                            console.log("triggered to hungry");
                             brainN.action = "Hungry";
+                            break;
                         }
 
                         //default action, pick a random point and move to it.
-
+                        console.log("default action")
                         //for wander movement
                         //pick a random point 50px any direction from surface object
                         let leftRange = update[i].x - 200;
@@ -158,78 +167,48 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                         //do it until valid co ords are found
                         //if path is a wall that is ok because this will just run again
                         //the next frame
-                        while(randomX < 0 || randomY < 0){
+                        while(randomX < 0 || randomY < 0 || randomX > mapCopy.length * 100 || randomY > mapCopy.length * 100){
                             //in range
                             randomX = Math.floor(Math.random() * (rightRange - leftRange + 1)) + leftRange;
                             randomY = Math.floor(Math.random() * (upperRange - bottomRange + 1)) + bottomRange;
                         }
+
+                        console.log("got a valid point");
                         
                         let randomPoint = {x: randomX, y: randomY};
-
+                        console.log("random point ", randomPoint);
                         let updatedData = initPathfinding(update[i], brainN, randomPoint, mapCopy, update, grid);
-                                        
+
+                        console.log("updatedData", updatedData);
+
                         //no path found, set state to idle
                         if(!updatedData){
+                            console.log("no path found for wander");
                             brainN.action = "Idle";
+                            break;
                         }else{
                             //attach path details to object
                             update[i] = updatedData.surfaceObject;
                             brainN = updatedData.brain;
-
+                            console.log("successfully going to wander");
                             //set to moving, inits action
                             brainN.action = "Moving";
                             brainN.targetAction = "Wander";
                         }
                         break;
+
                     case "Reached Target":
                         if(brainN.targetAction === "Eat"){
+                            console.log("reached target to eat");
                             brainN.action = "Eat Target";
                         }else{
+                            console.log("reached target now idle");
                             brainN.action = "Idle";
                         }
 
                         break;
-                    case "Dying":
-                        //remove from surfaceObjects
-                        update = removeFromArrayByIndex(update, i);
-                        brainUpdate = deleteBrainObjById(brainUpdate, i); 
-                        break;
-                    case "Hungry":
-                        let bush = getClosestBush(update, update[i], brainN);
-                        if(bush === null){
-                            //stay hungry
-                            console.log("no bush");
-                        }else{
-                            //let target = {x: 101, y: 298};
-                            //console.log(target);
-                            //init pathfinding
-                            let updatedData = initPathfinding(update[i], brainN, bush, mapCopy, update, grid);
-                                            
-                            //no path found, set state to idle
-                            if(!updatedData){
-                                brainN.action = "Idle";
-                            }else{
-                                //attach path details to object
-                                update[i] = updatedData.surfaceObject;
-                                brainN = updatedData.brain;
-            
-                                //set to moving, inits action
-                                brainN.action = "Moving";
-                                brainN.target = bush;
-                                brainN.targetAction = "Eat";
-                            }
-                        }
-                        break;
-                    case "Eat Target":
-                        //decrease food & hunger by 1
-                        for(let z = 0; z < update.length; z++){
-                            if(update[z].id === brainN.target.id){
-                                updateFood(update[z], -2);
-                                updateHunger(update[i], 1);
-                            }
-                        }
-                        break;
                     case "Moving":
+                        console.log("Moving");
                         //update[i] = updateHealth(update[i], -1);
                         //init movement
                         if(!brainN.isMoving){
@@ -244,12 +223,13 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                             update[i].x = update[i].x + (brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
                             update[i].y = update[i].y + (brainN.movement.directionY * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
                         }
-                    
+                        
                         if(Math.hypot(update[i].x - brainN.movement.startX, update[i].y - brainN.movement.startY) >= brainN.movement.distanceToPoint){
                             //else get next point.
                             //when point reached
                             //if last point then set to done moving
                             if(brainN.path.length == 0){
+                                console.log("done Moving");
                                 brainN.isMoving = false;
                                 brainN.action = "Reached Target";
                                 update[i].x = brainN.movement.endX;
@@ -260,15 +240,61 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                                 update[i].y = brainN.movement.endY;
                                 brainN.movement.endX = nextPoint.x;
                                 brainN.movement.endY = nextPoint.y;
-            
                             }
-                            
+                                
                         }
                         break;
+
+                    case "Dying":
+                        console.log("Dying");
+                        //remove from surfaceObjects
+                        update = removeFromArrayByIndex(update, i);
+                        brainUpdate = deleteBrainObjById(brainUpdate, i); 
+                        break;
+                    case "Hungry":
+                        console.log("from hungry");
+                        let bush = getClosestBush(update, update[i], brainN);
+                        if(bush === null){
+                            //stay hungry
+                            console.log("no bush");
+                        }else{
+                            //let target = {x: 101, y: 298};
+                            //console.log(target);
+                            //init pathfinding
+                            let updatedData = initPathfinding(update[i], brainN, bush, mapCopy, update, grid);
+                                            
+                            //no path found, set state to idle
+                            if(!updatedData){
+                                console.log("no path to bush found, setting to idle");
+                                brainN.action = "Idle";
+                            }else{
+                                console.log("set to moving, target is bush");
+                                //attach path details to object
+                                update[i] = updatedData.surfaceObject;
+                                brainN = updatedData.brain;
+            
+                                //set to moving, inits action
+                                brainN.action = "Moving";
+                                brainN.target = bush;
+                                brainN.targetAction = "Eat";
+                            }
+                        }
+                        break;
+                    case "Eat Target":
+                        console.log("eating target");
+                        //decrease food & hunger by 1
+                        for(let z = 0; z < update.length; z++){
+                            if(update[z].id === brainN.target.id){
+                                updateFood(update[z], -2);
+                                updateHunger(update[i], 1);
+                            }
+                        }
+                        break;
+                    
                 }     
 
             }
-            console.log(brainN.action);
+            //console.log(brainN.action);
         }
     }
     return {surfaceObjects: update, brain: brainUpdate};
