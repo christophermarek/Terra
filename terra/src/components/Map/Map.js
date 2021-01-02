@@ -9,11 +9,20 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
     const [toggleBorder, setToggleBorder] = useState(true);
     const [hoverEnabled, setHoverEnabled] = useState(false);
     const [mapHover, setMapHover] = useState(' ');
+    const [gridEnabled, setGridEnabled] = useState(false);
 
     function tileHover(x, y){
         if(hoverEnabled){
             setMapHover("Map: " + map[x][y].type);
         }
+    }
+
+    function renderGrid(){
+        //console.log(map);
+
+        return(
+          <p>returned</p>  
+        );
     }
 
     function enableHover(){
@@ -23,6 +32,10 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
         }else{
             setHoverEnabled(!hoverEnabled);
         }
+    }
+
+    function enableGrid(){
+        setGridEnabled(!gridEnabled);
     }
 
     function toggleCellBorders(e){
@@ -64,6 +77,8 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
         }
         return temp;
     }
+
+
     function renderSurfaceObjects(col, row){
         let matchingSurfaceObjects = fetchSurfaceObjectsForTile(col, row); 
         if(matchingSurfaceObjects.length > 0){
@@ -109,34 +124,59 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
         </div>
     );
 
+    const GridCell = ({ columnIndex, rowIndex, style }) => (
+        <div
+            style={style}
+            className={"gridBackground " + (toggleBorder ? "cell-border" : "no-border") + " Cell"}
+        >
+            {renderSurfaceObjects(columnIndex, rowIndex)}
+            
+        </div>
+    );
+
     if (!(typeof updateMapWithSelectedTile === "function")) { 
         updateMapWithSelectedTile = function(){}
     }
+
 
     return (
         <div className="Map">
             <div className="mapControls">
                 <button className="button" onClick={startClicked}>{started ? "Stop" : "Start"}</button>
                 <button className="button" onClick={toggleCellBorders}>Toggle Cell Borders</button>
+                <button className="button" onClick={enableGrid}>Toggle grid view</button>
                 <HoverControls mapHover={mapHover} enableHover={enableHover}/>
             </div>
             
             <div className="mapContainer">
-                {
+                {!gridEnabled ? (
+
                     <Grid
-                    className="Grid"
-                    columnCount={map.length}
-                    columnWidth={index => columnWidths[index]}
-                    height={750}
-                    rowCount={map.length}
-                    rowHeight={index => rowHeights[index]}
-                    width={1000}
-                  >
-                    {Cell}
-                  </Grid>
-                }
-                
-                
+                        className="Grid"
+                        columnCount={map.length}
+                        columnWidth={index => columnWidths[index]}
+                        height={750}
+                        rowCount={map.length}
+                        rowHeight={index => rowHeights[index]}
+                        width={1000}
+                    >
+                        {Cell}
+                    </Grid>
+                )
+                :
+                (
+                    <Grid
+                        className="Grid"
+                        columnCount={map.length}
+                        columnWidth={index => columnWidths[index]}
+                        height={750}
+                        rowCount={map.length}
+                        rowHeight={index => rowHeights[index]}
+                        width={1000}
+                    >
+                        {GridCell}
+                    </Grid>
+                )}
             </div>           
         </div>
     );

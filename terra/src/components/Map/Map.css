@@ -34,6 +34,10 @@
 .bush{
   background-color: #556B2F;
 }
+
+.gridBackground{
+  background-color: white;
+}
   
 .mapContainer {
   display: flex;

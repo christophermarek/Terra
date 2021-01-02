@@ -112,19 +112,21 @@ export function search(grid, start, end, self, target){
             let neighbor = neighbors[i];
             //console.log(neighbor);
             //wall is 1
-            if(grid[neighbor.x][neighbor.y] === 0){
-                if (!visited.includes(neighbor) || neighbor.x === end.x && neighbor.y === end.y){
+            if(grid[neighbor.x][neighbor.y] === 1){
+                console.log("neighbour at wall ", neighbor.x, " ", neighbor.y);
+            }
+            if (!visited.includes(neighbor) || neighbor.x === end.x && neighbor.y === end.y){
                     //# push into the stack the successors position
                     //# and concatenate its direction with the current path
                     //# increase the total path cost with successor cost and make the priority queues value the path cost
                     //# + the heuristic so it prioritizes shorter cost and distance paths
-                    visited.push(neighbor);
+                visited.push(neighbor);
                     //console.log('pushing to queue');
-                    queue.enqueue([neighbor, node.element[1].concat(neighbor), node.element[2] + 1], node.element[2] + 1 + calcHeuristic(neighbor, end));
+                queue.enqueue([neighbor, node.element[1].concat(neighbor), node.element[2] + 1], node.element[2] + 1 + calcHeuristic(neighbor, end));
                     //# append all successors onto the visited stack since they
                     //# are going to be iterated over now that we pushed them onto the queue
-                 }
             }
+            
             
        }
     }

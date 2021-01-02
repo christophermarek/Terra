@@ -105,7 +105,7 @@ function setupGrid(map, surfaceObjects){
 
     let size = map.length * 100;
     console.log(size);
-    let grid = [...Array(size)].map(x=>Array(size).fill(0))       
+    let grid = [...Array(size)].map(x=>Array(size).fill(0));
     
     for(let k = 0; k < surfaceObjects.length; k++){
         if(surfaceObjects[k].type === "tree"){
@@ -121,10 +121,10 @@ function setupGrid(map, surfaceObjects){
                             let xSym = surfaceObjects[k].x - (i - surfaceObjects[k].x);
                             let ySym = surfaceObjects[k].y - (j - surfaceObjects[k].y);
                             // (x, y), (x, ySym), (xSym , y), (xSym, ySym) are in the circle
-                            grid[i][j] = 1;
-                            grid[i][ySym] = 1;
-                            grid[xSym][j] = 1;
-                            grid[xSym][ySym] = 1;                
+                            //grid[i][j] = 1;
+                            //grid[i][ySym] = 1;
+                            //grid[xSym][j] = 1;
+                            //grid[xSym][ySym] = 1;                
                         }
                     }
                 }
