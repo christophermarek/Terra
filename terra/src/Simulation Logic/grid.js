@@ -104,40 +104,33 @@ function setupGrid(map, surfaceObjects){
     //the grid will have map.length * 100 elements since there are that many co-ordinates
 
     let size = map.length * 100;
+    console.log(size);
     let grid = [...Array(size)].map(x=>Array(size).fill(0))       
     
     for(let k = 0; k < surfaceObjects.length; k++){
         if(surfaceObjects[k].type === "tree"){
             let fetchedData = returnSurfaceObject(surfaceObjects[k].type);
             let radius = fetchedData.size;
-            //these two loops create a square around the circle which will be the bounding box for the surfaceObject
-
-            for(let n = (surfaceObjects[k].x - radius);  n < (surfaceObjects[k].x + radius); n++){
-                for(let m = (surfaceObjects[k].y - radius);  m < (surfaceObjects[k].y + radius); m++){
-                //skip if out of grid bounds
-                    //if(surfaceObjects[k].type === "tree"){
-                        if(n >= 0 && m >=0 && n < map.length * 100 && m < map.length * 100 ){
-                            console.log("setting walls on grid");
-                            grid[n][m] = 1;
+            //skip if out of grid bounds
+            if(surfaceObjects[k].type === "tree"){
+                //console.log("setting walls on grid");
+                for (let i = surfaceObjects[k].x - radius ; i <= surfaceObjects[k].x; i++){
+                    for (let j = surfaceObjects[k].y - radius ; j <= surfaceObjects[k].y; j++){
+                        // we don't have to take the square root, it's slow
+                        if ((i - surfaceObjects[k].x)*(i - surfaceObjects[k].x) + (j - surfaceObjects[k].y)*(j - surfaceObjects[k].y) <= radius*radius){
+                            let xSym = surfaceObjects[k].x - (i - surfaceObjects[k].x);
+                            let ySym = surfaceObjects[k].y - (j - surfaceObjects[k].y);
+                            // (x, y), (x, ySym), (xSym , y), (xSym, ySym) are in the circle
+                            grid[i][j] = 1;
+                            grid[i][ySym] = 1;
+                            grid[xSym][j] = 1;
+                            grid[xSym][ySym] = 1;                
                         }
-                    //}
+                    }
                 }
             }
-        }else{
-            continue;
         }
+    }
         
-    }
-   /*
-    for(let i = 0; i < size; i++){
-        let columns = [];
-        for(let j = 0; j < size; j++){
-            grid[i][j] = 0;
-        }
-        grid.push(columns);
-    }
-    */
-    
-
     return grid;
 }
