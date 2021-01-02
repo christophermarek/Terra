@@ -3,6 +3,7 @@ import './Map.css';
 import { VariableSizeGrid as Grid } from 'react-window';
 import {returnSurfaceObject} from '../../data/map/surfaceObjects'
 import HoverControls from './HoverControls';
+import { getBounds } from '../../Simulation Logic/grid';
 
 function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, started}) {
 
@@ -78,6 +79,68 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
         return temp;
     }
 
+    function fetchBoundsForTile(col, row){
+        let bounds = getBounds();
+        let temp = [];
+        for(let i = 0; i < bounds.length; i++){
+            //have to round since you cant have decimal co-ordinates
+            let strX = String(Math.round(bounds[i].x));
+            let strY = String(Math.round(bounds[i].y));
+            //fix if [0][y] or [x][0]
+            if(strX.length <= 2){
+                strX = "0" + strX;
+            }
+            if(strY.length <= 2){
+                strY = "0" + strY;
+            }
+
+            //fetch only the coords for col/row. last two digits are internal svg coords
+            let xIndex = strX.substring(0, strX.length - 2);
+            let yIndex = strY.substring(0, strY.length - 2);
+            //have to check if x or y is not a 
+            
+            if(Number(xIndex) == col && Number(yIndex) == row){
+                temp.push(bounds[i]);
+            }
+        }
+        return temp;
+    }
+
+    function renderBounds(col, row){
+        let matchingbounds = fetchBoundsForTile(col, row); 
+        if(matchingbounds.length > 0){
+            console.log(matchingbounds);
+        }else{
+            console.log("no bounds loaded");
+        }
+        
+        return(
+            <svg className="svg">
+                {matchingbounds.map((object, i) => {
+                    
+                    let xToStr = String(Math.round(object.x));
+                    let yToStr = String(Math.round(object.y));
+                    if(xToStr.length <= 2){
+                        xToStr = "0" + xToStr;
+                    }
+                    if(yToStr.length <= 2){
+                        yToStr = "0" + yToStr;
+                    }
+
+                    //since x,y are ints, cast to string and get the last two indexes
+                    //since the begining index's are the tile's index
+                    let x = xToStr.slice(-2);
+                    let y = yToStr.slice(-2);
+                    
+                    return(
+                        <circle cx={x} cy={y} r={1} fill="black"></circle>
+                    )
+                    
+                })}
+            </svg>
+        );
+    }
+
 
     function renderSurfaceObjects(col, row){
         let matchingSurfaceObjects = fetchSurfaceObjectsForTile(col, row); 
@@ -129,7 +192,13 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
             style={style}
             className={"gridBackground " + (toggleBorder ? "cell-border" : "no-border") + " Cell"}
         >
-            {renderSurfaceObjects(columnIndex, rowIndex)}
+            {
+            //Change to renderGrid Tiles, not sure how to implement it
+            //maybe add another variable to grid that is the static walls on the grid,
+            //then we can draw the points like we do surfaceObjects? can we?
+        
+            }
+            {renderBounds(columnIndex, rowIndex)}
             
         </div>
     );

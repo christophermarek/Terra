@@ -1,6 +1,8 @@
 import { returnSurfaceObject } from '../data/map/surfaceObjects';
 
 let grid = [];
+//this is an array of points that are walls in the grid
+let bounds = [];
 
 export function getNeighbors(grid, node){
     let ret = [];
@@ -71,6 +73,11 @@ export function getGrid(map, surfaceObjects){
     }
 }
 
+export function getBounds(){
+    return bounds;
+}
+
+
 //unused right now
 export function updateWallsOnGrid(map, surfaceObjects, isTrue){
 //go through surface objects and calculate the walls for this grid.
@@ -124,7 +131,12 @@ function setupGrid(map, surfaceObjects){
                             //grid[i][j] = 1;
                             //grid[i][ySym] = 1;
                             //grid[xSym][j] = 1;
-                            //grid[xSym][ySym] = 1;                
+                            //grid[xSym][ySym] = 1;       
+                            bounds.push({x: i, y: j});
+                            bounds.push({x: i, y: ySym});
+                            bounds.push({x: xSym, y: j});
+                            bounds.push({x: xSym, y: ySym});
+
                         }
                     }
                 }
