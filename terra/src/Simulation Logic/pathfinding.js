@@ -111,17 +111,21 @@ export function search(grid, start, end, self, target){
        for(let i = 0; i < neighbors.length; i++) {
             let neighbor = neighbors[i];
             //console.log(neighbor);
-            if (!visited.includes(neighbor) || neighbor.x === end.x && neighbor.y === end.y){
-               //# push into the stack the successors position
-               //# and concatenate its direction with the current path
-               //# increase the total path cost with successor cost and make the priority queues value the path cost
-               //# + the heuristic so it prioritizes shorter cost and distance paths
-               visited.push(neighbor);
-               //console.log('pushing to queue');
-               queue.enqueue([neighbor, node.element[1].concat(neighbor), node.element[2] + 1], node.element[2] + 1 + calcHeuristic(neighbor, end));
-               //# append all successors onto the visited stack since they
-               //# are going to be iterated over now that we pushed them onto the queue
+            //wall is 1
+            if(grid[neighbor.x][neighbor.y] === 0){
+                if (!visited.includes(neighbor) || neighbor.x === end.x && neighbor.y === end.y){
+                    //# push into the stack the successors position
+                    //# and concatenate its direction with the current path
+                    //# increase the total path cost with successor cost and make the priority queues value the path cost
+                    //# + the heuristic so it prioritizes shorter cost and distance paths
+                    visited.push(neighbor);
+                    //console.log('pushing to queue');
+                    queue.enqueue([neighbor, node.element[1].concat(neighbor), node.element[2] + 1], node.element[2] + 1 + calcHeuristic(neighbor, end));
+                    //# append all successors onto the visited stack since they
+                    //# are going to be iterated over now that we pushed them onto the queue
+                 }
             }
+            
        }
     }
     //console.log(queue.pop())

@@ -71,6 +71,7 @@ export function getGrid(map, surfaceObjects){
     }
 }
 
+//unused right now
 export function updateWallsOnGrid(map, surfaceObjects, isTrue){
 //go through surface objects and calculate the walls for this grid.
     //each surfaceObject has a wall around it as a bounding box
@@ -104,7 +105,29 @@ function setupGrid(map, surfaceObjects){
 
     let size = map.length * 100;
     let grid = [...Array(size)].map(x=>Array(size).fill(0))       
+    
+    for(let k = 0; k < surfaceObjects.length; k++){
+        if(surfaceObjects[k].type === "tree"){
+            let fetchedData = returnSurfaceObject(surfaceObjects[k].type);
+            let radius = fetchedData.size;
+            //these two loops create a square around the circle which will be the bounding box for the surfaceObject
 
+            for(let n = (surfaceObjects[k].x - radius);  n < (surfaceObjects[k].x + radius); n++){
+                for(let m = (surfaceObjects[k].y - radius);  m < (surfaceObjects[k].y + radius); m++){
+                //skip if out of grid bounds
+                    //if(surfaceObjects[k].type === "tree"){
+                        if(n >= 0 && m >=0 && n < map.length * 100 && m < map.length * 100 ){
+                            console.log("setting walls on grid");
+                            grid[n][m] = 1;
+                        }
+                    //}
+                }
+            }
+        }else{
+            continue;
+        }
+        
+    }
    /*
     for(let i = 0; i < size; i++){
         let columns = [];
