@@ -9,7 +9,7 @@ export function updateHunger(obj, amount){
 export function loseHungerOverTime(secondsPassed, obj){
     //where the rate is hunger depletion speed * time elapsed
     // * -1 to make it decrease
-    let hungerDepletionAmount = 1 * secondsPassed * - 1;
+    let hungerDepletionAmount = 2 * secondsPassed * - 1;
     obj = updateHunger(obj, hungerDepletionAmount);
     
     return obj;

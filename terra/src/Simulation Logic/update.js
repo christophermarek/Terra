@@ -129,10 +129,10 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
 
                 //for wander movement
                 //pick a random point 50px any direction from surface object
-                let leftRange = update[i].x - 50;
-                let rightRange = update[i].x + 50;
-                let upperRange = update[i].y - 50;
-                let bottomRange = update[i].y + 50;
+                let leftRange = update[i].x - 200;
+                let rightRange = update[i].x + 200;
+                let upperRange = update[i].y - 200;
+                let bottomRange = update[i].y + 200;
                 
                 let randomX = -1;
                 let randomY = -1;
@@ -313,7 +313,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
 
 
     
-    
+    console.log(brainN.action);
 
         }
         

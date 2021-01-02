@@ -68,18 +68,6 @@ function isWallMyself(x, y, radius, neighbor){
     }
 }
 
-//Cells that go inside the grid
-function Cell(x, y){
-    this.x = x;
-    this.y = y;
-    this.f = 0;
-    this.g = 0;
-    this.h = 0;
-    this.parent = null;
-    this.isWall = false;
-    this.closed = false;
-}
-
 export function search(grid, start, end, self, target){
 
     let result = [];
@@ -113,8 +101,6 @@ export function search(grid, start, end, self, target){
        //if problem.isGoalState(node[0]):
            //return node[1]
         if(node.element[0].x === end.x && node.element[0].y === end.y){
-            console.log("{ath found")
-            console.log(node);
             return node.element[1];
         }
 
@@ -151,11 +137,8 @@ export function startSearch(self, target, map, surfaceObjects){
     //updateWallsOnGrid(map, surfaceObjects, true);
 
     let start = {x: self.x, y: self.y};
-    console.log("started search at ", start);
     let end = {x: target.x, y: target.y};
-    console.log("end search at ", end);
     let result = search(grid, start, end, self, target);
-    console.log(JSON.stringify(result));
 
     //updateWallsOnGrid(map, surfaceObjects, false);
 
