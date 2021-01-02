@@ -136,6 +136,9 @@ function Simulation() {
 
         //global vars defined at top, not state vars
         secondsPassed = seconds;
+
+        //console.log("seconds passed for loop ", secondsPassed);
+
         //limit time skip on pause/start
         secondsPassed = Math.min(secondsPassed, 0.1);
         oldTimeStamp = timeStamp;
@@ -143,6 +146,7 @@ function Simulation() {
         //
         
         update(secondsPassed);
+        //console.log("new timestamp ", timeStamp);
         
         //
 
