@@ -1,7 +1,6 @@
-import { getNeighbors, getGrid, updateWallsOnGrid } from './grid';    
+import { getNeighbors, getGrid, updateWallsOnGrid, getBounds } from './grid';    
 import { returnSurfaceObject } from '../data/map/surfaceObjects';
 import { MinPriorityQueue, MaxPriorityQueue } from '@datastructures-js/priority-queue';
-
 
 //need these for pathfinding
 if (!Array.prototype.indexOf) {
@@ -35,37 +34,6 @@ export function calcHeuristic(pos0, pos1){
     let d1 = Math.abs (pos1.x - pos0.x);
     let d2 = Math.abs (pos1.y - pos0.y);
     return d1 + d2;
-}
-
-function isWallMyself(x, y, radius, neighbor){
-
-    //console.log("checking if wall is myself");
-    //console.log("self x/y: " + x + "," + y)
-    let leftX = x - radius;
-    let lowY = y - radius
-    let rightX = x + radius;
-    let highY = y + radius;
-    /*
-    console.log("bounds of self at x: " + leftX + " to " + rightX);
-    console.log("bounds of self at y: " + lowY + " to " + highY);
-
-
-    console.log(neighbor.x + "," + neighbor.y);
-    console.log(neighbor.x);
-    console.log(leftX);
-    console.log(neighbor.x >= leftX);
-    console.log((rightX >= neighbor.x));
-    console.log((neighbor.y >= lowY));
-    console.log((highY >= neighbor.y));
-    */
-    //check if exists in own bounds
-    if (((neighbor.x >= leftX) && (rightX >= neighbor.x)) && ((neighbor.y >= lowY) && (highY >= neighbor.y))){
-        //console.log("exists in bounds");
-        return true;
-    }else{
-        //console.log("not in bounds")
-        return false;
-    }
 }
 
 export function search(grid, start, end, self, target){
@@ -110,19 +78,18 @@ export function search(grid, start, end, self, target){
        //console.log(neighbors);
        for(let i = 0; i < neighbors.length; i++) {
             let neighbor = neighbors[i];
-            //console.log(neighbor);
-            //wall is 1
-            if(grid[neighbor.x][neighbor.y] === 1){
-                console.log("neighbour at wall ", neighbor.x, " ", neighbor.y);
-            }
-            if (!visited.includes(neighbor) || neighbor.x === end.x && neighbor.y === end.y){
+            //wall is if grid[x][y] = 1;
+            if (!visited.includes(neighbor) || (neighbor.x === end.x && neighbor.y === end.y)){
                     //# push into the stack the successors position
                     //# and concatenate its direction with the current path
                     //# increase the total path cost with successor cost and make the priority queues value the path cost
                     //# + the heuristic so it prioritizes shorter cost and distance paths
                 visited.push(neighbor);
+                //if(grid[neighbor.x][neighbor.y] !== 1){
+                    queue.enqueue([neighbor, node.element[1].concat(neighbor), node.element[2] + 1], node.element[2] + 1 + calcHeuristic(neighbor, end));
+                //}
+                
                     //console.log('pushing to queue');
-                queue.enqueue([neighbor, node.element[1].concat(neighbor), node.element[2] + 1], node.element[2] + 1 + calcHeuristic(neighbor, end));
                     //# append all successors onto the visited stack since they
                     //# are going to be iterated over now that we pushed them onto the queue
             }

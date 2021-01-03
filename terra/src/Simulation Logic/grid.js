@@ -16,46 +16,65 @@ export function getNeighbors(grid, node){
     //left
     //check if no left neighbours exist
     if(x - 1 >= 0){
+        //if(grid[x-1][y] !== 1){
+            ret.push({x: x-1, y: y})
+        //}
+        //console.log(bounds.length)
         //they do
-        ret.push({x: x-1, y: y})
     }
     
     //right
     //check if valid right neighbour
     if(x + 1 < grid.length){
-        ret.push({x: x+1, y: y});
+        //if(grid[x+1][y] !== 1){
+            ret.push({x: x+1, y: y});
+        //}
     }
 
     //top
     if(y - 1 >= 0) {
-        ret.push({x: x, y: y-1});
+        //if(grid[x][y-1] !== 1){
+            ret.push({x: x, y: y-1});
+        //}
     }
 
     //bottom
     if(y + 1 < grid.length) {
-        ret.push({x: x, y: y+1});
+        //if(grid[x][y+1] !== 1){
+            ret.push({x: x, y: y+1});
+        //}
     }
 
     //top left
     if(y - 1 >= 0 && x - 1 >= 0){
-        ret.push({x: x-1, y: y-1});
+        //if(grid[x-1][y-1] !== 1){
+            ret.push({x: x-1, y: y-1});
+        //}
     }
     
     //top right
     if(y - 1 >= 0 && x + 1 < grid.length){
-        ret.push({x: x+1, y: y-1});
+        //if(grid[x+1][y-1] !== 1){
+            ret.push({x: x+1, y: y-1});
+        //}
     }
 
     //bottom left
     if(y + 1 < grid.length && x - 1 >= 0){
-        ret.push({x: x-1, y: y+1});
+        //if(grid[x-1][y+1] !== 1){
+            ret.push({x: x-1, y: y+1});
+        //}
     }
 
     //bottom right
     if(y + 1 < grid.length && x + 1 < grid.length){
-        ret.push({x: x+1, y: y+1});
+        //if(grid[x+1][y+1] !== 1){
+            ret.push({x: x+1, y: y+1});
+        //}
     }
+    //console.log("neighbors length ", ret.length);
     return ret;
+
     
 }
 
@@ -65,7 +84,7 @@ export function getGrid(map, surfaceObjects){
 
     //I wonder if this will create a new grid, if we have a grid loaded from one map,
     //and then load into a different map in the same session. 
-    if(grid.length == 0){
+    if(grid.length === 0){
         grid = setupGrid(map, surfaceObjects);
         return grid;
     }else{
@@ -78,44 +97,16 @@ export function getBounds(){
 }
 
 
-//unused right now
-export function updateWallsOnGrid(map, surfaceObjects, isTrue){
-//go through surface objects and calculate the walls for this grid.
-    //each surfaceObject has a wall around it as a bounding box
-    for(let k = 0; k < surfaceObjects.length; k++){
-        let fetchedData = returnSurfaceObject(surfaceObjects[k].type);
-        let radius = fetchedData.size;
-        //these two loops create a square around the circle which will be the bounding box for the surfaceObject
-
-        for(let n = (surfaceObjects[k].x - radius);  n < (surfaceObjects[k].x + radius); n++){
-          for(let m = (surfaceObjects[k].y - radius);  m < (surfaceObjects[k].y + radius); m++){
-            //skip if out of grid bounds
-                //if(surfaceObjects[k].type === "tree"){
-                    if(n >= 0 && m >=0 && n < map.length * 100 && m < map.length * 100 ){
-                        try{
-                            grid[n][m].isWall = isTrue;
-                        }catch{
-                            console.log(n);
-                            console.log(m);
-
-                        }
-                    }
-                //}
-            }
-        }
-    }
-}
 
 function setupGrid(map, surfaceObjects){
 
     //the grid will have map.length * 100 elements since there are that many co-ordinates
-
+    console.log("called");
     let size = map.length * 100;
     console.log(size);
     let grid = [...Array(size)].map(x=>Array(size).fill(0));
     
     for(let k = 0; k < surfaceObjects.length; k++){
-        if(surfaceObjects[k].type === "tree"){
             let fetchedData = returnSurfaceObject(surfaceObjects[k].type);
             let radius = fetchedData.size;
             //skip if out of grid bounds
@@ -128,10 +119,10 @@ function setupGrid(map, surfaceObjects){
                             let xSym = surfaceObjects[k].x - (i - surfaceObjects[k].x);
                             let ySym = surfaceObjects[k].y - (j - surfaceObjects[k].y);
                             // (x, y), (x, ySym), (xSym , y), (xSym, ySym) are in the circle
-                            //grid[i][j] = 1;
-                            //grid[i][ySym] = 1;
-                            //grid[xSym][j] = 1;
-                            //grid[xSym][ySym] = 1;       
+                            grid[i][j] = 1;
+                            grid[i][ySym] = 1;
+                            grid[xSym][j] = 1;
+                            grid[xSym][ySym] = 1;       
                             bounds.push({x: i, y: j});
                             bounds.push({x: i, y: ySym});
                             bounds.push({x: xSym, y: j});
@@ -142,7 +133,8 @@ function setupGrid(map, surfaceObjects){
                 }
             }
         }
-    }
+    
+    
         
     return grid;
 }

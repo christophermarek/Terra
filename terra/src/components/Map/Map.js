@@ -11,6 +11,7 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
     const [hoverEnabled, setHoverEnabled] = useState(false);
     const [mapHover, setMapHover] = useState(' ');
     const [gridEnabled, setGridEnabled] = useState(false);
+    let bounds = getBounds();
 
     function tileHover(x, y){
         if(hoverEnabled){
@@ -72,7 +73,7 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
             let yIndex = strY.substring(0, strY.length - 2);
             //have to check if x or y is not a 
             
-            if(Number(xIndex) == col && Number(yIndex) == row){
+            if(Number(xIndex) === col && Number(yIndex) === row){
                 temp.push(surfaceObjects[i]);
             }
         }
@@ -80,7 +81,6 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
     }
 
     function fetchBoundsForTile(col, row){
-        let bounds = getBounds();
         let temp = [];
         for(let i = 0; i < bounds.length; i++){
             //have to round since you cant have decimal co-ordinates
@@ -99,7 +99,7 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
             let yIndex = strY.substring(0, strY.length - 2);
             //have to check if x or y is not a 
             
-            if(Number(xIndex) == col && Number(yIndex) == row){
+            if(Number(xIndex) === col && Number(yIndex) === row){
                 temp.push(bounds[i]);
             }
         }
@@ -109,11 +109,11 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
     function renderBounds(col, row){
         let matchingbounds = fetchBoundsForTile(col, row); 
         if(matchingbounds.length > 0){
-            console.log(matchingbounds);
+            //console.log(matchingbounds);
         }else{
-            console.log("no bounds loaded");
+            //console.log("no bounds loaded");
         }
-        
+
         return(
             <svg className="svg">
                 {matchingbounds.map((object, i) => {
@@ -150,7 +150,7 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
         return(
             <svg className="svg">
                 {matchingSurfaceObjects.map((object, i) => {
-                    
+                    //console.log(object);
                     let xToStr = String(Math.round(object.x));
                     let yToStr = String(Math.round(object.y));
                     if(xToStr.length <= 2){
@@ -166,8 +166,9 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
                     let y = yToStr.slice(-2);
                     
                     let fetchedObject = returnSurfaceObject(object.type);
+                    let key = xToStr + "," + yToStr + "," + object.id;
                     return(
-                        <circle cx={x} cy={y} r={fetchedObject.size} fill={fetchedObject.color}></circle>
+                        <circle key={key} cx={x} cy={y} r={fetchedObject.size} fill={fetchedObject.color}></circle>
                     )
                     
                 })}

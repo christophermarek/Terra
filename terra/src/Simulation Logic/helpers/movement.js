@@ -20,7 +20,7 @@ export function getDirectionToPoint(x, y, destX, destY, distance){
 export function initPathfinding(obj, brainN, target, map, surfaceObjects, grid){
     //i pass obj.x obj.y and obj. Refractor to just pass obj instead and pull properties
     brainN.path = startSearch(obj, target, map, surfaceObjects, grid);
-    console.log("got new path")
+    //console.log("got new path")
     //console.table(brainN.path);
     if(!brainN.path){
         return false;

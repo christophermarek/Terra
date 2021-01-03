@@ -145,7 +145,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                         //These get triggered to move ai to a state from idle to an action
                         //if this is not in idle then hunger loop will reset
                         //should be a switch
-                        console.log(update[i].hunger);
+                        //console.log(update[i].hunger);
                         if(update[i].hunger <= 90){
                             //console.log("triggered to hungry");
                             brainN.action = "Hungry";
