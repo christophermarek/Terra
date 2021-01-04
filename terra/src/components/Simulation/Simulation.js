@@ -159,12 +159,6 @@ function Simulation() {
             {!isLoaded ? (
                 <div className="loading">
 
-                    <div className="loadMap">
-                        <textarea placeholder="Paste imported map here" onChange={importMapTextHandler}>{importedMap}</textarea>
-                        <button className="button" onClick={() => loadMap(importedMap)}>Import Map</button>
-                    </div>
-                    
-
                     <div className="loadPreset">
                             
                             <select value={mapPreset} onChange={dropdownChange}>

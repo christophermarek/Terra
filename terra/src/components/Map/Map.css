@@ -88,6 +88,7 @@ svg {
 .leftContainer{
   display: flex;
   flex-direction: column;
+  width:15%;
 }
 
 .editorControls{
