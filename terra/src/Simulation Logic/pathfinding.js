@@ -1,6 +1,7 @@
-import { getNeighbors, getGrid, updateWallsOnGrid, getBounds } from './grid';    
+import { getNeighbors, getGrid, updateWallsOnGrid, getBounds, getPlanner } from './grid';    
 import { returnSurfaceObject } from '../data/map/surfaceObjects';
 import { MinPriorityQueue, MaxPriorityQueue } from '@datastructures-js/priority-queue';
+
 
 //need these for pathfinding
 if (!Array.prototype.indexOf) {
@@ -105,6 +106,7 @@ export function search(grid, start, end, self, target){
 export function startSearch(self, target, map, surfaceObjects){
     
     
+    /*
     let grid = getGrid(map, surfaceObjects);
 
     //updateWallsOnGrid(map, surfaceObjects, true);
@@ -114,8 +116,43 @@ export function startSearch(self, target, map, surfaceObjects){
     let result = search(grid, start, end, self, target);
 
     //updateWallsOnGrid(map, surfaceObjects, false);
+    */
 
-    return result;
+    
+    //import the planner and call it to create a path
+    //should be very simple
+
+    //Find path
+    let path = [];
+    let planner = getPlanner(map, surfaceObjects);
+    let fixedPath = [];
+
+    //this sets path to a 1d array of x,y cordinates where the x value is an element and the y value follows it
+    // [30, 20, 1, 5]
+    // { x: 30, y: 20 } { x: 1, y: 5 }
+
+    let dist = planner.search(self.x,self.y,  target.x,target.y, path);
+
+    //console.log(path);
+
+    //convert path to a array of object x,y cordinates
+    for(let i = 0; i < path.length; i+= 2){
+        
+        let parsedX = path[i];
+        let parsedY = path[i+1]; 
+        //console.log({x: parsedX, y: parsedY});
+        fixedPath.push({x: parsedX, y: parsedY});
+    }
+
+
+
+    //Log output
+    //console.log('path length=', dist)
+    
+
+    
+
+    return fixedPath;
     
     
 }

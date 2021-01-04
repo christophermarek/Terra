@@ -102,7 +102,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
             //should first be a check for survival needs ie water/food/health, then check other actions to do
             //add a way to know how they died, starved to death or health went to low, I would need
             //to remember the last state and check if it was combat or hungry/starving
-            if((update[i].health <= 0 || update[i].hunger <= 0) && brainN.action != "Dying"){
+            if((update[i].health <= 0 || update[i].hunger <= 0) && brainN.action !== "Dying"){
                 brainN.action = "Dying";
             }else{
 
@@ -208,11 +208,14 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
 
                         break;
                     case "Moving":
-                        //console.log("Moving");
+                        console.log("Moving");
                         //update[i] = updateHealth(update[i], -1);
                         //init movement
                         if(!brainN.isMoving){
+                            //console.log(update[i]);
+                            //console.log(brainN.movement);
                             brainN.movement.distanceToPoint = getDistanceToPoint(update[i].x, update[i].y, brainN.movement.endX, brainN.movement.endY);
+                            //console.log(brainN.movement.distanceToPoint);
                             let direction = getDirectionToPoint(update[i].x, update[i].y, brainN.movement.endX, brainN.movement.endY, brainN.movement.distanceToPoint);
                             brainN.movement.directionX = direction.x;
                             brainN.movement.directionY = direction.y;
@@ -228,21 +231,28 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                             //else get next point.
                             //when point reached
                             //if last point then set to done moving
-                            if(brainN.path.length == 0){
-                                //console.log("done Moving");
+                            if(brainN.path.length === 0){
+                                console.log("End of path");
                                 brainN.isMoving = false;
                                 brainN.action = "Reached Target";
-                                update[i].x = brainN.movement.endX;
-                                update[i].y = brainN.movement.endY;
+                                //save these incase we ever want to go back to the old locking
+                                //update[i].x = brainN.movement.endX;
+                                //update[i].y = brainN.movement.endY;
                             }else{
                                 let nextPoint = brainN.path.shift();
-                                update[i].x = brainN.movement.endX;
-                                update[i].y = brainN.movement.endY;
+                                console.log(nextPoint);
+                                //update[i].x = brainN.movement.endX;
+                                //update[i].y = brainN.movement.endY;
+                                //console.log("1, ", update[i]);
                                 brainN.movement.endX = nextPoint.x;
                                 brainN.movement.endY = nextPoint.y;
+                                //recalculate movement for new point
+                                brainN.isMoving = false;
                             }
                                 
                         }
+                        console.log("x,y ", update[i].x, update[i].y);
+
                         break;
 
                     case "Dying":

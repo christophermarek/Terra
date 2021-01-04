@@ -1,7 +1,7 @@
 import { startSearch } from '../pathfinding';
 
 export function getDistanceToPoint(x, y, destX, destY){
-    //console.log(" x: " + x + " y: " + y + " destX: " + destX + " destY: " + destY);
+    console.log(" x: " + x + " y: " + y + " destX: " + destX + " destY: " + destY);
     let distance = Math.hypot(destX - x, destY - y);
     return distance;
 }
@@ -22,12 +22,19 @@ export function initPathfinding(obj, brainN, target, map, surfaceObjects, grid){
     brainN.path = startSearch(obj, target, map, surfaceObjects, grid);
     //console.log("got new path")
     //console.table(brainN.path);
+    console.log(brainN.path);
     if(!brainN.path){
         return false;
     }
 
+    console.log(obj.x);
+    console.log(obj.y);
+
     let nextPoint = brainN.path.shift();
+    //need to skip first point
+    nextPoint = brainN.path.shift();
     //console.log(brainN)
+    //console.log(nextPoint);
     if(nextPoint === undefined){
         return false;
     }else{
