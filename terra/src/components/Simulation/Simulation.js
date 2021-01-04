@@ -181,11 +181,6 @@ function Simulation() {
                          startClicked={startClicked}
                          started={started}
                     />
-
-                    <GameConsole generalMessages={generalMessages}
-                                 battleMessages={battleMessages}
-                                 actionMessages={actionMessages}
-                    />
                     
                 </>
             )}

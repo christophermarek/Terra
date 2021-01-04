@@ -90,10 +90,6 @@ IDLE AND ALL OF THIS IS DONE NOW,
 
 ## After
 
-Path visualizer??
-Seems simple just render more circles,
-we already iterate over surfaceobjects so surfaceobjects[i].path is prob easy
-
 MAX MAP SIze right now is only 5, Any higher than that and the grid is too large.
 If we want to support larger maps then we need a pathfinding algorithm that will limit the scope of the grid to 
 6 chunks like this or maybe even smaller. Not sure.
