@@ -4,6 +4,7 @@ import { VariableSizeGrid as Grid } from 'react-window';
 import {returnSurfaceObject} from '../../data/map/surfaceObjects'
 import HoverControls from './HoverControls';
 import { getBounds } from '../../Simulation Logic/grid';
+import SurfaceObjectsPanel from './SurfaceObjectsPanel';
 
 function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, started}) {
 
@@ -11,6 +12,9 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
     const [hoverEnabled, setHoverEnabled] = useState(false);
     const [mapHover, setMapHover] = useState(' ');
     const [gridEnabled, setGridEnabled] = useState(false);
+    const [selectedSurfaceObjectId, setSelectedSurfaceObjectId] = useState(-1);
+
+
     let bounds = getBounds();
 
     function tileHover(x, y){
@@ -131,7 +135,7 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
                     //since the begining index's are the tile's index
                     let x = xToStr.slice(-2);
                     let y = yToStr.slice(-2);
-                    
+
                     return(
                         <circle cx={x} cy={y} r={1} fill="black"></circle>
                     )
@@ -168,7 +172,7 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
                     let fetchedObject = returnSurfaceObject(object.type);
                     let key = xToStr + "," + yToStr + "," + object.id;
                     return(
-                        <circle key={key} cx={x} cy={y} r={fetchedObject.size} fill={fetchedObject.color}></circle>
+                        <circle className={selectedSurfaceObjectId === object.id ? "cell-border" : "no-border"} key={key} cx={x} cy={y} r={fetchedObject.size} fill={fetchedObject.color}></circle>
                     )
                     
                 })}
@@ -216,6 +220,14 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
                     <button className="button" onClick={startClicked}>{started ? "Stop" : "Start"}</button>
                     <button className="button" onClick={toggleCellBorders}>Toggle Cell Borders</button>
                 </div>
+
+                <SurfaceObjectsPanel
+                    surfaceObjects={surfaceObjects}
+                    setSelectedSurfaceObjectId={setSelectedSurfaceObjectId}
+                    selectedSurfaceObjectId={selectedSurfaceObjectId}
+                />
+
+
             </div>
             
             

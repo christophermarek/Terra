@@ -137,7 +137,6 @@ export function startSearch(self, target, map, surfaceObjects){
 
     //convert path to a array of object x,y cordinates
     for(let i = 0; i < path.length; i+= 2){
-        
         let parsedX = path[i];
         let parsedY = path[i+1]; 
         //console.log({x: parsedX, y: parsedY});

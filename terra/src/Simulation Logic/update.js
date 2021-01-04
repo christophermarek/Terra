@@ -146,7 +146,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                         //if this is not in idle then hunger loop will reset
                         //should be a switch
                         //console.log(update[i].hunger);
-                        if(update[i].hunger <= 90){
+                        if(update[i].hunger <= 60){
                             //console.log("triggered to hungry");
                             brainN.action = "Hungry";
                             break;
@@ -208,7 +208,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
 
                         break;
                     case "Moving":
-                        console.log("Moving");
+                        //console.log("Moving");
                         //update[i] = updateHealth(update[i], -1);
                         //init movement
                         if(!brainN.isMoving){
@@ -232,15 +232,15 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                             //when point reached
                             //if last point then set to done moving
                             if(brainN.path.length === 0){
-                                console.log("End of path");
+                                //console.log("End of path");
                                 brainN.isMoving = false;
-                                brainN.action = "Reached Target";
+                                //brainN.action = "Reached Target";
                                 //save these incase we ever want to go back to the old locking
                                 //update[i].x = brainN.movement.endX;
                                 //update[i].y = brainN.movement.endY;
                             }else{
                                 let nextPoint = brainN.path.shift();
-                                console.log(nextPoint);
+                                //console.log(nextPoint);
                                 //update[i].x = brainN.movement.endX;
                                 //update[i].y = brainN.movement.endY;
                                 //console.log("1, ", update[i]);
