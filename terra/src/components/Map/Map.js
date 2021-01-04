@@ -211,12 +211,13 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
 
     return (
         <div className="Map">
-            <div className="mapControls">
-                <button className="button" onClick={startClicked}>{started ? "Stop" : "Start"}</button>
-                <button className="button" onClick={toggleCellBorders}>Toggle Cell Borders</button>
-                <button className="button" onClick={enableGrid}>Toggle grid view</button>
-                <HoverControls mapHover={mapHover} enableHover={enableHover}/>
+            <div className="leftContainer">
+                <div className="mapControls">
+                    <button className="button" onClick={startClicked}>{started ? "Stop" : "Start"}</button>
+                    <button className="button" onClick={toggleCellBorders}>Toggle Cell Borders</button>
+                </div>
             </div>
+            
             
             <div className="mapContainer">
                 {!gridEnabled ? (

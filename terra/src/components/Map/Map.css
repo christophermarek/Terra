@@ -41,11 +41,14 @@
   
 .mapContainer {
   display: flex;
-  flex: 1;
+  padding-left: 5%;
   justify-content: center;
-  padding-left: 10%;
   padding-right: 10%;
   position: relative;
+}
+
+.Map{
+  display:flex;
 }
 
 body{
@@ -79,10 +82,12 @@ svg {
 }
 
 .mapControls{
+  
+}
+
+.leftContainer{
   display: flex;
-  justify-content: center;
-  padding-left: 15%;
-  padding-right: 15%;
+  flex-direction: column;
 }
 
 .editorControls{
