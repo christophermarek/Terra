@@ -28,6 +28,18 @@ function Simulation() {
         setIsLoaded(true);
     }
 
+    function loadMapClicked(mapSaveNumber){
+        let mapData = window.localStorage.getItem(`map${mapSaveNumber}`);
+        loadMap(mapData);
+    }
+
+    function deleteMapClicked(mapSaveNumber){
+        if(window.confirm(`Are you sure you want to delete save #${mapSaveNumber}`)) {
+            localStorage.removeItem(`map${mapSaveNumber}`);
+            localStorage.removeItem(`map${mapSaveNumber}Ai`);
+          }
+    }
+
     function loadMap(importedData){
         let data = JSON.parse(importedData);
         setMap(map => (data.mapData));
@@ -153,6 +165,34 @@ function Simulation() {
         startLoop();
 
     }
+    
+    function loadLocalSaves(){
+
+        //this is the amount of saves we are supporting right now
+        const numbers = [1, 2, 3, 4, 5];
+
+        return numbers.map((number) => 
+            <div className="saveBar">
+                
+                <p>Map {number}</p>
+
+                {localStorage.hasOwnProperty(`map${number}`) ? (
+                    <>
+                        <input type="button" value="Load" onClick={() => loadMapClicked(number)}></input>
+                        <input type="button" value="Delete" onClick={() => deleteMapClicked(number)}></input>
+                    </>
+                ) 
+                :
+                (
+                    <p>does not exist</p>
+                )}
+
+            </div>
+
+                
+            
+        );
+    }
 
     return(
         <div className="Simulation">
@@ -160,11 +200,7 @@ function Simulation() {
                 <div className="loading">
 
                     <div className="loadPreset">
-                            
-                            <select value={mapPreset} onChange={dropdownChange}>
-                                <option value="map1">map1</option>
-                            </select>
-                            <button className="button" onClick={loadFromPreset}>Submit</button>
+                        {loadLocalSaves()}
                     </div>
                     
                 </div>
