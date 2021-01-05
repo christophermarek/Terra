@@ -101,3 +101,4 @@ Display filename maybe?
 
 Need a Save button in simulation.
 
+Buttons should stay selected when clicked like visually.
