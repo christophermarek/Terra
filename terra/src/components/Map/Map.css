@@ -7,8 +7,25 @@
   overflow: visible;
 }
 
+.panelList{
+  list-style: none;
+  padding-left: inherit;
+}
+
+.SurfaceObjectsPanels{
+  padding-left: 15%;
+}
+
+.listItem{
+  text-align: left;
+}
+
 .Cell{
   position: relative;
+}
+
+ul{
+  padding: none !important;
 }
 
 .grass{
@@ -84,7 +101,7 @@ svg {
 }
 
 .mapControls{
-  
+  padding-right: 15%;
 }
 
 .leftContainer{

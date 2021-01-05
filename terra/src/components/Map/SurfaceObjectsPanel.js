@@ -45,12 +45,12 @@ function SurfaceObjectsPanel({surfaceObjects, setSelectedSurfaceObjectId, select
                     
                     return(
                         <div key={object.id} onClick={() => panelClicked(object.id)}>
-                            <ul>
-                                <li>id: {object.id}</li>
-                                <li>type: {object.type}</li>
-                                <li>x: {Number(object.x).toFixed(2)}    y: {Number(object.y).toFixed(2)}</li>
-                                <li>health: {Number(object.health).toFixed(2)}</li>
-                                <li>hunger: {Number(object.hunger).toFixed(2)}</li>
+                            <ul className="panelList">
+                                <li className="listItem">id: {object.id}</li>
+                                <li className="listItem">type: {object.type}</li>
+                                <li className="listItem">x: {Number(object.x).toFixed(2)}    y: {Number(object.y).toFixed(2)}</li>
+                                <li className="listItem">health: {Number(object.health).toFixed(2)}</li>
+                                <li className="listItem">hunger: {Number(object.hunger).toFixed(2)}</li>
                             </ul>
                         </div>
                     )

@@ -27,6 +27,10 @@
   color: hsl(255, 11%, 22%);
 }
 
+.navBtn:active{
+  color: hsl(255, 11%, 22%);
+}
+
 .button{
   background-color:hsl(180, 66%, 49%);
   color:white;

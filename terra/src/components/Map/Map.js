@@ -221,7 +221,7 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
                         <button className="button" onClick={startClicked}>{started ? "Stop" : "Start"}</button>
                     ):(<></>)
                     }
-                    <button className="button" onClick={toggleCellBorders}>Toggle Cell Borders</button>
+                    <button class="navBtn inputButtonNoBorder Tile-Selector" onClick={toggleCellBorders}>Toggle Cell Borders</button>
                 </div>
 
                 <SurfaceObjectsPanel
