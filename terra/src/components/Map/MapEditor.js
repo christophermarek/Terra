@@ -6,8 +6,6 @@ import SurfaceObjectSelector from './SurfaceObjectSelector';
 import {returnSurfaceObject} from '../../data/map/surfaceObjects'
 function MapEditor() {
 
-    //mapsize is unused
-    const [mapSize, setSize] = useState(20);
     const [map, setMap] = useState([]);
     const [selectedTile, setSelectedTile] = useState('grass');
     const [selectedTileType, setSelectedTileType] = useState('');
@@ -113,11 +111,6 @@ function MapEditor() {
         setSurfaceObjects(surfaceObjects => (data.surfaceData));
     }
 
-
-    function mapSizeChange(e){
-        //setSize(e.target.value);
-    }
-
     function generateMapClicked(){
         var sizePrompt = prompt("Enter a map size as an integer:");
         if (sizePrompt == null || sizePrompt == "") {
@@ -133,11 +126,6 @@ function MapEditor() {
         } 
     }
     
-    function renderLocalSaveExists(saveNumber){
-        return(
-            <p>1</p>
-        );
-    }
 
     function loadLocalSaves(){
 
@@ -165,27 +153,12 @@ function MapEditor() {
                 
             
         );
-
-        /*
-        if(localStorage.hasOwnProperty(`map${i}`)){
-            //needs to be a function to return multiple
-                <li key={number.toString()}>
-                    {number}
-                </li>
-                );
-            }else{
-                renderLocalSaveExists();
-            }
-        }
-        */
     }
   
     return (
         <div className = "Map-Editor"> 
             {map.length === 0 ? (
                 <div className="preLoad">
-                    <input type="text" value={mapSize} onChange={mapSizeChange}></input>
-                    <button className="button" onClick={generateWorld}>Generate</button>
                     {loadLocalSaves()}
                 </div>
             ) : (
