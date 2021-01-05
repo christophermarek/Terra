@@ -94,12 +94,18 @@ svg {
 }
 
 .editorControls{
-  display: inline-block;
-  text-align: center;
+  display: flex;
+  padding-left: 20%;
+  padding-bottom: 1%;
 }
 
 .Map-Editor{
   text-align: center;
+  
+}
+
+.preEditor{
+  width: 100%;
   display: flex;
   justify-content: center;
 }

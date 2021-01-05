@@ -180,14 +180,18 @@ function MapEditor() {
     return (
         <div className = "Map-Editor"> 
             {map.length === 0 ? (
-                <div className="preLoad">
-                    {loadLocalSaves()}
+                <div className="preEditor">
+                    <div className="preLoad">
+                        {loadLocalSaves()}
+                    </div>
                 </div>
+                
             ) : (
-                <>  <div className="editorControls">
-                    <TileSelector updateSelectedTileType={updateSelectedTileType}/>
-                    <SurfaceObjectSelector updateSelectedSurfaceObjectType={updateSelectedSurfaceObjectType}></SurfaceObjectSelector>
-                    <MapFileHandler loadMap={loadMap} map={map} surfaceObjects={surfaceObjects} mapSaveNumber={selectedMapSaveNumber}/>
+                <>  
+                    <div className="editorControls">
+                        <TileSelector updateSelectedTileType={updateSelectedTileType}/>
+                        <SurfaceObjectSelector updateSelectedSurfaceObjectType={updateSelectedSurfaceObjectType}></SurfaceObjectSelector>
+                        <MapFileHandler loadMap={loadMap} map={map} surfaceObjects={surfaceObjects} mapSaveNumber={selectedMapSaveNumber}/>
                     </div>
                     
                     <Map map={map}

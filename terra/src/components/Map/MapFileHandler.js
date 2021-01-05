@@ -49,8 +49,8 @@ function MapFileHandler({map, loadMap, surfaceObjects, mapSaveNumber}) {
 
 
     return(
-        <div className="Map-File-Handler">
-            <button onClick={mapExport}>Save Map</button>
+        <div className="Tile-Selector">
+            <button class="navBtn inputButtonNoBorder" onClick={mapExport}>Save Map</button>
         </div>
     );
     

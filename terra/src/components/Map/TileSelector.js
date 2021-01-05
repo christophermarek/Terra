@@ -4,10 +4,10 @@ function TileSelector({updateSelectedTileType}) {
 
     return(
         <div className="Tile-Selector">
-            <button onClick={() => updateSelectedTileType('grass')}>Grass</button>
-            <button onClick={() => updateSelectedTileType('dirt')}>Dirt</button>
-            <button onClick={() => updateSelectedTileType('rock')}>Rock</button>
-            <button onClick={() => updateSelectedTileType('water')}>Water</button>
+            <button class="navBtn inputButtonNoBorder" onClick={() => updateSelectedTileType('grass')}>Grass</button>
+            <button class="navBtn inputButtonNoBorder" onClick={() => updateSelectedTileType('dirt')}>Dirt</button>
+            <button class="navBtn inputButtonNoBorder" onClick={() => updateSelectedTileType('rock')}>Rock</button>
+            <button class="navBtn inputButtonNoBorder" onClick={() => updateSelectedTileType('water')}>Water</button>
         </div>
     );
 }

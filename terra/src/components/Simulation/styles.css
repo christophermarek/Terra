@@ -43,6 +43,10 @@
     align-items: center;
 }
 
+.Tile-Selector{
+    border: 1px dashed hsl(257, 7%, 63%);
+}
+
 .loadPreset{
     width: 20%;
 }
