@@ -104,11 +104,21 @@ function MapEditor() {
         }
     }
 
-    
+    //unused function
     function loadMap(importedData){
         let data = JSON.parse(importedData);
         setMap(map => (data.mapData));
         setSurfaceObjects(surfaceObjects => (data.surfaceData));
+    }
+    
+    function editMapClicked(mapSaveNumber){
+
+        setSelectedMapSaveNumber(mapSaveNumber);
+
+        let data = JSON.parse(window.localStorage.getItem(`map${mapSaveNumber}`));
+        setMap(map => (data.mapData));
+        setSurfaceObjects(surfaceObjects => (data.surfaceData));
+        
     }
 
     function generateMapClicked(mapSaveNumber){
@@ -149,7 +159,7 @@ function MapEditor() {
 
                 {localStorage.hasOwnProperty(`map${number}`) ? (
                     <>
-                        <input type="button" value="Edit"></input>
+                        <input type="button" value="Edit" onClick={() => editMapClicked(number)}></input>
                         <input type="button" value="Delete" onClick={() => deleteMapClicked(number)}></input>
                     </>
                 ) 
