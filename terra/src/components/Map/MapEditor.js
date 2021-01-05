@@ -6,6 +6,7 @@ import SurfaceObjectSelector from './SurfaceObjectSelector';
 import {returnSurfaceObject} from '../../data/map/surfaceObjects'
 function MapEditor() {
 
+    //mapsize is unused
     const [mapSize, setSize] = useState(20);
     const [map, setMap] = useState([]);
     const [selectedTile, setSelectedTile] = useState('grass');
@@ -16,12 +17,6 @@ function MapEditor() {
     function generateSurfaceObjects(){
         
         let newSurfaceObjects = [];
-
-        //newSurfaceObjects.push({x: 25, y: 35, type: "tree"});
-        //newSurfaceObjects.push({x: 150, y: 350, type: "tree"});
-        //newSurfaceObjects.push({x: 350, y: 350, type: "tree"});
-        //newSurfaceObjects.push({x: 200, y: 200, type: "rabbit"});
-        //newSurfaceObjects.push({x: 425, y: 435, type: "rabbit"});
 
         setSurfaceObjects(surfaceObjects => (newSurfaceObjects));
         
@@ -39,13 +34,13 @@ function MapEditor() {
 
 
     //generateMap from mapSize args
-    function generateMap(){
+    function generateMap(inputSize){
 
         let newMap = [];
         
-        for(let i = 0; i < mapSize; i++){
+        for(let i = 0; i < inputSize; i++){
             let columns = [];
-            for(let j = 0; j < mapSize; j++){
+            for(let j = 0; j < inputSize; j++){
                 columns.push(Grass(i, j));
             }
             newMap.push(columns);  
@@ -54,8 +49,8 @@ function MapEditor() {
         setMap(map => (newMap));
     };
 
-    function generateWorld(){
-        generateMap();
+    function generateWorld(inputSize){
+        generateMap(inputSize);
         generateSurfaceObjects();
     }
 
@@ -120,7 +115,22 @@ function MapEditor() {
 
 
     function mapSizeChange(e){
-        setSize(e.target.value);
+        //setSize(e.target.value);
+    }
+
+    function generateMapClicked(){
+        var sizePrompt = prompt("Enter a map size as an integer:");
+        if (sizePrompt == null || sizePrompt == "") {
+            alert("Invalid map size, please enter a integer between 1-10");
+            return;
+        } else {
+            let parsedSize = parseInt(sizePrompt);
+            //can make mapsize 0, and when mapsize is not 0 is when we call generate world(),
+            //YO WE CAN JUST CALL GENERATE WORLD WITH ARGS THAT ARE THE MAP SIZE,
+            //I THINK ITS ONLY USED TO GENERATE THE MAP FOR THIS ONE FUNCTION
+            //console.log(mapSize);
+            generateWorld(parsedSize);
+        } 
     }
     
     function renderLocalSaveExists(saveNumber){
@@ -147,7 +157,7 @@ function MapEditor() {
                 ) 
                 :
                 (
-                    <input type="button" value="Generate"></input>
+                    <input type="button" value="Generate" onClick={generateMapClicked}></input>
                 )}
 
             </div>
