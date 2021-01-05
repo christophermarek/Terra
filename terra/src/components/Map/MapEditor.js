@@ -122,7 +122,53 @@ function MapEditor() {
     function mapSizeChange(e){
         setSize(e.target.value);
     }
+    
+    function renderLocalSaveExists(saveNumber){
+        return(
+            <p>1</p>
+        );
+    }
 
+    function loadLocalSaves(){
+
+        //this is the amount of saves we are supporting right now
+        const numbers = [1, 2, 3, 4, 5];
+
+        return numbers.map((number) => 
+            <div className="saveBar">
+                
+                <p>Map {number}</p>
+
+                {localStorage.hasOwnProperty(`map${number}`) ? (
+                    <>
+                        <input type="button" value="Edit"></input>
+                        <input type="button" value="Delete"></input>
+                    </>
+                ) 
+                :
+                (
+                    <input type="button" value="Generate"></input>
+                )}
+
+            </div>
+
+                
+            
+        );
+
+        /*
+        if(localStorage.hasOwnProperty(`map${i}`)){
+            //needs to be a function to return multiple
+                <li key={number.toString()}>
+                    {number}
+                </li>
+                );
+            }else{
+                renderLocalSaveExists();
+            }
+        }
+        */
+    }
   
     return (
         <div className = "Map-Editor"> 
@@ -130,6 +176,7 @@ function MapEditor() {
                 <div className="preLoad">
                     <input type="text" value={mapSize} onChange={mapSizeChange}></input>
                     <button className="button" onClick={generateWorld}>Generate</button>
+                    {loadLocalSaves()}
                 </div>
             ) : (
                 <>  <div className="editorControls">
@@ -140,6 +187,7 @@ function MapEditor() {
                     
                     <Map map={map}
                          surfaceObjects={surfaceObjects}
+                         isEditor={true}
                          updateMapWithSelectedTile={updateMapWithSelectedTile}
                     />
                 </>

@@ -55,10 +55,7 @@ function MapFileHandler({map, loadMap, surfaceObjects}) {
 
     return(
         <div className="Map-File-Handler">
-            <textarea placeholder="Paste imported map here" onChange={importMapTextHandler}>{importedMap}</textarea>
-            <button onClick={() => loadMap(importedMap)}>Import Map</button>
-            <button onClick={mapExport}>Export Map</button>
-            <textarea placeholder="Map exported here" value={exportedMap}></textarea>
+            <button onClick={mapExport}>Save Map</button>
         </div>
     );
     

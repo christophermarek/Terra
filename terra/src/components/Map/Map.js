@@ -6,7 +6,7 @@ import HoverControls from './HoverControls';
 import { getBounds } from '../../Simulation Logic/grid';
 import SurfaceObjectsPanel from './SurfaceObjectsPanel';
 
-function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, started}) {
+function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, started, isEditor}) {
 
     const [toggleBorder, setToggleBorder] = useState(true);
     const [hoverEnabled, setHoverEnabled] = useState(false);
@@ -217,7 +217,10 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
         <div className="Map">
             <div className="leftContainer">
                 <div className="mapControls">
-                    <button className="button" onClick={startClicked}>{started ? "Stop" : "Start"}</button>
+                    {!isEditor ? (
+                        <button className="button" onClick={startClicked}>{started ? "Stop" : "Start"}</button>
+                    ):(<></>)
+                    }
                     <button className="button" onClick={toggleCellBorders}>Toggle Cell Borders</button>
                 </div>
 
