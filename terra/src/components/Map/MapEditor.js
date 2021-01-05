@@ -10,7 +10,7 @@ function MapEditor() {
     const [selectedTile, setSelectedTile] = useState('grass');
     const [selectedTileType, setSelectedTileType] = useState('');
     const [surfaceObjects, setSurfaceObjects] = useState([]);
-    
+    const [selectedMapSaveNumber, setSelectedMapSaveNumber] = useState(0);
 
     function generateSurfaceObjects(){
         
@@ -104,14 +104,17 @@ function MapEditor() {
         }
     }
 
-
+    
     function loadMap(importedData){
         let data = JSON.parse(importedData);
         setMap(map => (data.mapData));
         setSurfaceObjects(surfaceObjects => (data.surfaceData));
     }
 
-    function generateMapClicked(){
+    function generateMapClicked(mapSaveNumber){
+
+        setSelectedMapSaveNumber(mapSaveNumber);
+
         var sizePrompt = prompt("Enter a map size as an integer:");
         if (sizePrompt == null || sizePrompt == "") {
             alert("Invalid map size, please enter a integer between 1-10");
@@ -145,7 +148,7 @@ function MapEditor() {
                 ) 
                 :
                 (
-                    <input type="button" value="Generate" onClick={generateMapClicked}></input>
+                    <input type="button" value="Generate" onClick={() => generateMapClicked(number)}></input>
                 )}
 
             </div>
@@ -165,7 +168,7 @@ function MapEditor() {
                 <>  <div className="editorControls">
                     <TileSelector updateSelectedTileType={updateSelectedTileType}/>
                     <SurfaceObjectSelector updateSelectedSurfaceObjectType={updateSelectedSurfaceObjectType}></SurfaceObjectSelector>
-                    <MapFileHandler loadMap={loadMap} map={map} surfaceObjects={surfaceObjects}/>
+                    <MapFileHandler loadMap={loadMap} map={map} surfaceObjects={surfaceObjects} mapSaveNumber={selectedMapSaveNumber}/>
                     </div>
                     
                     <Map map={map}

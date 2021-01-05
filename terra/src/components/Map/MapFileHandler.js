@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 
-function MapFileHandler({map, loadMap, surfaceObjects}) {
+function MapFileHandler({map, loadMap, surfaceObjects, mapSaveNumber}) {
 
     const [exportedMap, setExportedMap] = useState(' ');
-    const [importedMap, setImportedMap] = useState('');
 
     function generateAI(){
         let brain = [];
@@ -43,13 +42,9 @@ function MapFileHandler({map, loadMap, surfaceObjects}) {
         let saveDataString = JSON.stringify(saveData);
         setExportedMap(saveDataString);
 
-        window.localStorage.setItem('map1', saveDataString);
-        window.localStorage.setItem('map1Ai', generateAI());
+        window.localStorage.setItem(`map${mapSaveNumber}`, saveDataString);
+        window.localStorage.setItem(`map${mapSaveNumber}Ai`, generateAI());
         
-    }
-
-    function importMapTextHandler(event){
-        setImportedMap(event.target.value);
     }
 
 
