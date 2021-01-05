@@ -128,6 +128,13 @@ function MapEditor() {
             generateWorld(parsedSize);
         } 
     }
+
+    function deleteMapClicked(mapSaveNumber){
+        if(window.confirm(`Are you sure you want to delete save #${mapSaveNumber}`)) {
+            localStorage.removeItem(`map${mapSaveNumber}`);
+            localStorage.removeItem(`map${mapSaveNumber}Ai`);
+          }
+    }
     
 
     function loadLocalSaves(){
@@ -143,7 +150,7 @@ function MapEditor() {
                 {localStorage.hasOwnProperty(`map${number}`) ? (
                     <>
                         <input type="button" value="Edit"></input>
-                        <input type="button" value="Delete"></input>
+                        <input type="button" value="Delete" onClick={() => deleteMapClicked(number)}></input>
                     </>
                 ) 
                 :

@@ -96,3 +96,5 @@ If we want to support larger maps then we need a pathfinding algorithm that will
 -Make sure to note this as a potential upgrade in the future
 
 Having grid view might slow down the applicaiton, probably only keep it for debugging right now and disable it after. Might not though,
+
+Display filename maybe?
