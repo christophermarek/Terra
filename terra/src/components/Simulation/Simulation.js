@@ -174,17 +174,17 @@ function Simulation() {
         return numbers.map((number) => 
             <div className="saveBar">
                 
-                <p>Map {number}</p>
+                <p class="mapSaveFileText">Map {number}</p>
 
                 {localStorage.hasOwnProperty(`map${number}`) ? (
-                    <>
-                        <input type="button" value="Load" onClick={() => loadMapClicked(number)}></input>
-                        <input type="button" value="Delete" onClick={() => deleteMapClicked(number)}></input>
-                    </>
+                    <div className="saveControls">
+                        <input type="button" class="navBtn inputButtonNoBorder" value="Load" onClick={() => loadMapClicked(number)}></input>
+                        <input type="button" class="navBtn inputButtonNoBorder" value="Delete" onClick={() => deleteMapClicked(number)}></input>
+                    </div>
                 ) 
                 :
                 (
-                    <p>does not exist</p>
+                    <p class="mapFileSupportingText">does not exist.</p>
                 )}
 
             </div>
