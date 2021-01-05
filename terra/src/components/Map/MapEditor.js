@@ -118,7 +118,7 @@ function MapEditor() {
         let data = JSON.parse(window.localStorage.getItem(`map${mapSaveNumber}`));
         setMap(map => (data.mapData));
         setSurfaceObjects(surfaceObjects => (data.surfaceData));
-        
+
     }
 
     function generateMapClicked(mapSaveNumber){
@@ -155,17 +155,19 @@ function MapEditor() {
         return numbers.map((number) => 
             <div className="saveBar">
                 
-                <p>Map {number}</p>
+                <p class="mapSaveFileText">Map {number}</p>
 
                 {localStorage.hasOwnProperty(`map${number}`) ? (
-                    <>
-                        <input type="button" value="Edit" onClick={() => editMapClicked(number)}></input>
-                        <input type="button" value="Delete" onClick={() => deleteMapClicked(number)}></input>
-                    </>
+                    <div className="saveControls">
+                        <input type="button" value="Edit" class="navBtn inputButtonNoBorder" onClick={() => editMapClicked(number)}></input>
+                        <input type="button" value="Delete" class="navBtn inputButtonNoBorder" onClick={() => deleteMapClicked(number)}></input>
+                    </div>
                 ) 
                 :
                 (
-                    <input type="button" value="Generate" onClick={() => generateMapClicked(number)}></input>
+                    <div className="saveControls">
+                        <input type="button" value="Generate" class="navBtn inputButtonNoBorder" onClick={() => generateMapClicked(number)}></input>
+                    </div>
                 )}
 
             </div>
