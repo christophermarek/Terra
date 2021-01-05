@@ -32,10 +32,12 @@ function SurfaceObjectsPanel({surfaceObjects, setSelectedSurfaceObjectId, select
 
     }
     */
+    let surfaceObjCopy = [...surfaceObjects];
+
     let brainSurfaceObjects = [];
-    for(let i = 0; i < surfaceObjects.length; i++){
-        if(surfaceObjects[i].type = 'rabbit'){
-            brainSurfaceObjects.push(surfaceObjects[i]);
+    for(let i = 0; i < surfaceObjCopy.length; i++){
+        if(surfaceObjCopy[i].type === 'rabbit'){
+            brainSurfaceObjects.push(surfaceObjCopy[i]);
         }
     }
 

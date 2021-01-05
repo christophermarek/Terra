@@ -3,7 +3,8 @@ import Map from './Map';
 import TileSelector from './TileSelector';
 import MapFileHandler from './MapFileHandler';
 import SurfaceObjectSelector from './SurfaceObjectSelector';
-import {returnSurfaceObject} from '../../data/map/surfaceObjects'
+import { returnSurfaceObject } from '../../data/map/surfaceObjects';
+
 function MapEditor() {
 
     const [map, setMap] = useState([]);
@@ -15,7 +16,7 @@ function MapEditor() {
     function generateSurfaceObjects(){
         
         let newSurfaceObjects = [];
-
+        console.log(surfaceObjects);
         setSurfaceObjects(surfaceObjects => (newSurfaceObjects));
         
     }
@@ -82,7 +83,7 @@ function MapEditor() {
             }
 
             let objData = returnSurfaceObject(selectedTile);
-
+            
             newObj.health = objData.maxHealth;
 
             if(objData.type === 'rabbit'){
@@ -94,13 +95,19 @@ function MapEditor() {
             }
 
             newObj.type = objData.type;
-            
             //add id for ai link
-            newObj.id = newSurfaceObjects.length;
 
+            newObj.id = newSurfaceObjects.length;
             newSurfaceObjects.push(newObj);
-            setSurfaceObjects(surfaceObjects => (newSurfaceObjects))
-            
+
+            //console.log("newObj", newObj.type);
+            //console.log("newsurfaceobj", newSurfaceObjects);
+            //console.log(newSurfaceObjects[0].type);
+
+            //ok what is changing surfaceObjects, this is weird af.
+            //console.log(surfaceObjects);
+            setSurfaceObjects(surfaceObjects => (newSurfaceObjects));
+            //console.log(surfaceObjects);
         }
     }
 
@@ -108,15 +115,17 @@ function MapEditor() {
     function loadMap(importedData){
         let data = JSON.parse(importedData);
         setMap(map => (data.mapData));
+        console.log(surfaceObjects);
         setSurfaceObjects(surfaceObjects => (data.surfaceData));
     }
     
     function editMapClicked(mapSaveNumber){
-
+        console.log("running");
         setSelectedMapSaveNumber(mapSaveNumber);
 
         let data = JSON.parse(window.localStorage.getItem(`map${mapSaveNumber}`));
         setMap(map => (data.mapData));
+        console.log(surfaceObjects);
         setSurfaceObjects(surfaceObjects => (data.surfaceData));
 
     }

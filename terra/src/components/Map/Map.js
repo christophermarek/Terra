@@ -168,8 +168,8 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
                     //since the begining index's are the tile's index
                     let x = xToStr.slice(-2);
                     let y = yToStr.slice(-2);
-                    
                     let fetchedObject = returnSurfaceObject(object.type);
+
                     let key = xToStr + "," + yToStr + "," + object.id;
                     return(
                         <circle className={selectedSurfaceObjectId === object.id ? "cell-border" : "no-border"} key={key} cx={x} cy={y} r={fetchedObject.size} fill={fetchedObject.color}></circle>
