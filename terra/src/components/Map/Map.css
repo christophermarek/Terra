@@ -63,6 +63,15 @@ ul{
   position: relative;
 }
 
+.selectedButton{
+  color: hsl(255, 11%, 22%);
+  border: 1px dashed hsl(255, 11%, 22%) !important;
+}
+
+.selectedButtonNoBorder{
+  color: hsl(255, 11%, 22%);
+}
+
 .Map{
   display:flex;
 }

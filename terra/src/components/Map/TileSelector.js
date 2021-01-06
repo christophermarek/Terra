@@ -1,13 +1,13 @@
 import React from 'react';
 
-function TileSelector({updateSelectedTileType}) {
+function TileSelector({updateSelectedTileType, selectedTile}) {
 
     return(
         <div className="Tile-Selector">
-            <button class="navBtn inputButtonNoBorder" onClick={() => updateSelectedTileType('grass')}>Grass</button>
-            <button class="navBtn inputButtonNoBorder" onClick={() => updateSelectedTileType('dirt')}>Dirt</button>
-            <button class="navBtn inputButtonNoBorder" onClick={() => updateSelectedTileType('rock')}>Rock</button>
-            <button class="navBtn inputButtonNoBorder" onClick={() => updateSelectedTileType('water')}>Water</button>
+            <button className={"navBtn inputButtonNoBorder" + (selectedTile === 'grass' ? ' selectedButton' : ' ')} onClick={() => updateSelectedTileType('grass')}>Grass</button>
+            <button className={"navBtn inputButtonNoBorder" + (selectedTile === 'dirt' ? ' selectedButton' : ' ')} onClick={() => updateSelectedTileType('dirt')}>Dirt</button>
+            <button className={"navBtn inputButtonNoBorder" + (selectedTile === 'rock' ? ' selectedButton' : ' ')} onClick={() => updateSelectedTileType('rock')}>Rock</button>
+            <button className={"navBtn inputButtonNoBorder" + (selectedTile === 'water' ? ' selectedButton' : ' ')} onClick={() => updateSelectedTileType('water')}>Water</button>
         </div>
     );
 }

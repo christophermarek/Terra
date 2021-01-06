@@ -198,8 +198,8 @@ function MapEditor() {
             ) : (
                 <>  
                     <div className="editorControls">
-                        <TileSelector updateSelectedTileType={updateSelectedTileType}/>
-                        <SurfaceObjectSelector updateSelectedSurfaceObjectType={updateSelectedSurfaceObjectType}></SurfaceObjectSelector>
+                        <TileSelector selectedTile={selectedTile} updateSelectedTileType={updateSelectedTileType}/>
+                        <SurfaceObjectSelector selectedTile={selectedTile} updateSelectedSurfaceObjectType={updateSelectedSurfaceObjectType}></SurfaceObjectSelector>
                         <MapFileHandler loadMap={loadMap} map={map} surfaceObjects={surfaceObjects} mapSaveNumber={selectedMapSaveNumber}/>
                     </div>
                     

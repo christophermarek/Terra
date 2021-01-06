@@ -218,10 +218,10 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
             <div className="leftContainer">
                 <div className="mapControls">
                     {!isEditor ? (
-                        <button className="navBtn inputButtonNoBorder Tile-Selector" onClick={startClicked}>{started ? "Stop" : "Start"}</button>
+                        <button className={"navBtn inputButtonNoBorder Tile-Selector" + (started ? ' selectedButton' : ' ')} onClick={startClicked}>{started ? "Stop" : "Start"}</button>
                     ):(<></>)
                     }
-                    <button class="navBtn inputButtonNoBorder Tile-Selector" onClick={toggleCellBorders}>Toggle Cell Borders</button>
+                    <button className={"navBtn inputButtonNoBorder Tile-Selector" + (toggleBorder ? ' selectedButton' : ' ')} onClick={toggleCellBorders}>Toggle Cell Borders</button>
                 </div>
 
                 <SurfaceObjectsPanel
@@ -229,7 +229,6 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
                     setSelectedSurfaceObjectId={setSelectedSurfaceObjectId}
                     selectedSurfaceObjectId={selectedSurfaceObjectId}
                 />
-
 
             </div>
             

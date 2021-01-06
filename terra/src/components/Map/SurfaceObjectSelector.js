@@ -1,12 +1,12 @@
 import React from 'react';
 
-function SurfaceObjectSelector({updateSelectedSurfaceObjectType}) {
+function SurfaceObjectSelector({updateSelectedSurfaceObjectType, selectedTile}) {
 
     return(
         <div className="Tile-Selector">
-            <button class="navBtn inputButtonNoBorder" onClick={() => updateSelectedSurfaceObjectType('tree')}>Tree</button>
-            <button class="navBtn inputButtonNoBorder" onClick={() => updateSelectedSurfaceObjectType('bush')}>Bush</button>
-            <button class="navBtn inputButtonNoBorder" onClick={() => updateSelectedSurfaceObjectType('rabbit')}>Rabbit</button>
+            <button className={"navBtn inputButtonNoBorder"  + (selectedTile === 'tree' ? ' selectedButton' : ' ')} onClick={() => updateSelectedSurfaceObjectType('tree')}>Tree</button>
+            <button className={"navBtn inputButtonNoBorder"  + (selectedTile === 'bush' ? ' selectedButton' : ' ')} onClick={() => updateSelectedSurfaceObjectType('bush')}>Bush</button>
+            <button className={"navBtn inputButtonNoBorder"  + (selectedTile === 'rabbit' ? ' selectedButton' : ' ')} onClick={() => updateSelectedSurfaceObjectType('rabbit')}>Rabbit</button>
         </div>
     );
 

@@ -21,6 +21,7 @@
   color: hsl(257, 7%, 63%);
   font-weight: 500;
   font-size: 16px;
+  outline: none;
 }
 
 .navBtn:hover{
@@ -28,7 +29,6 @@
 }
 
 .navBtn:active{
-  color: hsl(255, 11%, 22%);
 }
 
 .button{
