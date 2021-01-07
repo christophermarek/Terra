@@ -146,7 +146,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                         //if this is not in idle then hunger loop will reset
                         //should be a switch
                         //console.log(update[i].hunger);
-                        if(update[i].hunger <= 60){
+                        if(update[i].hunger <= 90){
                             //console.log("triggered to hungry");
                             brainN.action = "Hungry";
                             break;
@@ -212,6 +212,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                         //update[i] = updateHealth(update[i], -1);
                         //init movement
                         if(!brainN.isMoving){
+                            console.log("in here");
                             //console.log(update[i]);
                             //console.log(brainN.movement);
                             brainN.movement.distanceToPoint = getDistanceToPoint(update[i].x, update[i].y, brainN.movement.endX, brainN.movement.endY);
@@ -220,6 +221,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                             brainN.movement.directionX = direction.x;
                             brainN.movement.directionY = direction.y;
                             brainN.isMoving = true;
+                            
                         }else{
                             //its calculated as x += movementspeed * secondspassed
                             //where movement speed is in pixels per second
@@ -234,7 +236,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                             if(brainN.path.length === 0){
                                 //console.log("End of path");
                                 brainN.isMoving = false;
-                                //brainN.action = "Reached Target";
+                                brainN.action = "Reached Target";
                                 //save these incase we ever want to go back to the old locking
                                 //update[i].x = brainN.movement.endX;
                                 //update[i].y = brainN.movement.endY;
@@ -251,7 +253,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                             }
                                 
                         }
-                        console.log("x,y ", update[i].x, update[i].y);
+                        //console.log("x,y ", update[i].x, update[i].y);
 
                         break;
 

@@ -152,6 +152,7 @@ function MapEditor() {
         if(window.confirm(`Are you sure you want to delete save #${mapSaveNumber}`)) {
             localStorage.removeItem(`map${mapSaveNumber}`);
             localStorage.removeItem(`map${mapSaveNumber}Ai`);
+            window.location.reload();
           }
     }
     
@@ -191,16 +192,19 @@ function MapEditor() {
             {map.length === 0 ? (
                 <div className="preEditor">
                     <div className="preLoad">
+                        <p class="mapSaveFileText centeredText" >Map Editor</p>
                         {loadLocalSaves()}
                     </div>
                 </div>
                 
             ) : (
                 <>  
-                    <div className="editorControls">
-                        <TileSelector selectedTile={selectedTile} updateSelectedTileType={updateSelectedTileType}/>
-                        <SurfaceObjectSelector selectedTile={selectedTile} updateSelectedSurfaceObjectType={updateSelectedSurfaceObjectType}></SurfaceObjectSelector>
-                        <MapFileHandler loadMap={loadMap} map={map} surfaceObjects={surfaceObjects} mapSaveNumber={selectedMapSaveNumber}/>
+                    <div className="topBar">
+                        <div className="editorControls">
+                            <TileSelector selectedTile={selectedTile} updateSelectedTileType={updateSelectedTileType}/>
+                            <SurfaceObjectSelector selectedTile={selectedTile} updateSelectedSurfaceObjectType={updateSelectedSurfaceObjectType}></SurfaceObjectSelector>
+                            <MapFileHandler loadMap={loadMap} map={map} surfaceObjects={surfaceObjects} mapSaveNumber={selectedMapSaveNumber}/>
+                        </div>
                     </div>
                     
                     <Map map={map}

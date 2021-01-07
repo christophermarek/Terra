@@ -200,6 +200,7 @@ function Simulation() {
                 <div className="loading">
 
                     <div className="loadPreset">
+                        <p class="mapSaveFileText centeredText" >Simulation</p>
                         {loadLocalSaves()}
                     </div>
                     

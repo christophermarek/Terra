@@ -63,9 +63,18 @@ ul{
   position: relative;
 }
 
+.topBar{
+  display: flex;
+  align-items: center;
+}
+
 .selectedButton{
   color: hsl(255, 11%, 22%);
   border: 1px dashed hsl(255, 11%, 22%) !important;
+}
+
+.centeredText{
+  text-align: center;
 }
 
 .selectedButtonNoBorder{

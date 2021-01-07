@@ -95,10 +95,12 @@ If we want to support larger maps then we need a pathfinding algorithm that will
 6 chunks like this or maybe even smaller. Not sure.
 -Make sure to note this as a potential upgrade in the future
 
-Having grid view might slow down the applicaiton, probably only keep it for debugging right now and disable it after. Might not though,
+Having grid view might slow down the application, probably only keep it for debugging right now and disable it after. Might not though,
 
 Display filename maybe?
 
 Need a Save button in simulation.
 
 Buttons should stay selected when clicked like visually.
+
+Make it so you cant walk on water.
