@@ -153,6 +153,11 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
         }
         return(
             <svg className="svg">
+                <defs>
+                    <pattern id="image" x="0" y="0" height="1" width="1">
+                        <image x="0" y="0" href='../../assets/tree.png'></image>
+                    </pattern>   
+                </defs>   
                 {matchingSurfaceObjects.map((object, i) => {
                     //console.log(object);
                     let xToStr = String(Math.round(object.x));
@@ -171,8 +176,11 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
                     let fetchedObject = returnSurfaceObject(object.type);
 
                     let key = xToStr + "," + yToStr + "," + object.id;
+                    
                     return(
-                        <circle className={selectedSurfaceObjectId === object.id ? "cell-border" : "no-border"} key={key} cx={x} cy={y} r={fetchedObject.size} fill={fetchedObject.color}></circle>
+                        <circle className={fetchedObject.type + " " + (selectedSurfaceObjectId === object.id ? "cell-border" : "no-border")} key={key} cx={x} cy={y} r={fetchedObject.size} fill="url(#image)">
+                            
+                        </circle>
                     )
                     
                 })}
@@ -235,8 +243,10 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
             
             <div className="mapContainer">
                 {!gridEnabled ? (
+                    <>
+                        
 
-                    <Grid
+                        <Grid
                         className="Grid"
                         columnCount={map.length}
                         columnWidth={index => columnWidths[index]}
@@ -244,9 +254,13 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
                         rowCount={map.length}
                         rowHeight={index => rowHeights[index]}
                         width={1000}
-                    >
-                        {Cell}
-                    </Grid>
+                        >
+                            {Cell}
+                        </Grid>
+                    </>
+                    
+
+                    
                 )
                 :
                 (

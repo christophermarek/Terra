@@ -29,6 +29,10 @@ ul{
 
 .grass{
   background-color:#7ec850;
+  background-image: url("../../assets/grass.png");
+}
+
+.rabbit{
 }
 
 .dirt{
