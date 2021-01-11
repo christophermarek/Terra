@@ -30,24 +30,13 @@ export function initPathfinding(obj, brainN, target, map, surfaceObjects, grid){
         return false;
     }
 
-    //check if object goes to this point they will not be in a wall
-    for(let i = 0; i < brainN.path.length; i++){
-        let x = Math.round(brainN.path[i].x);
-        let y = Math.round(brainN.path[i].y);
-        console.log(" x,y ", x, ":", y)
-        let n = getGridElementAtKey(x, y);
-        console.log("id ", brainN.surfaceObjectId);
-        console.log(isPointInBounds(brainN.surfaceObjectId, {x: x, y: y}, surfaceObjects));
-        //check if intersects with bounds of tree
-        
+    
         /*
         if(grid.(x, y) === 1){
             console.log("true");
         }
         */
-    }
-
-
+    //console.log(brainN.path);
     //console.log(obj.x);
     //console.log(obj.y);
     

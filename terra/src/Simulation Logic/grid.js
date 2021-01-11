@@ -127,26 +127,26 @@ export function isPointInBounds(surfaceObjectId, point, surfaceObjects){
                 let ySym = point.y - (j - point.y);
                 // (x, y), (x, ySym), (xSym , y), (xSym, ySym) are in the circle                
                 if(grid.get(i, j) === 1){
-                    return false;
+                    return true;
                 }
 
                 if(grid.get(i, ySym) === 1){
-                    return false;
+                    return true;
                 }
 
                 if(grid.get(xSym, j) === 1){
-                    return false;
+                    return true;
                 }
 
                 if(grid.get(xSym, ySym) === 1){
-                    return false;
+                    return true;
                 }
 
             }
         }
     }
 
-    return true;
+    return false;
 }
 
 function setupPlanner(map, surfaceObjects){
