@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function SurfaceObjectsPanel({surfaceObjects, setSelectedSurfaceObjectId, selectedSurfaceObjectId}) {
+function SurfaceObjectsPanel({surfaceObjects, setSelectedSurfaceObjectId, selectedSurfaceObjectId, brain}) {
 
     function panelClicked(id){
         if(selectedSurfaceObjectId === id){
@@ -32,27 +32,45 @@ function SurfaceObjectsPanel({surfaceObjects, setSelectedSurfaceObjectId, select
 
     }
     */
+
     let surfaceObjCopy = [...surfaceObjects];
+
+    let brainCopy;
+
+    if(brain !== undefined){
+        brainCopy = [...brain];
+    }
 
     let brainSurfaceObjects = [];
     for(let i = 0; i < surfaceObjCopy.length; i++){
         if(surfaceObjCopy[i].type === 'rabbit'){
-            brainSurfaceObjects.push(surfaceObjCopy[i]);
+            if(brain !== undefined){
+                let brainN = brainCopy[brain.findIndex(x => x.surfaceObjectId === i)];
+                brainSurfaceObjects.push([surfaceObjCopy[i], brainN]);
+            }else{
+                brainSurfaceObjects.push([surfaceObjCopy[i], 0]);
+            }
         }
     }
+
+
 
     return(
         <div className="SurfaceObjectsPanels">
             {brainSurfaceObjects.map((object, i) => {
                     
                     return(
-                        <div key={object.id} onClick={() => panelClicked(object.id)}>
-                            <ul className={"panelList Tile-Selector" + (selectedSurfaceObjectId === object.id ? ' selectedButton' : ' ')}>
-                                <li className="listItem">id: {object.id}</li>
-                                <li className="listItem">type: {object.type}</li>
-                                <li className="listItem">x: {Number(object.x).toFixed(2)}    y: {Number(object.y).toFixed(2)}</li>
-                                <li className="listItem">health: {Number(object.health).toFixed(2)}</li>
-                                <li className="listItem">hunger: {Number(object.hunger).toFixed(2)}</li>
+                        <div key={object[0].id} onClick={() => panelClicked(object[0].id)}>
+                            <ul className={"panelList Tile-Selector" + (selectedSurfaceObjectId === object[0].id ? ' selectedButton' : ' ')}>
+                                <li className="listItem">id: {object[0].id}</li>
+                                <li className="listItem">type: {object[0].type}</li>
+                                <li className="listItem">x: {Number(object[0].x).toFixed(2)}    y: {Number(object[0].y).toFixed(2)}</li>
+                                <li className="listItem">health: {Number(object[0].health).toFixed(2)}</li>
+                                <li className="listItem">hunger: {Number(object[0].hunger).toFixed(2)}</li>
+
+                                {brain !== undefined &&
+                                    <li className="listItem">action: {object[1].action}</li>
+                                }
                             </ul>
                         </div>
                     )

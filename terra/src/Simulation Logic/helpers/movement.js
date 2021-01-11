@@ -1,4 +1,5 @@
 import { startSearch } from '../pathfinding';
+import { getGridElementAtKey, isPointInBounds } from '../grid';
 
 export function getDistanceToPoint(x, y, destX, destY){
     //console.log(" x: " + x + " y: " + y + " destX: " + destX + " destY: " + destY);
@@ -18,18 +19,37 @@ export function getDirectionToPoint(x, y, destX, destY, distance){
 //creates a new path to destination for obj, and sets state it needs to start the "Moving" action
 //takes surfaceObject and brainObject
 export function initPathfinding(obj, brainN, target, map, surfaceObjects, grid){
-    console.log("getting new path");
+
+    //console.log("getting new path");
     //i pass obj.x obj.y and obj. Refractor to just pass obj instead and pull properties
     brainN.path = startSearch(obj, target, map, surfaceObjects, grid);
     //console.log("got new path")
     //console.table(brainN.path);
-    console.log(brainN.path);
+    //console.log(brainN.path);
     if(!brainN.path){
         return false;
     }
 
-    console.log(obj.x);
-    console.log(obj.y);
+    //check if object goes to this point they will not be in a wall
+    for(let i = 0; i < brainN.path.length; i++){
+        let x = Math.round(brainN.path[i].x);
+        let y = Math.round(brainN.path[i].y);
+        console.log(" x,y ", x, ":", y)
+        let n = getGridElementAtKey(x, y);
+        console.log("id ", brainN.surfaceObjectId);
+        console.log(isPointInBounds(brainN.surfaceObjectId, {x: x, y: y}, surfaceObjects));
+        //check if intersects with bounds of tree
+        
+        /*
+        if(grid.(x, y) === 1){
+            console.log("true");
+        }
+        */
+    }
+
+
+    //console.log(obj.x);
+    //console.log(obj.y);
     
     let nextPoint = brainN.path.shift();
     //need to skip first point

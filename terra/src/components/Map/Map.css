@@ -28,8 +28,8 @@ ul{
 }
 
 .grass{
-  background-color:#7ec850;
-  background-image: url("../../assets/grass.png");
+  background-color:#4c7f58;
+  /*background-image: url("../../assets/grass.png");*/
 }
 
 .rabbit{
@@ -45,6 +45,11 @@ ul{
 
 .water{
   background-color: #1ca3ec;
+}
+
+.assets{
+  height: 0;
+  width: 0;
 }
 
 .tree{

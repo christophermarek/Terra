@@ -5,6 +5,7 @@ import { updateFood, plantFoodTickUpdate, getClosestBush } from './helpers/food'
 import { getBrainObjectById, deleteBrainObjById } from './helpers/brain';
 import { returnSurfaceObject } from '../data/map/surfaceObjects';
 //import { calcHeuristic, search, startSearch } from './pathfinding';
+import { getGrid } from '../Simulation Logic/grid';
 
 function removeFromArrayByIndex(arr, index){
     arr.splice(index, 1);
@@ -75,6 +76,8 @@ function updateBounds(obj, map){
 }
 
 
+
+
 //when refractor-ing add a brainObjectUpdate() 
 export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUpdate, brainPreUpdate, grid){
 
@@ -140,6 +143,9 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                 //THINKING
                 switch (brainN.action){
                     case "Idle":
+                        //let testgrid = getGrid(mapCopy, update);
+                        //console.log(testgrid.get(Math.round(update[i].x), Math.round(update[i].y)));
+                        //console.log(grid[][Math.round(update[i].y)]);
                         //console.log("IDLE");
                         //trigger functions
                         //These get triggered to move ai to a state from idle to an action
@@ -199,8 +205,30 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
 
                     case "Reached Target":
                         if(brainN.targetAction === "Eat"){
+
+                            //need to check if we actually reached the target or if the pathfinding messed up
+                            if(!(brainN.target.x - 10 <= update[i].x <= brainN.target.x + 10)|| !(brainN.target.y - 10 <= update[i].y <= brainN.target.y + 10)){
+                                let updatedData = initPathfinding(update[i], brainN, brainN.target, mapCopy, update, grid);
+                                        
+                                //no path found, set state to idle
+                                if(!updatedData){
+                                    //console.log("no path to bush found, setting to idle");
+                                    brainN.action = "Idle";
+                                }else{
+                                    //console.log("set to moving, target is bush");
+                                    //attach path details to object
+                                    update[i] = updatedData.surfaceObject;
+                                    brainN = updatedData.brain;
+                
+                                    //set to moving, inits action
+                                    brainN.action = "Moving";
+                                    brainN.target = brainN.target;
+                                    brainN.targetAction = "Eat";
+                                }
+                            }else{
+                                brainN.action = "Eat Target";
+                            }   
                             //console.log("reached target to eat");
-                            brainN.action = "Eat Target";
                         }else{
                             //console.log("reached target now idle");
                             brainN.action = "Idle";
@@ -212,7 +240,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                         //update[i] = updateHealth(update[i], -1);
                         //init movement
                         if(!brainN.isMoving){
-                            console.log("in here");
+                            //console.log("in here");
                             //console.log(update[i]);
                             //console.log(brainN.movement);
                             brainN.movement.distanceToPoint = getDistanceToPoint(update[i].x, update[i].y, brainN.movement.endX, brainN.movement.endY);
@@ -237,6 +265,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                                 //console.log("End of path");
                                 brainN.isMoving = false;
                                 brainN.action = "Reached Target";
+                            
                                 //save these incase we ever want to go back to the old locking
                                 //update[i].x = brainN.movement.endX;
                                 //update[i].y = brainN.movement.endY;

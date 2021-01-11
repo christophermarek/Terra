@@ -107,10 +107,56 @@ export function getPlanner(map, surfaceObjects){
     }
 }  
 
+//checks if surface object is at this point, will its bounds collide with anything
+export function isPointInBounds(surfaceObjectId, point, surfaceObjects){
+
+    //let surfaceObject = surfaceObjects[surfaceObjects.findIndex(x => x.surfaceObjectId === surfaceObjectId)];
+    let surfaceObj;
+    for(let n = 0; n < surfaceObjects.length; n++){
+        if(surfaceObjects[n].id === surfaceObjectId){
+            surfaceObj = surfaceObjects[n];
+        }
+    }
+
+    let radius = returnSurfaceObject(surfaceObj.type).size;
+
+    for (let i = point.x - radius ; i <= point.x; i++){
+        for (let j = point.y - radius ; j <= point.y; j++){
+            if ((i - point.x)*(i - point.x) + (j - point.y)*(j - point.y) <= radius*radius){
+                let xSym = point.x - (i - point.x);
+                let ySym = point.y - (j - point.y);
+                // (x, y), (x, ySym), (xSym , y), (xSym, ySym) are in the circle                
+                if(grid.get(i, j) === 1){
+                    return false;
+                }
+
+                if(grid.get(i, ySym) === 1){
+                    return false;
+                }
+
+                if(grid.get(xSym, j) === 1){
+                    return false;
+                }
+
+                if(grid.get(xSym, ySym) === 1){
+                    return false;
+                }
+
+            }
+        }
+    }
+
+    return true;
+}
+
 function setupPlanner(map, surfaceObjects){
     //Create path planner
     planner = createPlanner(getGrid(map, surfaceObjects));
     return planner;
+}
+
+export function getGridElementAtKey(x, y){
+    return grid.get(x, y)
 }
 
 export function getBounds(){
@@ -156,6 +202,8 @@ function setupNdGrid(map, surfaceObjects){
 
     return grid;
 }
+
+
 
 
 

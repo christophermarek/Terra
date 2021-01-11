@@ -103,4 +103,10 @@ Need a Save button in simulation.
 
 Buttons should stay selected when clicked like visually.
 
-Make it so you cant walk on water.
+Lower id surface objects render below, so a rabbit needs to have lower id than trees so it goes under the tree
+
+Add a view with switchable tabs to view trees and bush properties too
+
+After rabbit dies of hunger, error next iteration.
+
+Make it so you cant walk on water, and that trees cant be placed on stone

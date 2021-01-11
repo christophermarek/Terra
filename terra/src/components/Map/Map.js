@@ -6,9 +6,9 @@ import HoverControls from './HoverControls';
 import { getBounds } from '../../Simulation Logic/grid';
 import SurfaceObjectsPanel from './SurfaceObjectsPanel';
 
-function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, started, isEditor}) {
+function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, started, isEditor, brain}) {
 
-    const [toggleBorder, setToggleBorder] = useState(true);
+    const [toggleBorder, setToggleBorder] = useState(false);
     const [hoverEnabled, setHoverEnabled] = useState(false);
     const [mapHover, setMapHover] = useState(' ');
     const [gridEnabled, setGridEnabled] = useState(false);
@@ -153,11 +153,6 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
         }
         return(
             <svg className="svg">
-                <defs>
-                    <pattern id="image" x="0" y="0" height="1" width="1">
-                        <image x="0" y="0" href='../../assets/tree.png'></image>
-                    </pattern>   
-                </defs>   
                 {matchingSurfaceObjects.map((object, i) => {
                     //console.log(object);
                     let xToStr = String(Math.round(object.x));
@@ -178,7 +173,8 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
                     let key = xToStr + "," + yToStr + "," + object.id;
                     
                     return(
-                        <circle className={fetchedObject.type + " " + (selectedSurfaceObjectId === object.id ? "cell-border" : "no-border")} key={key} cx={x} cy={y} r={fetchedObject.size} fill="url(#image)">
+                        //<circle className={fetchedObject.type + " " + (selectedSurfaceObjectId === object.id ? "cell-border" : "no-border")} key={key} cx={x} cy={y} r={fetchedObject.size} fill={"url(#" + fetchedObject.type + ")"}>
+                        <circle className={fetchedObject.type + " " + (selectedSurfaceObjectId === object.id ? "cell-border" : "no-border")} key={key} cx={x} cy={y} r={fetchedObject.size} fill={fetchedObject.color}>
                             
                         </circle>
                     )
@@ -234,6 +230,7 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
 
                 <SurfaceObjectsPanel
                     surfaceObjects={surfaceObjects}
+                    brain={brain}
                     setSelectedSurfaceObjectId={setSelectedSurfaceObjectId}
                     selectedSurfaceObjectId={selectedSurfaceObjectId}
                 />
@@ -244,7 +241,19 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
             <div className="mapContainer">
                 {!gridEnabled ? (
                     <>
-                        
+                    <svg className="assets">
+                        <defs>
+                            <pattern id="tree" x="0" y="0" height="1" width="1">
+                                <image x="0" y="0" href="https://i.ibb.co/GnDLfxG/tree.png"></image>
+                            </pattern>   
+                            <pattern id="bush" x="0" y="0" height="1" width="1">
+                                <image x="0" y="0" href="https://i.ibb.co/FWWLnBd/bush.png"></image>
+                            </pattern>   
+                            <pattern id="rabbit" x="0" y="0" height="1" width="1">
+                                <image x="0" y="0" href="https://i.ibb.co/LCCm7ng/rabbit.png"></image>
+                            </pattern>     
+                        </defs>   
+                    </svg>
 
                         <Grid
                         className="Grid"

@@ -1,20 +1,20 @@
 
 const tree = {
-    color: "#42692f",
+    color: "#265031",
     type: 'tree',
     size: 30,
     movementSpeed: 0
 }
 
 const bush = {
-    color: "green",
+    color: "#1fcb72",
     type: 'bush',
     size: 10,
     movementSpeed: 0
 }
 
 const rabbit = {
-    color: "#9f9289",
+    color: "#f7e1da",
     type: 'rabbit',
     size: 15,
     movementSpeed: 75,

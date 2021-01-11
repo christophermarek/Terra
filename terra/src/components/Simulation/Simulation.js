@@ -211,6 +211,8 @@ function Simulation() {
                          surfaceObjects={surfaceObjects}
                          startClicked={startClicked}
                          started={started}
+                         isEditor={false}
+                         brain={brain}
                     />
                     
                 </>
