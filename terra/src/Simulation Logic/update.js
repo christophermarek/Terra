@@ -253,14 +253,42 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                             brainN.isMoving = true;
                             
                         }else{
+                            if(update[i].x < 0 ){
+                                update[i].x = 1
+                            }
+                            if(update[i].y < 0 ){
+                                update[i].y = 1
+                            }
                             //its calculated as x += movementspeed * secondspassed
                             //where movement speed is in pixels per second
                             update[i].x = update[i].x + (brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
                             update[i].y = update[i].y + (brainN.movement.directionY * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
                             
-                            //ok so 
+                            //just so we dont recalculate direction every iteration
+                            let updatingFlag = false;
+                            //count is to let it run away for a few cycles
                             if(isPointInBounds(brainN.surfaceObjectId, {x: Math.round(update[i].x), y: Math.round(update[i].y)}, update)){
-                                console.log('here');
+                                //direction to point is where we are going,
+                                //so we want to flip direction until its not.
+                                //brainN.movement.directionX *a= 1;
+                                //brainN.movement.directionY *= 1;
+                                //move it away from wall a little bit
+
+                                //i think i need to account for dirrection when i do +1 or -1 for the x or y cause
+                                //it could be either way depending on where the point is.
+                                //if its up then we dont update y up but we update x up, 
+                                READ THE COMMENTS ABOVE TOMMOROW
+                                update[i].x = update[i].x  - 1 + ((brainN.movement.directionX * -1) * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
+                                update[i].y = update[i].y  - 1 + ((brainN.movement.directionY * -1) * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
+                                updatingFlag = true;
+
+                                //console.log(brainN.movement.directionX);
+
+                            }else{
+                                if(updatingFlag){
+                                    brainN.isMoving = false;
+                                    updatingFlag = false;
+                                }
                             }
                         }
                         
