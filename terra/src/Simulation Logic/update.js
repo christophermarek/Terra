@@ -5,7 +5,9 @@ import { updateFood, plantFoodTickUpdate, getClosestBush } from './helpers/food'
 import { getBrainObjectById, deleteBrainObjById } from './helpers/brain';
 import { returnSurfaceObject } from '../data/map/surfaceObjects';
 //import { calcHeuristic, search, startSearch } from './pathfinding';
-import { getGrid } from '../Simulation Logic/grid';
+import { getGrid, isPointInBounds } from '../Simulation Logic/grid';
+import { startSearch } from './pathfinding';
+
 
 function removeFromArrayByIndex(arr, index){
     arr.splice(index, 1);
@@ -207,7 +209,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                         if(brainN.targetAction === "Eat"){
 
                             //need to check if we actually reached the target or if the pathfinding messed up
-                            if(!(brainN.target.x - 10 <= update[i].x <= brainN.target.x + 10)|| !(brainN.target.y - 10 <= update[i].y <= brainN.target.y + 10)){
+                            if(!(brainN.target.x - 5 <= update[i].x <= brainN.target.x + 5)|| !(brainN.target.y - 5 <= update[i].y <= brainN.target.y + 5)){
                                 let updatedData = initPathfinding(update[i], brainN, brainN.target, mapCopy, update, grid);
                                         
                                 //no path found, set state to idle
@@ -255,6 +257,11 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                             //where movement speed is in pixels per second
                             update[i].x = update[i].x + (brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
                             update[i].y = update[i].y + (brainN.movement.directionY * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
+                            
+                            //ok so 
+                            if(isPointInBounds(brainN.surfaceObjectId, {x: Math.round(update[i].x), y: Math.round(update[i].y)}, update)){
+                                console.log('here');
+                            }
                         }
                         
                         if(Math.hypot(update[i].x - brainN.movement.startX, update[i].y - brainN.movement.startY) >= brainN.movement.distanceToPoint){
@@ -271,6 +278,48 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                                 //update[i].y = brainN.movement.endY;
                             }else{
                                 let nextPoint = brainN.path.shift();
+                                /*
+                                //check if object goes to this point they will not be in a wall
+                                let x = Math.round(nextPoint.x);
+                                let y = Math.round(nextPoint.y);
+                                
+                                //check if there is a point that we should be at, if there is calculate a new
+                                //path for that point
+                                if(isPointInBounds(brainN.surfaceObjectId, {x: x, y: y}, update)){
+                                    //remove the point from the path
+                                    //shifting it out removes it
+                                    //brainN.path.splice(i, 1);
+                                    //get previous point
+                                    let prev = {x: update[i].x, y: update[i].y};
+                                    let next = {x: brainN.path[1].x, y: brainN.path[1].y};
+                                    let fixedPath = startSearch(prev, next, mapCopy, update, grid);
+                                        
+                                    if(!fixedPath){
+                                        //no path exists
+                                        //not sure what to do here
+                                        //return false;
+                                    }
+
+                                    //const items = [1, 2, 3, 4, 5]
+                                    //console.log("inserting new path");
+                                        
+                                    const insert = (arr, index, ...newItems) => [
+                                        // part of the array before the specified index
+                                        ...arr.slice(0, index),
+                                        // inserted items
+                                        ...newItems,
+                                        // part of the array after the specified index
+                                        ...arr.slice(index)
+                                    ]
+                                        
+                                    for(let j = 0; j < fixedPath.length; j++){
+                                        brainN.path = insert(brainN.path, i, fixedPath[j]);
+                                    }
+
+                                    //DONT FORGET TO MAKE THE LOOP AFTER
+
+                                }
+                                */
                                 //console.log(nextPoint);
                                 //update[i].x = brainN.movement.endX;
                                 //update[i].y = brainN.movement.endY;
@@ -280,6 +329,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                                 //recalculate movement for new point
                                 brainN.isMoving = false;
                             }
+                            
                                 
                         }
                         //console.log("x,y ", update[i].x, update[i].y);
