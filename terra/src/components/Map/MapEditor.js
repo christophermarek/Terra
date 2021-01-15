@@ -12,6 +12,7 @@ function MapEditor() {
     const [selectedTileType, setSelectedTileType] = useState('');
     const [surfaceObjects, setSurfaceObjects] = useState([]);
     const [selectedMapSaveNumber, setSelectedMapSaveNumber] = useState(0);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     function generateSurfaceObjects(){
         
@@ -64,7 +65,41 @@ function MapEditor() {
         setSelectedTileType('surface');
     }
 
+    function deleteSurfaceObjectClicked(){
+        setIsDeleting(!isDeleting);
+    }
+
+    function deleteSurfaceObject(e, x, y){
+        let TileX = (x * 100);
+        let TileY = (y * 100);
+        let xOffset = (e.nativeEvent.offsetX);
+        let yOffset = (e.nativeEvent.offsetY);
+
+        let CalcX = (TileY) + (xOffset);
+        let CalcY = (TileX) + (yOffset);
+
+        let target = {
+            x: CalcX,
+            y: CalcY
+        }
+        //now we need to find the surfaceObject that intersects with this one.
+        for(let i = 0; i < surfaceObjects.length; i++){
+            let radius = returnSurfaceObject(surfaceObjects[i].type).size;
+            //point is inside of surfaceObject if true
+            if(Math.pow(target.x - surfaceObjects[i].x, 2) + Math.pow(target.y - surfaceObjects[i].y, 2) < Math.pow(radius, 2)){
+
+                const selectedRemoved = [...surfaceObjects.slice(0, i), ...surfaceObjects.slice(i + 1)];
+                setSurfaceObjects(selectedRemoved);
+            } 
+               
+        }
+            
+    }
+
     function updateMapWithSelectedTile(e, x, y){
+        if(isDeleting){
+            deleteSurfaceObject(e, x, y);
+        }
         //console.log(`clicked here x: ${x} y: ${y}`)
         if(selectedTileType === 'map'){
             let newMap = [...map];
@@ -217,6 +252,7 @@ function MapEditor() {
                         <div className="editorControls">
                             <TileSelector selectedTile={selectedTile} updateSelectedTileType={updateSelectedTileType}/>
                             <SurfaceObjectSelector selectedTile={selectedTile} updateSelectedSurfaceObjectType={updateSelectedSurfaceObjectType}></SurfaceObjectSelector>
+                            <button className={"navBtn inputButtonNoBorder Tile-Selector"  + (isDeleting ? ' selectedButton' : ' ')} onClick={deleteSurfaceObjectClicked}>{"Delete"}</button>
                         </div>
                     </div>
                     

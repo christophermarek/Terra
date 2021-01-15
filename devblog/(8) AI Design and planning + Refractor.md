@@ -98,8 +98,6 @@ maybe keep a local storage variable to check for this.
 
 Remove surfaceObject in editor button
 
-Fix map editor placement issue, shouldnt be too hard... it is important though.
-
 Make it so you cant walk on water, and that trees cant be placed on stone or water.
 
 Add default on empty route to route to /Simulation
