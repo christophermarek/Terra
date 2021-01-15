@@ -68,7 +68,7 @@ function SurfaceObjectsPanel({surfaceObjects, setSelectedSurfaceObjectId, select
                                 <li className="listItem">health: {Number(object[0].health).toFixed(2)}</li>
                                 <li className="listItem">hunger: {Number(object[0].hunger).toFixed(2)}</li>
 
-                                {brain !== undefined &&
+                                {brain !== undefined && object[1] !== undefined &&
                                     <li className="listItem">action: {object[1].action}</li>
                                 }
                             </ul>

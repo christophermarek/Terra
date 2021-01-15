@@ -95,9 +95,8 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
     for(let i = 0; i < update.length; i++){
 
         //brainN has a one to one relationship with a surfaceObject, and it is linked with the surfaceObject id
-        let brainN = brainUpdate[brainUpdate.findIndex(x => x.surfaceObjectId === i)];
+        let brainN = brainUpdate[brainUpdate.findIndex(x => x.surfaceObjectId === update[i].id)];
         //let boundsUpdate = updateBounds(update[i], map);
-
         //update[i] = boundsUpdate;
         //need a bool property for this
         if(update[i].type === 'bush' || update[i].type === 'tree'){
@@ -270,7 +269,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                         //console.log("Dying");
                         //remove from surfaceObjects
                         update = removeFromArrayByIndex(update, i);
-                        brainUpdate = deleteBrainObjById(brainUpdate, i); 
+                        brainUpdate = deleteBrainObjById(brainUpdate, update.id); 
                         break;
                     case "Hungry":
                         //console.log("from hungry");

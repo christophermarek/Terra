@@ -89,14 +89,10 @@ IDLE AND ALL OF THIS IS DONE NOW,
 Lower id surface objects render below, so a rabbit needs to have lower id than trees so it goes under the tree
 not sure what to do about this though.... Maybe play around with the css while pause with a guy under the tree in the editor 
 
-After rabbit dies of hunger, error next iteration.
-
 Need to clean all the code.
 
 Have a default map as a preset for people to use when they never loaded before,
 maybe keep a local storage variable to check for this.
-
-Remove surfaceObject in editor button
 
 Make it so you cant walk on water, and that trees cant be placed on stone or water.
 
