@@ -5,8 +5,9 @@ import {returnSurfaceObject} from '../../data/map/surfaceObjects'
 import HoverControls from './HoverControls';
 import { getBounds } from '../../Simulation Logic/grid';
 import SurfaceObjectsPanel from './SurfaceObjectsPanel';
+import MapFileHandler from './MapFileHandler';
 
-function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, started, isEditor, brain}) {
+function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, started, isEditor, brain, selectedMapSaveNumber}) {
 
     const [toggleBorder, setToggleBorder] = useState(false);
     const [hoverEnabled, setHoverEnabled] = useState(false);
@@ -221,6 +222,7 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
         <div className="Map">
             <div className="leftContainer">
                 <div className="mapControls">
+                    <MapFileHandler brain={brain} map={map} surfaceObjects={surfaceObjects} mapSaveNumber={selectedMapSaveNumber}/>
                     {!isEditor ? (
                         <button className={"navBtn inputButtonNoBorder Tile-Selector" + (started ? ' selectedButton' : ' ')} onClick={startClicked}>{started ? "Stop" : "Start"}</button>
                     ):(<></>)

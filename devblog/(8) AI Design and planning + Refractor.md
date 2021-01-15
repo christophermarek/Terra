@@ -95,13 +95,9 @@ If we want to support larger maps then we need a pathfinding algorithm that will
 6 chunks like this or maybe even smaller. Not sure.
 -Make sure to note this as a potential upgrade in the future
 
-Having grid view might slow down the application, probably only keep it for debugging right now and disable it after. Might not though,
-
 Display filename maybe?
 
 Need a Save button in simulation.
-
-Buttons should stay selected when clicked like visually.
 
 Lower id surface objects render below, so a rabbit needs to have lower id than trees so it goes under the tree
 
@@ -111,7 +107,9 @@ After rabbit dies of hunger, error next iteration.
 
 Need to clean all the code.
 
-Instead of targeting the bush, target a random point on the bush.
+Back and save button above start.
+
+Instead of targeting the bush, target a random point on the edge of bush.
 
 Make it so you cant walk on water, and that trees cant be placed on stone.
 

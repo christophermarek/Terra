@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-function MapFileHandler({map, loadMap, surfaceObjects, mapSaveNumber}) {
-
+function MapFileHandler({map, surfaceObjects, mapSaveNumber, brain}) {
+    console.log(mapSaveNumber);
     const [exportedMap, setExportedMap] = useState(' ');
 
     function generateAI(){
@@ -36,22 +36,29 @@ function MapFileHandler({map, loadMap, surfaceObjects, mapSaveNumber}) {
     }
 
     function mapExport(){
+        console.log("exporting map save number: ", mapSaveNumber);
         let mapCopy = [...map];
         let surfaceObjectsCopy = [...surfaceObjects];
         let saveData = {mapData: mapCopy, surfaceData: surfaceObjectsCopy};
+        let brainDataString = JSON.stringify(brain);
         let saveDataString = JSON.stringify(saveData);
         setExportedMap(saveDataString);
-
+        
         window.localStorage.setItem(`map${mapSaveNumber}`, saveDataString);
-        window.localStorage.setItem(`map${mapSaveNumber}Ai`, generateAI());
+
+        if(brain === undefined){
+            window.localStorage.setItem(`map${mapSaveNumber}Ai`, generateAI());
+        }else{
+            window.localStorage.setItem(`map${mapSaveNumber}Ai`, brainDataString);
+        }
+        
+        alert("Map saved");
         
     }
 
 
     return(
-        <div className="Tile-Selector">
-            <button class="navBtn inputButtonNoBorder" onClick={mapExport}>Save Map</button>
-        </div>
+        <button class="navBtn inputButtonNoBorder Tile-Selector" onClick={mapExport}>Save Map</button>
     );
     
 }

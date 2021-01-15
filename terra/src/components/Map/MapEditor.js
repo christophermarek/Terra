@@ -120,7 +120,6 @@ function MapEditor() {
     }
     
     function editMapClicked(mapSaveNumber){
-        console.log("running");
         setSelectedMapSaveNumber(mapSaveNumber);
 
         let data = JSON.parse(window.localStorage.getItem(`map${mapSaveNumber}`));
@@ -203,13 +202,13 @@ function MapEditor() {
                         <div className="editorControls">
                             <TileSelector selectedTile={selectedTile} updateSelectedTileType={updateSelectedTileType}/>
                             <SurfaceObjectSelector selectedTile={selectedTile} updateSelectedSurfaceObjectType={updateSelectedSurfaceObjectType}></SurfaceObjectSelector>
-                            <MapFileHandler loadMap={loadMap} map={map} surfaceObjects={surfaceObjects} mapSaveNumber={selectedMapSaveNumber}/>
                         </div>
                     </div>
                     
                     <Map map={map}
                          surfaceObjects={surfaceObjects}
                          isEditor={true}
+                         selectedMapSaveNumber={selectedMapSaveNumber}
                          updateMapWithSelectedTile={updateMapWithSelectedTile}
                     />
                 </>

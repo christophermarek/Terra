@@ -18,6 +18,7 @@ function Simulation() {
     const [generalMessages, setGeneralMessages] = useState([]);
     const [battleMessages, setBattleMessages] = useState([]);
     const [actionMessages, setActionMessages] = useState([]);
+    const [selectedMapSaveNumber, setSelectedMapSaveNumber] = useState(0);
 
 
     let secondsPassed = 0;
@@ -29,8 +30,16 @@ function Simulation() {
     }
 
     function loadMapClicked(mapSaveNumber){
+        setSelectedMapSaveNumber(mapSaveNumber);
+
         let mapData = window.localStorage.getItem(`map${mapSaveNumber}`);
-        loadMap(mapData);
+        let data = JSON.parse(mapData);
+        setMap(map => (data.mapData));
+        setSurfaceObjects(surfaceObjects => (data.surfaceData));
+
+        let aiData = JSON.parse(window.localStorage.getItem(`map${mapSaveNumber}Ai`));
+        setBrain(aiData);
+        mapLoaded();
     }
 
     function deleteMapClicked(mapSaveNumber){
@@ -38,38 +47,6 @@ function Simulation() {
             localStorage.removeItem(`map${mapSaveNumber}`);
             localStorage.removeItem(`map${mapSaveNumber}Ai`);
           }
-    }
-
-    function loadMap(importedData){
-        let data = JSON.parse(importedData);
-        setMap(map => (data.mapData));
-        setSurfaceObjects(surfaceObjects => (data.surfaceData));
-
-        //loadAi
-        let aiData = JSON.parse(window.localStorage.getItem('map1Ai'));
-        setBrain(aiData);
-        mapLoaded();
-
-    }
-
-    function importMapTextHandler(event){
-        setImportedMap(event.target.value);
-    }
-
-    function dropdownChange(event){
-        setMapPreset(event.target.value);
-        
-    }
-    
-    function loadFromPreset(event){
-        event.preventDefault();
-        
-        switch(mapPreset){
-            case "map1":
-                loadMap(window.localStorage.getItem('map1'));
-            default:
-                loadMap(window.localStorage.getItem('map1'));
-        }  
     }
 
     function startClicked(){
@@ -213,6 +190,7 @@ function Simulation() {
                          started={started}
                          isEditor={false}
                          brain={brain}
+                         selectedMapSaveNumber={selectedMapSaveNumber}
                     />
                     
                 </>
