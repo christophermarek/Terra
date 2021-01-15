@@ -2,7 +2,6 @@ import { startSearch } from '../pathfinding';
 import { getGridElementAtKey, isPointInBounds } from '../grid';
 
 export function getDistanceToPoint(x, y, destX, destY){
-    //console.log(" x: " + x + " y: " + y + " destX: " + destX + " destY: " + destY);
     let distance = Math.hypot(destX - x, destY - y);
     return distance;
 }
@@ -20,31 +19,16 @@ export function getDirectionToPoint(x, y, destX, destY, distance){
 //takes surfaceObject and brainObject
 export function initPathfinding(obj, brainN, target, map, surfaceObjects, grid){
 
-    //console.log("getting new path");
-    //i pass obj.x obj.y and obj. Refractor to just pass obj instead and pull properties
     brainN.path = startSearch(obj, target, map, surfaceObjects, grid);
-    //console.log("got new path")
-    //console.table(brainN.path);
-    //console.log(brainN.path);
+
     if(!brainN.path){
         return false;
     }
 
     
-        /*
-        if(grid.(x, y) === 1){
-            console.log("true");
-        }
-        */
-    //console.log(brainN.path);
-    //console.log(obj.x);
-    //console.log(obj.y);
-    
     let nextPoint = brainN.path.shift();
     //need to skip first point
     nextPoint = brainN.path.shift();
-    //console.log(brainN)
-    //console.log(nextPoint);
     if(nextPoint === undefined){
         return false;
     }else{

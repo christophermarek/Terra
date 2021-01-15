@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Map from './Map';
 import TileSelector from './TileSelector';
-import MapFileHandler from './MapFileHandler';
 import SurfaceObjectSelector from './SurfaceObjectSelector';
 import { returnSurfaceObject } from '../../data/map/surfaceObjects';
 
@@ -17,31 +16,24 @@ function MapEditor() {
     function generateSurfaceObjects(){
         
         let newSurfaceObjects = [];
-        console.log(surfaceObjects);
         setSurfaceObjects(surfaceObjects => (newSurfaceObjects));
         
     }
-
-    function Grass(x, y){
-        let defaultTile = {
-            x: x,
-            y: y,
-            type: "grass",
-        }; 
-
-        return defaultTile;
-    }
-
 
     //generateMap from mapSize args
     function generateMap(inputSize){
 
         let newMap = [];
-        
+
         for(let i = 0; i < inputSize; i++){
             let columns = [];
             for(let j = 0; j < inputSize; j++){
-                columns.push(Grass(i, j));
+                let defaultTile = {
+                    x: i,
+                    y: j,
+                    type: "grass",
+                }; 
+                columns.push(defaultTile);
             }
             newMap.push(columns);  
         }
@@ -87,7 +79,7 @@ function MapEditor() {
             let radius = returnSurfaceObject(surfaceObjects[i].type).size;
             //point is inside of surfaceObject if true
             if(Math.pow(target.x - surfaceObjects[i].x, 2) + Math.pow(target.y - surfaceObjects[i].y, 2) < Math.pow(radius, 2)){
-
+                //remove surfaceObject from array without mutating
                 const selectedRemoved = [...surfaceObjects.slice(0, i), ...surfaceObjects.slice(i + 1)];
                 setSurfaceObjects(selectedRemoved);
             } 
@@ -99,64 +91,48 @@ function MapEditor() {
     function updateMapWithSelectedTile(e, x, y){
         if(isDeleting){
             deleteSurfaceObject(e, x, y);
-        }
-        //console.log(`clicked here x: ${x} y: ${y}`)
-        if(selectedTileType === 'map'){
-            let newMap = [...map];
-            newMap[x][y].type = selectedTile;
-            setMap(map => (newMap));
-        }
-        if(selectedTileType === 'surface'){
-            let newSurfaceObjects = [...surfaceObjects];
-            let TileX = (x * 100);
-            let TileY = (y * 100);
-            let xOffset = (e.nativeEvent.offsetX);
-            let yOffset = (e.nativeEvent.offsetY);
-
-            let CalcX = (TileY) + (xOffset);
-            let CalcY = (TileX) + (yOffset);
-
-            //x y have to be flipped for svg
-            let newObj = {
-                x: CalcX,
-                y: CalcY,
+        }else{
+            if(selectedTileType === 'map'){
+                let newMap = [...map];
+                newMap[x][y].type = selectedTile;
+                setMap(map => (newMap));
             }
+            if(selectedTileType === 'surface'){
+                let newSurfaceObjects = [...surfaceObjects];
+                let TileX = (x * 100);
+                let TileY = (y * 100);
+                let xOffset = (e.nativeEvent.offsetX);
+                let yOffset = (e.nativeEvent.offsetY);
+    
+                let CalcX = (TileY) + (xOffset);
+                let CalcY = (TileX) + (yOffset);
+    
+                //x y have to be flipped for svg
+                let newObj = {
+                    x: CalcX,
+                    y: CalcY,
+                }
+    
+                let objData = returnSurfaceObject(selectedTile);
+                
+                newObj.health = objData.maxHealth;
+    
+                if(objData.type === 'rabbit'){
+                    newObj.hunger = 100;
+                }
+    
+                if(objData.type === 'bush'){
+                    newObj.food = 100;
+                }
+    
+                newObj.type = objData.type;
+    
+                newObj.id = newSurfaceObjects.length;
+                newSurfaceObjects.push(newObj);
 
-            let objData = returnSurfaceObject(selectedTile);
-            
-            newObj.health = objData.maxHealth;
-
-            if(objData.type === 'rabbit'){
-                newObj.hunger = 100;
+                setSurfaceObjects(surfaceObjects => (newSurfaceObjects));
             }
-
-            if(objData.type === 'bush'){
-                newObj.food = 100;
-            }
-
-            newObj.type = objData.type;
-            //add id for ai link
-
-            newObj.id = newSurfaceObjects.length;
-            newSurfaceObjects.push(newObj);
-
-            //console.log("newObj", newObj.type);
-            //console.log("newsurfaceobj", newSurfaceObjects);
-            //console.log(newSurfaceObjects[0].type);
-
-            //ok what is changing surfaceObjects, this is weird af.
-            //console.log(surfaceObjects);
-            setSurfaceObjects(surfaceObjects => (newSurfaceObjects));
-            //console.log(surfaceObjects);
         }
-    }
-
-    //unused function
-    function loadMap(importedData){
-        let data = JSON.parse(importedData);
-        setMap(map => (data.mapData));
-        console.log(surfaceObjects);
-        setSurfaceObjects(surfaceObjects => (data.surfaceData));
     }
     
     function editMapClicked(mapSaveNumber){
@@ -164,9 +140,7 @@ function MapEditor() {
 
         let data = JSON.parse(window.localStorage.getItem(`map${mapSaveNumber}`));
         setMap(map => (data.mapData));
-        console.log(surfaceObjects);
         setSurfaceObjects(surfaceObjects => (data.surfaceData));
-
     }
 
     function generateMapClicked(mapSaveNumber){
@@ -184,11 +158,6 @@ function MapEditor() {
                 alert("Invalid map size, please enter a integer between 1-6");
                 return;
             }
-
-            //can make mapsize 0, and when mapsize is not 0 is when we call generate world(),
-            //YO WE CAN JUST CALL GENERATE WORLD WITH ARGS THAT ARE THE MAP SIZE,
-            //I THINK ITS ONLY USED TO GENERATE THE MAP FOR THIS ONE FUNCTION
-            //console.log(mapSize);
             generateWorld(parsedSize);
         } 
     }
@@ -198,7 +167,7 @@ function MapEditor() {
             localStorage.removeItem(`map${mapSaveNumber}`);
             localStorage.removeItem(`map${mapSaveNumber}Ai`);
             window.location.reload();
-          }
+        }
     }
     
 

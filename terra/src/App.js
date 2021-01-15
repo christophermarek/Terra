@@ -7,7 +7,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  useLocation,
   Link
 } from "react-router-dom";
 
@@ -17,12 +16,11 @@ function App() {
   const [selectedNavItem, setSelectedNavItem] = useState('');
 
   useEffect(() => {
-    // Update the document title using the browser API
     const pathname = window.location.pathname
     if(pathname.toString().toLowerCase() === '/editor'){
       setSelectedNavItem('editor');
     }
-    if(pathname.toString().toLowerCase() === '/simulation'){
+    if(pathname.toString().toLowerCase() === '/simulation' || pathname.toString().toLowerCase() === '/'){
       setSelectedNavItem('simulation');
     }
   });
@@ -50,6 +48,10 @@ function App() {
           <Route path="/editor">
             <MapEditor />
           </Route>
+          <Route path="/" >
+            <Simulation />
+          </Route>
+
         </Switch>
       </div>
     </Router>

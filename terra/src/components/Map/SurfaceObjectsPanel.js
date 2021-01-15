@@ -10,28 +10,6 @@ function SurfaceObjectsPanel({surfaceObjects, setSelectedSurfaceObjectId, select
             setSelectedSurfaceObjectId(id);
         }
     }
-    /*
-    function renderSurfaceObjectRow(surfaceObject){
-        console.log(surfaceObject)
-
-        return(
-            <p>1</p>
-        );
-    }
-
-    function renderBrainSurfaceObjects(){
-        //console.log(surfaceObjects);
-        for(let i = 0; i < surfaceObjects.length; i++){
-            //console.log(i);
-            if(surfaceObjects[i].type === 'rabbit'){
-                //console.log("obj:, ", surfaceObjects[i], " id: ", surfaceObjects[i].id);
-                renderSurfaceObjectRow(surfaceObjects[i]);
-            }
-        }
-        
-
-    }
-    */
 
     let surfaceObjCopy = [...surfaceObjects];
 
@@ -52,8 +30,6 @@ function SurfaceObjectsPanel({surfaceObjects, setSelectedSurfaceObjectId, select
             }
         }
     }
-
-
 
     return(
         <div className="SurfaceObjectsPanels">

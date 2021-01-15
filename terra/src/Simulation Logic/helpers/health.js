@@ -6,12 +6,10 @@ export function updateHealth(obj, amount){
 
     if(obj.health >= returnSurfaceObject(obj.type).maxHealth){
         obj.health = returnSurfaceObject(obj.type).maxHealth;
-        //overheal message to console?
     }
 
     if(obj.health <= 0){
         obj.health = 0;
-        //no health message to console
     }
 
     return obj;

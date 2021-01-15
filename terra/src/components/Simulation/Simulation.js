@@ -1,29 +1,22 @@
 import React, { useState } from 'react';
 import Map from '../Map/Map';
-import './styles.css';
-import { GameConsole } from './GameConsole';
-
 import { updateSurfaceObjects } from '../../Simulation Logic/update'; 
+
+import './styles.css';
+import { getGrid } from '../../Simulation Logic/grid';
 
 function Simulation() {
 
-    const [importedMap, setImportedMap] = useState('');
     const [map, setMap] = useState([]);
     const [surfaceObjects, setSurfaceObjects] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [mapPreset, setMapPreset] = useState("map1");
     const [started, setStarted] = useState(false);
     const [requestAnimationFrameID, setRequestAnimationFrameID] = useState(undefined); 
     const [brain, setBrain] = useState([]);
-    const [generalMessages, setGeneralMessages] = useState([]);
-    const [battleMessages, setBattleMessages] = useState([]);
-    const [actionMessages, setActionMessages] = useState([]);
     const [selectedMapSaveNumber, setSelectedMapSaveNumber] = useState(0);
-
 
     let secondsPassed = 0;
     let oldTimeStamp = 0;
-
 
     function mapLoaded(){
         setIsLoaded(true);
@@ -77,42 +70,9 @@ function Simulation() {
          }
     }
 
-    function addConsoleMessage(surfObjId, message, type){
-
-        /*
-        consoleMessage Schema
-        {time, surfObjId, message}
-        */
-
-        
-        let date = new Date(); 
-        let timeString = date.getHours() + " : " + date.getMinutes() + " : " + date.getSeconds();
-
-        let consoleString =  {
-            timeStamp: timeString,
-            surfaceObjectId: surfObjId,
-            message: message
-        };
-        
-        switch(type){
-            case 'General':
-                setGeneralMessages(generalMessages => [...generalMessages, consoleString]);
-                break;
-            case 'Battle':
-                setBattleMessages(battleMessages => [...battleMessages, consoleString]);
-                break;
-            case 'Action':
-                setActionMessages(actionMessages => [...actionMessages, consoleString]);
-                break;
-            default:
-                setGeneralMessages(generalMessages => [...generalMessages, consoleString]);
-            }
-        
-    }
-
     function update(secondsPassed){
 
-        let update = updateSurfaceObjects(secondsPassed, map, surfaceObjects, brain, map)
+        let update = updateSurfaceObjects(secondsPassed, map, surfaceObjects, brain, map, getGrid(map, surfaceObjects))
         setBrain(brain => (update.brain));
         setSurfaceObjects(surfaceObjects => (update.surfaceObjects));
 
@@ -127,8 +87,6 @@ function Simulation() {
         //global vars defined at top, not state vars
         secondsPassed = seconds;
 
-        //console.log("seconds passed for loop ", secondsPassed);
-
         //limit time skip on pause/start
         secondsPassed = Math.min(secondsPassed, 0.1);
         oldTimeStamp = timeStamp;
@@ -136,7 +94,6 @@ function Simulation() {
         //
         
         update(secondsPassed);
-        //console.log("new timestamp ", timeStamp);
         
         //
 

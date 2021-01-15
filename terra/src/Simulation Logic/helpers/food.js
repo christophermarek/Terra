@@ -20,23 +20,6 @@ export function plantFoodTickUpdate(secondsPassed, obj){
     return obj;
 }
 
-export function checkDepletedBushesDurations(surfaceObjects, brainN){
-    
-    /*
-
-    Not a good implementation 
-
-    let bushes = surfaceObjects.filter(object => object.type === 'bush');
-
-    for(let i = 0; i < bushes; i++){
-        if(Math.floor(Date.now() / 1000) - brainN.depletedBushes[i].timestamp >= 10){
-            
-        }
-    }
-
-    return obj;
-    */
-}
 
 //where obj is the surfaceObject we are searching from
 //returns null if no bush found
