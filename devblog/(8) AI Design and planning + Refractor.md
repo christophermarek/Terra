@@ -109,4 +109,14 @@ Add a view with switchable tabs to view trees and bush properties too
 
 After rabbit dies of hunger, error next iteration.
 
-Make it so you cant walk on water, and that trees cant be placed on stone
+Need to clean all the code.
+
+Instead of targeting the bush, target a random point on the bush.
+
+Make it so you cant walk on water, and that trees cant be placed on stone.
+
+ONLY AFTER WE ARE ON GITHUB PAGES AND ARE BUG FREE WITH THE ABOVE FIXES.
+# Water update
+-thirst, exact same as hunger.
+-make water all wall on grid.
+-make water target a random point on the edge of the water.

@@ -253,19 +253,20 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                             brainN.isMoving = true;
                             
                         }else{
+                            if(brainN.isAvoiding === undefined || brainN.cycles === undefined){
+                                brainN.isAvoiding = false;
+                                brainN.cycles = 0;
+                            }
+
                             if(update[i].x < 0 ){
                                 update[i].x = 1
                             }
                             if(update[i].y < 0 ){
                                 update[i].y = 1
                             }
-                            //its calculated as x += movementspeed * secondspassed
-                            //where movement speed is in pixels per second
-                            update[i].x = update[i].x + (brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
-                            update[i].y = update[i].y + (brainN.movement.directionY * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
+                            
                             
                             //just so we dont recalculate direction every iteration
-                            let updatingFlag = false;
                             //count is to let it run away for a few cycles
                             if(isPointInBounds(brainN.surfaceObjectId, {x: Math.round(update[i].x), y: Math.round(update[i].y)}, update)){
                                 //direction to point is where we are going,
@@ -273,22 +274,112 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                                 //brainN.movement.directionX *a= 1;
                                 //brainN.movement.directionY *= 1;
                                 //move it away from wall a little bit
+                                
+                                
+                                //get the surfaceObject we intersected with.
+                                
+                                for(let l = 0; l < update.length; l++){
+                                    if(update[l].type === "tree"){
+                                        if(isPointInBounds(update[l].id, {x: Math.round(update[i].x), y: Math.round(update[i].y)}, update)){
+                                            //console.log("id: ", l);
+                                            //l is the index of the surfaceObject we collided with
 
-                                //i think i need to account for dirrection when i do +1 or -1 for the x or y cause
-                                //it could be either way depending on where the point is.
-                                //if its up then we dont update y up but we update x up, 
-                                READ THE COMMENTS ABOVE TOMMOROW
-                                update[i].x = update[i].x  - 1 + ((brainN.movement.directionX * -1) * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
-                                update[i].y = update[i].y  - 1 + ((brainN.movement.directionY * -1) * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
-                                updatingFlag = true;
+                                            //get all 4 corners of a square of that surfaceObject
+                                            //find the surfaceObject we intersected with
+                                            let radius = returnSurfaceObject(update[l].type).size;
+                                            let topLeftDistance = getDistanceToPoint(update[i].x, update[i].y ,update[l].x - radius, update[l].y - radius);
+                                            let bottomLeftDistance = getDistanceToPoint(update[i].x, update[i].y , update[l].x - radius, update[l].y + radius);
+                                            let bottomRightDistance = getDistanceToPoint(update[i].x, update[i].y , update[l].x + radius, update[l].y - radius);
+                                            let topRightDistance = getDistanceToPoint(update[i].x, update[i].y , update[l].x + radius, update[l].y + radius);
+                                            let closestPoint = [{x: update[l].x - radius, y: update[l].y - radius, distance: topLeftDistance}, 
+                                                                {x: update[l].x - radius, y: update[l].y + radius, distance: bottomLeftDistance},
+                                                                {x: update[l].x + radius, y: update[l].y - radius, distance: bottomRightDistance},
+                                                                {x: update[l].x + radius, y: update[l].y + radius, distance: topRightDistance}
+                                                                ];
+                                            //sort array of points to find the closest point
+                                            closestPoint.sort((a, b) => a.distance - b.distance);
+                                            //find the closest corner to you at point of collision that we have not already pathed to yet.
+                                            //calculate new distance and direction to that point
+                                            let direction = getDirectionToPoint(update[i].x, update[i].y, closestPoint[0].x, closestPoint[0].y, closestPoint[0].distance);
+                                            brainN.movement.directionX = direction.x;
+                                            brainN.movement.directionY = direction.y;
+                                            brainN.isAvoiding = true;
+                                            //console.log("moving to new direction");
 
-                                //console.log(brainN.movement.directionX);
+                                            //calculate a new direction and set it to that point.
+                                            //when we reach that point we recalculate the direction again. 
+                                            console.log("chranging direction");
+                                            let updatedData = initPathfinding(update[i], brainN, closestPoint[0], mapCopy, update, grid);
 
-                            }else{
-                                if(updatingFlag){
-                                    brainN.isMoving = false;
-                                    updatingFlag = false;
+                                            //console.log("updatedData", updatedData);
+
+                                            //no path found, set state to idle
+                                            if(!updatedData){
+                                                //console.log("no path found for wander");
+                                                brainN.action = "Idle";
+                                                break;
+                                            }else{
+                                                //attach path details to object
+                                                update[i] = updatedData.surfaceObject;
+                                                brainN = updatedData.brain;
+                                                //console.log("successfully going to wander");
+                                                //set to moving, inits action
+                                                brainN.action = "Moving";
+                                                brainN.targetAction = "Wander";
+                                            }
+                                        }
+                                    }
+                                    
                                 }
+
+                                    //Think I need to find a point now, i could just get direction to a corner of the object.
+                                    //so if intersect with a circle
+                                    
+                                    
+                                    /*
+                                    
+
+                                    if(Math.abs(brainN.movement.directionX) < Math.abs(brainN.movement.directionY)){
+                                        //brainN.movement.directionX = brainN.movement.directionY;
+                                        brainN.movement.directionY = brainN.movement.directionY * -1;
+                                        //brainN.movement.directionX = brainN.movement.directionX * -1;
+
+                                    }else{
+                                        //brainN.movement.directionY = brainN.movement.directionX;
+                                        brainN.movement.directionX = brainN.movement.directionX * -1;
+                                        //brainN.movement.directionY = brainN.movement.directionY * -1;
+                                    }
+                                    */
+
+                                    update[i].x = update[i].x + (brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
+                                    update[i].y = update[i].y + (brainN.movement.directionY * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
+                                    
+                                    //ok all this does though is make us go oposite of the point, then when we are out of the wall we 
+                                    //will go back, we want to find the direction of the point and go opposite of that ya but in a direction to avoid
+                                    //it aswell
+                                    //now need to make it so we only go to this direction point calculate that distance once and go, then lock out of the cycles
+                                    //need to redo this logic
+                                    //figure out what is wrong to test just use one surfaceObject and watch if the direction
+                                    //changes to early because i think that might be the problem
+                                    brainN.cycles += 1;
+
+                                    //console.log("X: ", brainN.movement.directionX, " Y: ", brainN.movement.directionY);
+                                    //console.log(brainN.movement.directionX);
+
+                                
+                            }else{
+                                if(brainN.cycles >= 1){
+                                    console.log("getting naew direction");
+                                    brainN.cycles = 0;
+                                    brainN.isMoving = false;
+                                    brainN.isAvoiding = false;
+                                    
+                                }
+
+                                //its calculated as x += movementspeed * secondspassed
+                                //where movement speed is in pixels per second
+                                update[i].x = update[i].x + (brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
+                                update[i].y = update[i].y + (brainN.movement.directionY * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
                             }
                         }
                         
