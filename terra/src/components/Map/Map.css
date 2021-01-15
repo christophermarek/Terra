@@ -120,10 +120,14 @@ svg {
 
 .saveBar{
   display: flex;
-  padding-top: 15%;
-  padding-bottom: 15%;
+  margin-top: 15%;
+  margin-bottom: 15%;
   justify-content: space-between;
   align-items: center;
+}
+
+.saveBar:hover{
+  outline: 1px dashed hsl(255, 11%, 22%) !important;
 }
 
 .mapControls{

@@ -133,12 +133,18 @@ function MapEditor() {
 
         setSelectedMapSaveNumber(mapSaveNumber);
 
-        var sizePrompt = prompt("Enter a map size as an integer:");
+        let sizePrompt = prompt("Enter a map size as an integer between 1 - 5:");
         if (sizePrompt == null || sizePrompt == "") {
-            alert("Invalid map size, please enter a integer between 1-10");
+            alert("Invalid map size, please enter a integer between 1-5");
             return;
         } else {
             let parsedSize = parseInt(sizePrompt);
+
+            if(!(parsedSize > 0 && parsedSize < 6)){
+                alert("Invalid map size, please enter a integer between 1-5");
+                return;
+            }
+
             //can make mapsize 0, and when mapsize is not 0 is when we call generate world(),
             //YO WE CAN JUST CALL GENERATE WORLD WITH ARGS THAT ARE THE MAP SIZE,
             //I THINK ITS ONLY USED TO GENERATE THE MAP FOR THIS ONE FUNCTION

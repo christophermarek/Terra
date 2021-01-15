@@ -97,8 +97,6 @@ If we want to support larger maps then we need a pathfinding algorithm that will
 
 Display filename maybe?
 
-Need a Save button in simulation.
-
 Lower id surface objects render below, so a rabbit needs to have lower id than trees so it goes under the tree
 
 Add a view with switchable tabs to view trees and bush properties too
@@ -107,9 +105,7 @@ After rabbit dies of hunger, error next iteration.
 
 Need to clean all the code.
 
-Back and save button above start.
-
-Instead of targeting the bush, target a random point on the edge of bush.
+Back above start.
 
 Make it so you cant walk on water, and that trees cant be placed on stone.
 
