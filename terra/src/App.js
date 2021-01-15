@@ -32,9 +32,11 @@ function App() {
         </nav>
         <Switch>
           <Route path="/simulation">
+            {() => navButtonClicked('simulation')}
             <Simulation />
           </Route>
           <Route path="/editor">
+            {() => navButtonClicked('editor')}
             <MapEditor />
           </Route>
         </Switch>

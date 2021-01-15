@@ -191,6 +191,10 @@ function MapEditor() {
             
         );
     }
+
+    function backClicked(){
+        setMap([]);
+    }
   
     return (
         <div className = "Map-Editor"> 
@@ -212,10 +216,11 @@ function MapEditor() {
                     </div>
                     
                     <Map map={map}
-                         surfaceObjects={surfaceObjects}
-                         isEditor={true}
-                         selectedMapSaveNumber={selectedMapSaveNumber}
-                         updateMapWithSelectedTile={updateMapWithSelectedTile}
+                        backClicked={backClicked}
+                        surfaceObjects={surfaceObjects}
+                        isEditor={true}
+                        selectedMapSaveNumber={selectedMapSaveNumber}
+                        updateMapWithSelectedTile={updateMapWithSelectedTile}
                     />
                 </>
             )}

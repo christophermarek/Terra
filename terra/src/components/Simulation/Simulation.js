@@ -171,6 +171,10 @@ function Simulation() {
         );
     }
 
+    function backClicked(){
+        setIsLoaded(false);
+    }
+
     return(
         <div className="Simulation">
             {!isLoaded ? (
@@ -190,6 +194,7 @@ function Simulation() {
                          started={started}
                          isEditor={false}
                          brain={brain}
+                         backClicked={backClicked}
                          selectedMapSaveNumber={selectedMapSaveNumber}
                     />
                     
