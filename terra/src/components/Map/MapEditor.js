@@ -65,6 +65,7 @@ function MapEditor() {
     }
 
     function updateMapWithSelectedTile(e, x, y){
+        //console.log(`clicked here x: ${x} y: ${y}`)
         if(selectedTileType === 'map'){
             let newMap = [...map];
             newMap[x][y].type = selectedTile;
@@ -72,14 +73,18 @@ function MapEditor() {
         }
         if(selectedTileType === 'surface'){
             let newSurfaceObjects = [...surfaceObjects];
-            
-            let CalcX = Number(String(x) + String(e.nativeEvent.offsetX));
-            let CalcY = Number(String(y) + String(e.nativeEvent.offsetY));
+            let TileX = (x * 100);
+            let TileY = (y * 100);
+            let xOffset = (e.nativeEvent.offsetX);
+            let yOffset = (e.nativeEvent.offsetY);
+
+            let CalcX = (TileY) + (xOffset);
+            let CalcY = (TileX) + (yOffset);
 
             //x y have to be flipped for svg
             let newObj = {
-                x: CalcY,
-                y: CalcX,
+                x: CalcX,
+                y: CalcY,
             }
 
             let objData = returnSurfaceObject(selectedTile);

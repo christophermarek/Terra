@@ -174,6 +174,10 @@ function Simulation() {
 
     function backClicked(){
         setIsLoaded(false);
+        //pause
+        if(started){
+            startClicked();
+        }
     }
 
     return(
