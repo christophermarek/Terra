@@ -86,6 +86,7 @@ export function getNeighbors(grid, node){
 
 
 
+
 export function getGrid(map, surfaceObjects){
 
     //I wonder if this will create a new grid, if we have a grid loaded from one map,
@@ -156,7 +157,7 @@ function setupPlanner(map, surfaceObjects){
 }
 
 export function getGridElementAtKey(x, y){
-    return grid.get(x, y)
+    return grid.get(Math.round(x), Math.round(y))
 }
 
 export function getBounds(){

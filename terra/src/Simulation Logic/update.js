@@ -5,7 +5,7 @@ import { updateFood, plantFoodTickUpdate, getClosestBush } from './helpers/food'
 import { getBrainObjectById, deleteBrainObjById } from './helpers/brain';
 import { returnSurfaceObject } from '../data/map/surfaceObjects';
 //import { calcHeuristic, search, startSearch } from './pathfinding';
-import { getGrid, isPointInBounds } from '../Simulation Logic/grid';
+import { getGrid, isPointInBounds, getGridElementAtKey } from '../Simulation Logic/grid';
 import { startSearch } from './pathfinding';
 
 
@@ -207,30 +207,10 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
 
                     case "Reached Target":
                         if(brainN.targetAction === "Eat"){
-
-                            //need to check if we actually reached the target or if the pathfinding messed up
-                            if(!(brainN.target.x - 5 <= update[i].x <= brainN.target.x + 5)|| !(brainN.target.y - 5 <= update[i].y <= brainN.target.y + 5)){
-                                let updatedData = initPathfinding(update[i], brainN, brainN.target, mapCopy, update, grid);
-                                        
-                                //no path found, set state to idle
-                                if(!updatedData){
-                                    //console.log("no path to bush found, setting to idle");
-                                    brainN.action = "Idle";
-                                }else{
-                                    //console.log("set to moving, target is bush");
-                                    //attach path details to object
-                                    update[i] = updatedData.surfaceObject;
-                                    brainN = updatedData.brain;
-                
-                                    //set to moving, inits action
-                                    brainN.action = "Moving";
-                                    brainN.target = brainN.target;
-                                    brainN.targetAction = "Eat";
-                                }
-                            }else{
-                                brainN.action = "Eat Target";
-                            }   
-                            //console.log("reached target to eat");
+                            console.log("wanna eat");
+                            
+                            console.log("at food and in distance")
+                            brainN.action = "Eat Target";
                         }else{
                             //console.log("reached target now idle");
                             brainN.action = "Idle";
@@ -253,134 +233,10 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                             brainN.isMoving = true;
                             
                         }else{
-                            if(brainN.isAvoiding === undefined || brainN.cycles === undefined){
-                                brainN.isAvoiding = false;
-                                brainN.cycles = 0;
-                            }
+                           
+                            update[i].x = update[i].x + (brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
+                            update[i].y = update[i].y + (brainN.movement.directionY * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
 
-                            if(update[i].x < 0 ){
-                                update[i].x = 1
-                            }
-                            if(update[i].y < 0 ){
-                                update[i].y = 1
-                            }
-                            
-                            
-                            //just so we dont recalculate direction every iteration
-                            //count is to let it run away for a few cycles
-                            if(isPointInBounds(brainN.surfaceObjectId, {x: Math.round(update[i].x), y: Math.round(update[i].y)}, update)){
-                                //direction to point is where we are going,
-                                //so we want to flip direction until its not.
-                                //brainN.movement.directionX *a= 1;
-                                //brainN.movement.directionY *= 1;
-                                //move it away from wall a little bit
-                                
-                                
-                                //get the surfaceObject we intersected with.
-                                
-                                for(let l = 0; l < update.length; l++){
-                                    if(update[l].type === "tree"){
-                                        if(isPointInBounds(update[l].id, {x: Math.round(update[i].x), y: Math.round(update[i].y)}, update)){
-                                            //console.log("id: ", l);
-                                            //l is the index of the surfaceObject we collided with
-
-                                            //get all 4 corners of a square of that surfaceObject
-                                            //find the surfaceObject we intersected with
-                                            let radius = returnSurfaceObject(update[l].type).size;
-                                            let topLeftDistance = getDistanceToPoint(update[i].x, update[i].y ,update[l].x - radius, update[l].y - radius);
-                                            let bottomLeftDistance = getDistanceToPoint(update[i].x, update[i].y , update[l].x - radius, update[l].y + radius);
-                                            let bottomRightDistance = getDistanceToPoint(update[i].x, update[i].y , update[l].x + radius, update[l].y - radius);
-                                            let topRightDistance = getDistanceToPoint(update[i].x, update[i].y , update[l].x + radius, update[l].y + radius);
-                                            let closestPoint = [{x: update[l].x - radius, y: update[l].y - radius, distance: topLeftDistance}, 
-                                                                {x: update[l].x - radius, y: update[l].y + radius, distance: bottomLeftDistance},
-                                                                {x: update[l].x + radius, y: update[l].y - radius, distance: bottomRightDistance},
-                                                                {x: update[l].x + radius, y: update[l].y + radius, distance: topRightDistance}
-                                                                ];
-                                            //sort array of points to find the closest point
-                                            closestPoint.sort((a, b) => a.distance - b.distance);
-                                            //find the closest corner to you at point of collision that we have not already pathed to yet.
-                                            //calculate new distance and direction to that point
-                                            let direction = getDirectionToPoint(update[i].x, update[i].y, closestPoint[0].x, closestPoint[0].y, closestPoint[0].distance);
-                                            brainN.movement.directionX = direction.x;
-                                            brainN.movement.directionY = direction.y;
-                                            brainN.isAvoiding = true;
-                                            //console.log("moving to new direction");
-
-                                            //calculate a new direction and set it to that point.
-                                            //when we reach that point we recalculate the direction again. 
-                                            console.log("chranging direction");
-                                            let updatedData = initPathfinding(update[i], brainN, closestPoint[0], mapCopy, update, grid);
-
-                                            //console.log("updatedData", updatedData);
-
-                                            //no path found, set state to idle
-                                            if(!updatedData){
-                                                //console.log("no path found for wander");
-                                                brainN.action = "Idle";
-                                                break;
-                                            }else{
-                                                //attach path details to object
-                                                update[i] = updatedData.surfaceObject;
-                                                brainN = updatedData.brain;
-                                                //console.log("successfully going to wander");
-                                                //set to moving, inits action
-                                                brainN.action = "Moving";
-                                                brainN.targetAction = "Wander";
-                                            }
-                                        }
-                                    }
-                                    
-                                }
-
-                                    //Think I need to find a point now, i could just get direction to a corner of the object.
-                                    //so if intersect with a circle
-                                    
-                                    
-                                    /*
-                                    
-
-                                    if(Math.abs(brainN.movement.directionX) < Math.abs(brainN.movement.directionY)){
-                                        //brainN.movement.directionX = brainN.movement.directionY;
-                                        brainN.movement.directionY = brainN.movement.directionY * -1;
-                                        //brainN.movement.directionX = brainN.movement.directionX * -1;
-
-                                    }else{
-                                        //brainN.movement.directionY = brainN.movement.directionX;
-                                        brainN.movement.directionX = brainN.movement.directionX * -1;
-                                        //brainN.movement.directionY = brainN.movement.directionY * -1;
-                                    }
-                                    */
-
-                                    update[i].x = update[i].x + (brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
-                                    update[i].y = update[i].y + (brainN.movement.directionY * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
-                                    
-                                    //ok all this does though is make us go oposite of the point, then when we are out of the wall we 
-                                    //will go back, we want to find the direction of the point and go opposite of that ya but in a direction to avoid
-                                    //it aswell
-                                    //now need to make it so we only go to this direction point calculate that distance once and go, then lock out of the cycles
-                                    //need to redo this logic
-                                    //figure out what is wrong to test just use one surfaceObject and watch if the direction
-                                    //changes to early because i think that might be the problem
-                                    brainN.cycles += 1;
-
-                                    //console.log("X: ", brainN.movement.directionX, " Y: ", brainN.movement.directionY);
-                                    //console.log(brainN.movement.directionX);
-
-                                
-                            }else{
-                                if(brainN.cycles >= 1){
-                                    console.log("getting naew direction");
-                                    brainN.cycles = 0;
-                                    brainN.isMoving = false;
-                                    brainN.isAvoiding = false;
-                                    
-                                }
-
-                                //its calculated as x += movementspeed * secondspassed
-                                //where movement speed is in pixels per second
-                                update[i].x = update[i].x + (brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
-                                update[i].y = update[i].y + (brainN.movement.directionY * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
-                            }
                         }
                         
                         if(Math.hypot(update[i].x - brainN.movement.startX, update[i].y - brainN.movement.startY) >= brainN.movement.distanceToPoint){
@@ -397,52 +253,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                                 //update[i].y = brainN.movement.endY;
                             }else{
                                 let nextPoint = brainN.path.shift();
-                                /*
-                                //check if object goes to this point they will not be in a wall
-                                let x = Math.round(nextPoint.x);
-                                let y = Math.round(nextPoint.y);
-                                
-                                //check if there is a point that we should be at, if there is calculate a new
-                                //path for that point
-                                if(isPointInBounds(brainN.surfaceObjectId, {x: x, y: y}, update)){
-                                    //remove the point from the path
-                                    //shifting it out removes it
-                                    //brainN.path.splice(i, 1);
-                                    //get previous point
-                                    let prev = {x: update[i].x, y: update[i].y};
-                                    let next = {x: brainN.path[1].x, y: brainN.path[1].y};
-                                    let fixedPath = startSearch(prev, next, mapCopy, update, grid);
-                                        
-                                    if(!fixedPath){
-                                        //no path exists
-                                        //not sure what to do here
-                                        //return false;
-                                    }
-
-                                    //const items = [1, 2, 3, 4, 5]
-                                    //console.log("inserting new path");
-                                        
-                                    const insert = (arr, index, ...newItems) => [
-                                        // part of the array before the specified index
-                                        ...arr.slice(0, index),
-                                        // inserted items
-                                        ...newItems,
-                                        // part of the array after the specified index
-                                        ...arr.slice(index)
-                                    ]
-                                        
-                                    for(let j = 0; j < fixedPath.length; j++){
-                                        brainN.path = insert(brainN.path, i, fixedPath[j]);
-                                    }
-
-                                    //DONT FORGET TO MAKE THE LOOP AFTER
-
-                                }
-                                */
-                                //console.log(nextPoint);
-                                //update[i].x = brainN.movement.endX;
-                                //update[i].y = brainN.movement.endY;
-                                //console.log("1, ", update[i]);
+                            
                                 brainN.movement.endX = nextPoint.x;
                                 brainN.movement.endY = nextPoint.y;
                                 //recalculate movement for new point
@@ -468,16 +279,49 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                             //stay hungry
                             console.log("no bush");
                         }else{
-                            //let target = {x: 101, y: 298};
-                            //console.log(target);
-                            //init pathfinding
-                            let updatedData = initPathfinding(update[i], brainN, bush, mapCopy, update, grid);
+                            console.log(bush);
+                            let updatedData;
+                            //we need to check if start point is wall.
+                            //if it is then we need to find the closest point that is not a wall.
+                            //and change start point to that
+                            updatedData = initPathfinding(update[i], brainN, bush, mapCopy, update, grid);
+
                                             
                             //no path found, set state to idle
                             if(!updatedData){
+                                console.log("getGridElementAtKey(update[i].x, update[i].y): ", getGridElementAtKey(update[i].x, update[i].y));
+                                console.log("no path to bush found");
+                                
+                                let flag = false;
+                                while(!flag){
+                                    if(getGridElementAtKey(update[i].x + brainN.counter, update[i].y + brainN.counter) != 1){
+                                        brainN.closestPoint = {x: Math.round(update[i].x + brainN.counter), y: Math.round(update[i].y + brainN.counter)};
+                                        updatedData = initPathfinding(brainN.closestPoint, brainN, bush, mapCopy, update, grid);
+                                        if(!updatedData){
+                                            flag = false;
+                                        }else{
+                                            flag = true;
+                                        }
+                                    }
+                                    brainN.counter += 1;
+                                }
+                                //console.log("found closestPoint that is not wall", closestPoint);
+                                brainN.closestPoint = 0;
+                                brainN.counter = 0;
+                                //console.log("set to moving, target is bush");
+                                //attach path details to object
+                                update[i] = updatedData.surfaceObject;
+                                brainN = updatedData.brain;
+            
+                                //set to moving, inits action
+                                brainN.action = "Moving";
+                                brainN.target = bush;
+                                brainN.targetAction = "Eat";
                                 //console.log("no path to bush found, setting to idle");
-                                brainN.action = "Idle";
+                                //brainN.action = "Idle";
                             }else{
+                                brainN.closestPoint = 0;
+                                brainN.counter = 0;
                                 //console.log("set to moving, target is bush");
                                 //attach path details to object
                                 update[i] = updatedData.surfaceObject;
@@ -491,15 +335,37 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                         }
                         break;
                     case "Eat Target":
-                        //console.log("eating target");
-                        //decrease food & hunger by 1
-                        for(let z = 0; z < update.length; z++){
-                            if(update[z].id === brainN.target.id){
-                                updateFood(update[z], -2);
-                                updateHunger(update[i], 1);
+                        //calculate new path
+                        //15 and 10 are bush size and rabbit size
+                        if(!(Math.hypot(update[i].x - brainN.target.x, update[i].y - brainN.target.y) <= (15 + 10))){
+                            //console.log("")
+                            let updatedData = initPathfinding(update[i], brainN, brainN.target, mapCopy, update, grid);
+                            //no path found, set state to idle
+                            if(!updatedData){
+                                //console.log("no path to bush found, setting to idle");
+                                brainN.action = "Idle";
+                            }else{
+                                //console.log("set to moving, target is bush");
+                                //attach path details to object
+                                update[i] = updatedData.surfaceObject;
+                                brainN = updatedData.brain;
+            
+                                //set to moving, inits action
+                                brainN.action = "Moving";
+                                brainN.target = brainN.target;
+                                brainN.targetAction = "Eat";
                             }
+                        }else{
+                            //decrease food & hunger by 1
+                            for(let z = 0; z < update.length; z++){
+                                if(update[z].id === brainN.target.id){
+                                    updateFood(update[z], -2);
+                                    updateHunger(update[i], 1);
+                                }
+                            }
+                            break;
                         }
-                        break;
+                        
                     
                 }     
 
