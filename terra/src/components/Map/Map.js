@@ -222,6 +222,7 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
         <div className="Map">
             <div className="leftContainer">
                 <div className="mapControls">
+                    <div className={"mapSaveFileText smallerdisplay"}>Map{" " + selectedMapSaveNumber}</div>
                     <MapFileHandler brain={brain} map={map} surfaceObjects={surfaceObjects} mapSaveNumber={selectedMapSaveNumber}/>
                     {!isEditor ? (
                         <button className={"navBtn inputButtonNoBorder Tile-Selector" + (started ? ' selectedButton' : ' ')} onClick={startClicked}>{started ? "Stop" : "Start"}</button>

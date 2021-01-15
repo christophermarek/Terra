@@ -107,6 +107,8 @@ Need to clean all the code.
 
 Back above start.
 
+Remove surfaceObject in editor
+
 Make it so you cant walk on water, and that trees cant be placed on stone.
 
 ONLY AFTER WE ARE ON GITHUB PAGES AND ARE BUG FREE WITH THE ABOVE FIXES.

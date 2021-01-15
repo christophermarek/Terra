@@ -79,7 +79,7 @@ ul{
 
 .selectedButton{
   color: hsl(255, 11%, 22%);
-  border: 1px dashed hsl(255, 11%, 22%) !important;
+  outline: 1px dashed hsl(255, 11%, 22%) !important;
 }
 
 .centeredText{
@@ -120,8 +120,6 @@ svg {
 
 .saveBar{
   display: flex;
-  margin-top: 15%;
-  margin-bottom: 15%;
   justify-content: space-between;
   align-items: center;
 }
@@ -133,6 +131,11 @@ svg {
 .mapControls{
   display: flex;
   flex-direction: column;
+}
+
+.smallerdisplay{
+  font-size: 100% !important;
+  text-align: center;
 }
 
 .leftContainer{
