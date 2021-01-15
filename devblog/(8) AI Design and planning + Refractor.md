@@ -105,8 +105,6 @@ After rabbit dies of hunger, error next iteration.
 
 Need to clean all the code.
 
-Back above start.
-
 Remove surfaceObject in editor
 
 Make it so you cant walk on water, and that trees cant be placed on stone.

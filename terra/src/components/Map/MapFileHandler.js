@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 function MapFileHandler({map, surfaceObjects, mapSaveNumber, brain}) {
-    console.log(mapSaveNumber);
+    //console.log(mapSaveNumber);
     const [exportedMap, setExportedMap] = useState(' ');
 
     function generateAI(){
@@ -36,7 +36,7 @@ function MapFileHandler({map, surfaceObjects, mapSaveNumber, brain}) {
     }
 
     function mapExport(){
-        console.log("exporting map save number: ", mapSaveNumber);
+        //console.log("exporting map save number: ", mapSaveNumber);
         let mapCopy = [...map];
         let surfaceObjectsCopy = [...surfaceObjects];
         let saveData = {mapData: mapCopy, surfaceData: surfaceObjectsCopy};

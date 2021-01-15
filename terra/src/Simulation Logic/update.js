@@ -296,7 +296,9 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                                 while(!flag){
                                     if(getGridElementAtKey(update[i].x + brainN.counter, update[i].y + brainN.counter) != 1){
                                         brainN.closestPoint = {x: Math.round(update[i].x + brainN.counter), y: Math.round(update[i].y + brainN.counter)};
-                                        updatedData = initPathfinding(brainN.closestPoint, brainN, bush, mapCopy, update, grid);
+                                        update[i].x = brainN.closestPoint.x;
+                                        update[i].y = brainN.closestPoint.y;
+                                        updatedData = initPathfinding(update[i], brainN, bush, mapCopy, update, grid);
                                         if(!updatedData){
                                             flag = false;
                                         }else{
@@ -311,6 +313,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                                 //console.log("set to moving, target is bush");
                                 //attach path details to object
                                 update[i] = updatedData.surfaceObject;
+                                console.log("should not be bush, ", update[i]);
                                 brainN = updatedData.brain;
             
                                 //set to moving, inits action
