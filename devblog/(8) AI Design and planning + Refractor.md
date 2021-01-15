@@ -86,8 +86,6 @@ IDLE AND ALL OF THIS IS DONE NOW,
 
 ## Final items left
 
-Need to clean all the code.
-
 Have a default map as a preset for people to use when they never loaded before,
 maybe keep a local storage variable to check for this.
 

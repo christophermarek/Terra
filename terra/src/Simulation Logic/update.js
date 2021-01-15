@@ -61,13 +61,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                     continue;
                 }
 
-                 //Movement Disruptor
-                if(brainN.action === "Moving" && update[i].hunger <= 50){
-                    brainN.action = "Hungry"
-                    continue;
-                }
 
-                console.log(brainN.action);
                 //THINKING
                 switch (brainN.action){
                     case "Idle":
