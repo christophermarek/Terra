@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import MapEditor from './components/Map/MapEditor';
 import Simulation from './components/Simulation/Simulation';
@@ -7,6 +7,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  useLocation,
   Link
 } from "react-router-dom";
 
@@ -14,6 +15,18 @@ import {
 function App() {
   
   const [selectedNavItem, setSelectedNavItem] = useState('');
+
+  useEffect(() => {
+    // Update the document title using the browser API
+    const pathname = window.location.pathname
+    if(pathname.toString().toLowerCase() === '/editor'){
+      setSelectedNavItem('editor');
+    }
+    if(pathname.toString().toLowerCase() === '/simulation'){
+      setSelectedNavItem('simulation');
+    }
+  });
+  
 
   function navButtonClicked(routeName){
     setSelectedNavItem(routeName);
@@ -32,11 +45,9 @@ function App() {
         </nav>
         <Switch>
           <Route path="/simulation">
-            {() => navButtonClicked('simulation')}
             <Simulation />
           </Route>
           <Route path="/editor">
-            {() => navButtonClicked('editor')}
             <MapEditor />
           </Route>
         </Switch>
