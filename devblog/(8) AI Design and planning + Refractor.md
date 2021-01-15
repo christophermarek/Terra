@@ -82,35 +82,22 @@ path to another bush.
 
 So we just need a default idle action now.
 
-&&
-
-I still need to add when a bush runs out of food, we need to remember that that bush ran out of food, and then look for the next closest bush.
-
 IDLE AND ALL OF THIS IS DONE NOW,
 
-## After
-
-MAX MAP SIze right now is only 5, Any higher than that and the grid is too large.
-If we want to support larger maps then we need a pathfinding algorithm that will limit the scope of the grid to 
-6 chunks like this or maybe even smaller. Not sure.
--Make sure to note this as a potential upgrade in the future
-
-Display filename maybe?
+## Final items left
 
 Lower id surface objects render below, so a rabbit needs to have lower id than trees so it goes under the tree
-
-Add a view with switchable tabs to view trees and bush properties too
 
 After rabbit dies of hunger, error next iteration.
 
 Need to clean all the code.
+
+Have a default map as a preset for people to use
 
 Remove surfaceObject in editor
 
 Make it so you cant walk on water, and that trees cant be placed on stone.
 
 ONLY AFTER WE ARE ON GITHUB PAGES AND ARE BUG FREE WITH THE ABOVE FIXES.
-# Water update
--thirst, exact same as hunger.
--make water all wall on grid.
--make water target a random point on the edge of the water.
+
+
