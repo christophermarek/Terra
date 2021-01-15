@@ -46,14 +46,13 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
             if((update[i].health <= 0) && brainN.action !== "Dying"){
                 brainN.action = "Dying";
             }else{
-
-                if(update[i].hunger <= 0){
-                    console.log("triggered this")
-                    update[i].action = "Starving";
+                //TICK STATUS MODIFIERS
+                if(update[i].hunger <= 0 && update[i].health > 0){
+                    //starve to death
+                    update[i] = updateHealth(update[i], -1);
                     continue;
                 }
 
-                //TICK STATUS MODIFIERS
                 //always loses hunger no matter what
                 update[i] = loseHungerOverTime(secondsPassed, update[i]);
 
@@ -68,10 +67,11 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                     continue;
                 }
 
+                console.log(brainN.action);
                 //THINKING
                 switch (brainN.action){
                     case "Idle":
-                        if(update[i].hunger <= 90){
+                        if(update[i].hunger <= 50){
                             brainN.action = "Hungry";
                             break;
                         }
@@ -157,11 +157,6 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                         }
 
                         break;
-
-                    case "Starving":
-                        updateHealth(update[i], -10);
-                        break;
-
                     case "Dying":
                         update = removeFromArrayByIndex(update, i);
                         brainUpdate = deleteBrainObjById(brainUpdate, update.id); 

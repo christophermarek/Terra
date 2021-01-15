@@ -1,5 +1,4 @@
 import { startSearch } from '../pathfinding';
-import { getGridElementAtKey, isPointInBounds } from '../grid';
 
 export function getDistanceToPoint(x, y, destX, destY){
     let distance = Math.hypot(destX - x, destY - y);
