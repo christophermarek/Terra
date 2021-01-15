@@ -133,15 +133,15 @@ function MapEditor() {
 
         setSelectedMapSaveNumber(mapSaveNumber);
 
-        let sizePrompt = prompt("Enter a map size as an integer between 1 - 5:");
+        let sizePrompt = prompt("Enter a map size as an integer between 1 - 6:");
         if (sizePrompt == null || sizePrompt == "") {
-            alert("Invalid map size, please enter a integer between 1-5");
+            alert("Invalid map size, please enter a integer between 1-6");
             return;
         } else {
             let parsedSize = parseInt(sizePrompt);
 
-            if(!(parsedSize > 0 && parsedSize < 6)){
-                alert("Invalid map size, please enter a integer between 1-5");
+            if(!(parsedSize > 0 && parsedSize < 7)){
+                alert("Invalid map size, please enter a integer between 1-6");
                 return;
             }
 

@@ -46,6 +46,7 @@ function Simulation() {
         if(window.confirm(`Are you sure you want to delete save #${mapSaveNumber}`)) {
             localStorage.removeItem(`map${mapSaveNumber}`);
             localStorage.removeItem(`map${mapSaveNumber}Ai`);
+            window.location.reload();
           }
     }
 
