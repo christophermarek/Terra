@@ -6,7 +6,7 @@ import SurfaceObjectsPanel from './SurfaceObjectsPanel';
 import MapFileHandler from './MapFileHandler';
 
 function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, started, isEditor, brain, selectedMapSaveNumber, backClicked}) {
-
+    //comment
     const [toggleBorder, setToggleBorder] = useState(false);
     const [selectedSurfaceObjectId, setSelectedSurfaceObjectId] = useState(-1);
 
