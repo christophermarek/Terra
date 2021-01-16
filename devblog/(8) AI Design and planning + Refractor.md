@@ -86,9 +86,9 @@ IDLE AND ALL OF THIS IS DONE NOW,
 
 ## Final items left
 
-Have a default map as a preset for people to use when they never loaded before,
-maybe keep a local storage variable to check for this.
+Just need to fix like 1 more bug thats it
 
+https://levelup.gitconnected.com/deploying-your-react-website-to-github-pages-ac0e24601bdf
 ONLY AFTER WE ARE ON GITHUB PAGES AND ARE BUG FREE WITH THE ABOVE FIXES.
 
 Update Readme with link to application on github pages.

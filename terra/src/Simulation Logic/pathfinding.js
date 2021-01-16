@@ -8,7 +8,7 @@ export function startSearch(self, target, map, surfaceObjects){
     let planner = getPlanner(map, surfaceObjects);
     let fixedPath = [];
 
-    let dist = planner.search(self.x,self.y,  target.x,target.y, path);
+    planner.search(self.x,self.y,  target.x,target.y, path);
 
     //format to {x, y} object
     for(let i = 0; i < path.length; i+= 2){

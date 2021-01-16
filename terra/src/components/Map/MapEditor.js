@@ -148,7 +148,7 @@ function MapEditor() {
         setSelectedMapSaveNumber(mapSaveNumber);
 
         let sizePrompt = prompt("Enter a map size as an integer between 1 - 6:");
-        if (sizePrompt == null || sizePrompt == "") {
+        if (sizePrompt === null || sizePrompt === "") {
             alert("Invalid map size, please enter a integer between 1-6");
             return;
         } else {
@@ -177,20 +177,20 @@ function MapEditor() {
         const numbers = [1, 2, 3, 4, 5];
 
         return numbers.map((number) => 
-            <div className="saveBar">
+            <div key={number} className="saveBar">
                 
-                <p class="mapSaveFileText">Map {number}</p>
+                <p className="mapSaveFileText">Map {number}</p>
 
                 {localStorage.hasOwnProperty(`map${number}`) ? (
                     <div className="saveControls">
-                        <input type="button" value="Edit" class="navBtn inputButtonNoBorder" onClick={() => editMapClicked(number)}></input>
-                        <input type="button" value="Delete" class="navBtn inputButtonNoBorder" onClick={() => deleteMapClicked(number)}></input>
+                        <input type="button" value="Edit" className="navBtn inputButtonNoBorder" onClick={() => editMapClicked(number)}></input>
+                        <input type="button" value="Delete" className="navBtn inputButtonNoBorder" onClick={() => deleteMapClicked(number)}></input>
                     </div>
                 ) 
                 :
                 (
                     <div className="saveControls">
-                        <input type="button" value="Generate" class="navBtn inputButtonNoBorder" onClick={() => generateMapClicked(number)}></input>
+                        <input type="button" value="Generate" className="navBtn inputButtonNoBorder" onClick={() => generateMapClicked(number)}></input>
                     </div>
                 )}
 
@@ -210,7 +210,7 @@ function MapEditor() {
             {map.length === 0 ? (
                 <div className="preEditor">
                     <div className="preLoad">
-                        <p class="mapSaveFileText centeredText" >Map Editor</p>
+                        <p className="mapSaveFileText centeredText" >Map Editor</p>
                         {loadLocalSaves()}
                     </div>
                 </div>

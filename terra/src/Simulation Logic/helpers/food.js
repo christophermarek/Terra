@@ -52,7 +52,7 @@ export function getClosestBush(surfaceObjects, obj, brainN){
             }
 
             let distFromBush = getDistanceToPoint(obj.x, obj.y, bushes[i].x, bushes[i].y); 
-            if(distFromBush < closestBushDistance || closestBushDistance == -1){
+            if(distFromBush < closestBushDistance || closestBushDistance === -1){
                 closestBushDistance = distFromBush;
                 closestBush = bushes[i];
             }

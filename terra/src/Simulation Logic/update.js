@@ -4,7 +4,7 @@ import { updateFood, plantFoodTickUpdate, getClosestBush } from './helpers/food'
 import { updateHealth } from './helpers/health';
 import { deleteBrainObjById } from './helpers/brain';
 import { returnSurfaceObject } from '../data/map/surfaceObjects';
-import { getGridElementAtKey } from '../Simulation Logic/grid';
+import { getGridElementAtKey, getNearbyPointThatIsntWall } from '../Simulation Logic/grid';
 
 
 function removeFromArrayByIndex(arr, index){
@@ -45,6 +45,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
 
             if((update[i].health <= 0) && brainN.action !== "Dying"){
                 brainN.action = "Dying";
+                continue;
             }else{
                 //TICK STATUS MODIFIERS
                 if(update[i].hunger <= 0 && update[i].health > 0){
@@ -98,6 +99,18 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
 
                         //no path found, set state to idle
                         if(!updatedData){
+                            //console.log("idle no path found for, ", brainN.surfaceObjectId);
+
+                            //need to catch the error for when we are trapped in a tree
+                            //we will never make a valid path because update[i] is going to have starting
+                            //coords that are a wall.
+
+                            //need to find a nearby point that is not a wall.
+                            let nearbyValidPoint = getNearbyPointThatIsntWall(update[i].x, update[i].y);
+                            //reset surfaceObject to this x,y. will be so close usually that you cant tell.
+                            update[i].x = nearbyValidPoint.x;
+                            update[i].y = nearbyValidPoint.y;
+
                             brainN.action = "Idle";
                             break;
                         }else{
@@ -168,32 +181,12 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
 
                             //no path found, set state to idle
                             if(!updatedData){
-                                let flag = false;
-                                while(!flag){
-                                    if(getGridElementAtKey(update[i].x + brainN.counter, update[i].y + brainN.counter) != 1){
-                                        brainN.closestPoint = {x: Math.round(update[i].x + brainN.counter), y: Math.round(update[i].y + brainN.counter)};
-                                        update[i].x = brainN.closestPoint.x;
-                                        update[i].y = brainN.closestPoint.y;
-                                        updatedData = initPathfinding(update[i], brainN, bush, mapCopy, update, grid);
-                                        if(!updatedData){
-                                            flag = false;
-                                        }else{
-                                            flag = true;
-                                        }
-                                    }
-                                    brainN.counter += 1;
-                                }
-                                brainN.closestPoint = 0;
-                                brainN.counter = 0;
-                                //attach path details to object
-                                update[i] = updatedData.surfaceObject;
-                                console.log("should not be bush, ", update[i]);
-                                brainN = updatedData.brain;
-            
-                                //set to moving, inits action
-                                brainN.action = "Moving";
-                                brainN.target = bush;
-                                brainN.targetAction = "Eat";
+                                let nearbyValidPoint = getNearbyPointThatIsntWall(update[i].x, update[i].y);
+                                //reset surfaceObject to this x,y. will be so close usually that you cant tell.
+                                update[i].x = nearbyValidPoint.x;
+                                update[i].y = nearbyValidPoint.y;
+                                brainN.action = "Idle";
+                                break;
                             }else{
                                 brainN.closestPoint = 0;
                                 brainN.counter = 0;
@@ -223,7 +216,6 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
             
                                 //set to moving, inits action
                                 brainN.action = "Moving";
-                                brainN.target = brainN.target;
                                 brainN.targetAction = "Eat";
                             }
                         }else{

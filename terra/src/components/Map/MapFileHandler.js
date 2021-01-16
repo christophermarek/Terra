@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 function MapFileHandler({map, surfaceObjects, mapSaveNumber, brain}) {
 
-    const [exportedMap, setExportedMap] = useState(' ');
 
     function generateAI(){
         let brain = [];
@@ -41,7 +40,6 @@ function MapFileHandler({map, surfaceObjects, mapSaveNumber, brain}) {
         let saveData = {mapData: mapCopy, surfaceData: surfaceObjectsCopy};
         let brainDataString = JSON.stringify(brain);
         let saveDataString = JSON.stringify(saveData);
-        setExportedMap(saveDataString);
         
         window.localStorage.setItem(`map${mapSaveNumber}`, saveDataString);
 
@@ -57,7 +55,7 @@ function MapFileHandler({map, surfaceObjects, mapSaveNumber, brain}) {
 
 
     return(
-        <button class="navBtn inputButtonNoBorder Tile-Selector" onClick={mapExport}>Save Map</button>
+        <button className="navBtn inputButtonNoBorder Tile-Selector" onClick={mapExport}>Save Map</button>
     );
     
 }

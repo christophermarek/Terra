@@ -107,19 +107,19 @@ function Simulation() {
         const numbers = [1, 2, 3, 4, 5];
 
         return numbers.map((number) => 
-            <div className="saveBar">
+            <div key={number} className="saveBar">
                 
-                <p class="mapSaveFileText">Map {number}</p>
+                <p className="mapSaveFileText">Map {number}</p>
 
                 {localStorage.hasOwnProperty(`map${number}`) ? (
                     <div className="saveControls">
-                        <input type="button" class="navBtn inputButtonNoBorder" value="Load" onClick={() => loadMapClicked(number)}></input>
-                        <input type="button" class="navBtn inputButtonNoBorder" value="Delete" onClick={() => deleteMapClicked(number)}></input>
+                        <input type="button" className="navBtn inputButtonNoBorder" value="Load" onClick={() => loadMapClicked(number)}></input>
+                        <input type="button" className="navBtn inputButtonNoBorder" value="Delete" onClick={() => deleteMapClicked(number)}></input>
                     </div>
                 ) 
                 :
                 (
-                    <p class="mapFileSupportingText">does not exist.</p>
+                    <p className="mapFileSupportingText">does not exist.</p>
                 )}
 
             </div>

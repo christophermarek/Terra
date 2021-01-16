@@ -79,6 +79,35 @@ export function getGridElementAtKey(x, y){
     return grid.get(Math.round(x), Math.round(y))
 }
 
+export function getNearbyPointThatIsntWall(x, y){
+    x = Math.round(x);
+    y = Math.round(y);
+    //console.log(`grid get at x: ${x} y: ${y} = ` + grid.get(x, y));
+    let counter = 0;
+    let validPoint = 0;
+    while(validPoint === 0){
+        if(grid.get(x + counter, y + counter) === 0){
+            validPoint = {x: x + counter, y: y + counter};
+            break;
+        }
+        if(grid.get(x - counter, y - counter) === 0){
+            validPoint = {x: x - counter, y: y - counter};
+            break;
+        }
+        if(grid.get(x + counter, y - counter) === 0){
+            validPoint = {x: x + counter, y: y - counter};
+            break;
+        }
+        if(grid.get(x - counter, y + counter) === 0){
+            validPoint = {x: x - counter, y: y + counter};
+            break;
+        }
+        counter += 1;
+    }
+
+    return validPoint;
+}
+
 
 function setupNdGrid(map, surfaceObjects){
     let size = (map.length * 100) * (map.length * 100);
