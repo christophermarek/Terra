@@ -9,6 +9,7 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
     //comment
     const [toggleBorder, setToggleBorder] = useState(false);
     const [selectedSurfaceObjectId, setSelectedSurfaceObjectId] = useState(-1);
+    const [surfaceObjectsDisplayToggle, setSurfaceObjectsDisplayToggle] = useState(false);
 
     function toggleCellBorders(e){
         e.preventDefault();
@@ -97,6 +98,10 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
         </div>
     );
 
+    function displayToggleClicked(){
+        setSurfaceObjectsDisplayToggle(!surfaceObjectsDisplayToggle);
+    }
+
 
     if (!(typeof updateMapWithSelectedTile === "function")) { 
         updateMapWithSelectedTile = function(){}
@@ -114,6 +119,7 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
                     ):(<></>)
                     }
                     <button className={"navBtn inputButtonNoBorder Tile-Selector" + (toggleBorder ? ' selectedButton' : ' ')} onClick={toggleCellBorders}>Toggle Cell Borders</button>
+                    <input type="button" value={!surfaceObjectsDisplayToggle ? "Rabbit data" : "Tree & Bush data"} className="navBtn inputButtonNoBorder Tile-Selector" onClick={displayToggleClicked}></input>
                 </div>
 
                 <SurfaceObjectsPanel
@@ -121,6 +127,7 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
                     brain={brain}
                     setSelectedSurfaceObjectId={setSelectedSurfaceObjectId}
                     selectedSurfaceObjectId={selectedSurfaceObjectId}
+                    surfaceObjectsDisplayToggle={surfaceObjectsDisplayToggle}
                 />
 
             </div>
