@@ -72,7 +72,7 @@ function Simulation() {
 
     function update(secondsPassed){
 
-        let update = updateSurfaceObjects(secondsPassed, map, surfaceObjects, brain, map, getGrid(map, surfaceObjects))
+        let update = updateSurfaceObjects(secondsPassed, map, surfaceObjects, brain, getGrid(map, surfaceObjects));
         setBrain(brain => (update.brain));
         setSurfaceObjects(surfaceObjects => (update.surfaceObjects));
 

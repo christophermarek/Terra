@@ -119,7 +119,7 @@ function setupNdGrid(map, surfaceObjects){
 
     //Create a maze as an ndarray
     grid = ndarray(grid, [map.length * 100, map.length * 100])
-    
+
     for(let k = 0; k < surfaceObjects.length; k++){
         let fetchedData = returnSurfaceObject(surfaceObjects[k].type);
         let radius = fetchedData.size;
@@ -135,6 +135,21 @@ function setupNdGrid(map, surfaceObjects){
                         grid.set(i,ySym, 1);
                         grid.set(xSym, j, 1);
                         grid.set(xSym, ySym, 1);
+                    }
+                }
+            }
+        }
+    }
+
+    for(let q = 0; q < map.length; q++){
+        for(let w = 0; w < map.length; w++){
+            if(map[q][w].type === 'water'){
+                //they are flipped x and y coords for some reason
+                let x = w * 100;
+                let y = q * 100;
+                for(let u = 0; u < 100; u++){
+                    for(let t = 0; t < 100; t++){
+                        grid.set(x+u, y+t, 1);
                     }
                 }
             }
