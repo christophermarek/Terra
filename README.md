@@ -10,3 +10,14 @@ To play just click the link to the app, and load a map in the simulation tab to 
 
 https://terrasim.netlify.app/
 
+
+## Features
+
+- Rabbits
+    - Hunger
+        - Eating bushes
+    - Wander
+        - Move to random point nearby
+
+- Bushes
+    - Food
