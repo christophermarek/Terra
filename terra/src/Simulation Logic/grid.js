@@ -91,8 +91,6 @@ export function getNearbyPointThatIsntWall(x, y){
             validPoint = {x: x + counter, y: y + counter};
             break;
         }
-
-
         if(grid.get(x - counter, y - counter) === 0){
             validPoint = {x: x - counter, y: y - counter};
             break;
