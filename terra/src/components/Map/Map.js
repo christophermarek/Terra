@@ -9,7 +9,7 @@ function Map({map, surfaceObjects, updateMapWithSelectedTile, startClicked, star
     //comment
     const [toggleBorder, setToggleBorder] = useState(false);
     const [selectedSurfaceObjectId, setSelectedSurfaceObjectId] = useState(-1);
-    const [surfaceObjectsDisplayToggle, setSurfaceObjectsDisplayToggle] = useState(false);
+    const [surfaceObjectsDisplayToggle, setSurfaceObjectsDisplayToggle] = useState(true);
 
     function toggleCellBorders(e){
         e.preventDefault();

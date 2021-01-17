@@ -1,5 +1,6 @@
 import { getDirectionToPoint, getDistanceToPoint, initPathfinding } from './helpers/movement';
 import { updateHunger, loseHungerOverTime } from './helpers/hunger';
+import { upddateThirst, loseThirstOverTime, updateThirst } from './helpers/thirst';
 import { updateFood, plantFoodTickUpdate, getClosestBush } from './helpers/food';
 import { updateHealth } from './helpers/health';
 import { deleteBrainObjById } from './helpers/brain';
@@ -48,16 +49,23 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                 continue;
             }else{
                 //TICK STATUS MODIFIERS
+
+                //starve to death
                 if(update[i].hunger <= 0 && update[i].health > 0){
-                    //starve to death
                     update[i] = updateHealth(update[i], -1);
                     continue;
                 }
 
-                //always loses hunger no matter what
+                
                 update[i] = loseHungerOverTime(secondsPassed, update[i]);
-
+                update[i] = loseThirstOverTime(secondsPassed, update[i]);
+                
                 if(update[i].hunger >= 100){
+                    brainN.action = "Idle";
+                    continue;
+                }
+
+                if(update[i].thirst >= 100){
                     brainN.action = "Idle";
                     continue;
                 }
@@ -68,6 +76,11 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                     case "Idle":
                         if(update[i].hunger <= 50){
                             brainN.action = "Hungry";
+                            break;
+                        }
+
+                        if(update[i].thirst <=50){
+                            brainN.action = "Thirsty";
                             break;
                         }
 
@@ -126,6 +139,8 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                     case "Reached Target":
                         if(brainN.targetAction === "Eat"){
                             brainN.action = "Eat Target";
+                        }else if(brainN.targetAction === "Drink"){
+                            brainN.action = "Drink Target";
                         }else{
                             brainN.action = "Idle";
                         }
@@ -178,6 +193,71 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                         update = removeFromArrayByIndex(update, i);
                         brainUpdate = deleteBrainObjById(brainUpdate, update.id); 
                         break;
+                    case "Thirsty":
+                        //find a water nearby
+                        let closestWaterTile = 0;
+                        let closestWaterDistance = -1;
+                        for(let i = 0; i < mapCopy.length; i++){
+                            for(let j = 0; j < mapCopy.length; j++){
+                                if(mapCopy[i][j].type === 'water'){
+                                    let x = j * 100;
+                                    let y = i * 100;
+                                    let distFromWater = getDistanceToPoint(update[i].x, update[i].y, x, y); 
+                                    if(distFromWater < closestWaterDistance || closestWaterDistance === -1){
+                                        closestWaterDistance = distFromWater;
+                                        closestWaterTile = {x: x, y: y};
+                                    }
+                                }
+                            }
+                        }
+
+                        //this is only the top left corner of the tile. Now we need to get a point on the perimiter that is
+                        //the closest to the surfaceObject to go to.
+                        //can just do corners and midpoints.
+                        let topLeft = closestWaterTile;
+                        let topMid = {x: closestWaterTile.x + 50, y: closestWaterTile.y}
+                        let topRight = {x: closestWaterTile.x + 100, y: closestWaterTile.y}
+                        let left = {x: closestWaterTile.x, y: closestWaterTile.y + 50};
+                        let right = {x: closestWaterTile.x + 100, y: closestWaterTile.y + 50};
+                        let bottomLeft = {x: closestWaterTile.x + 0, y: closestWaterTile.y + 100}
+                        let bottomMid = {x: closestWaterTile.x + 50, y: closestWaterTile.y + 100}
+                        let bottomRight = {x: closestWaterTile.x + 100, y: closestWaterTile.y + 100}
+                        let points = [topLeft, topMid, topRight, left, right, bottomLeft, bottomMid, bottomRight];
+                        let closestPoint = 0;
+                        let closestPointDistance = -1;
+                        for(let v = 0; v < points.length; v++){
+                            let distFromPoint = getDistanceToPoint(update[i].x, update[i].y, points[v].x, points[v].y);
+                            if(distFromPoint < closestPointDistance || closestPointDistance === -1){
+                                closestPointDistance = distFromPoint;
+                                closestPoint = {x: points[v].x, y: points[v].y};
+                            }
+                        }
+
+                        let waterUpdatedData = initPathfinding(update[i], brainN, closestPoint, mapCopy, update, grid);
+
+                        //no path found, set state to idle
+                        if(!waterUpdatedData){
+                            console.log("no path found to water");
+                            let nearbyValidPoint = getNearbyPointThatIsntWall(update[i].x, update[i].y);
+                            //reset surfaceObject to this x,y. will be so close usually that you cant tell.
+                            update[i].x = nearbyValidPoint.x;
+                            update[i].y = nearbyValidPoint.y;
+                            brainN.action = "Idle";
+                            break;
+                        }else{
+
+                            update[i] = waterUpdatedData.surfaceObject;
+                            brainN = waterUpdatedData.brain;
+            
+                            //set to moving, inits action
+                            brainN.action = "Moving";
+                            brainN.target = closestPoint;
+                            brainN.targetAction = "Drink";
+                        }
+                        
+
+                        break;
+
                     case "Hungry":
                         let bush = getClosestBush(update, update[i], brainN);
                         if(bush === null){
@@ -211,6 +291,29 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                             }
                         }
                         break;
+
+                    case "Drink Target":
+                        //calculate new path
+                        //15 is rabbit size and 10 is how close i want to be to target
+                        if(!(Math.hypot(update[i].x - brainN.target.x, update[i].y - brainN.target.y) <= (15 + 10))){
+                            let updatedData = initPathfinding(update[i], brainN, brainN.target, mapCopy, update, grid);
+                            //no path found, set state to idle
+                            if(!updatedData){
+                                brainN.action = "Idle";
+                            }else{
+                                //attach path details to object
+                                update[i] = updatedData.surfaceObject;
+                                brainN = updatedData.brain;
+            
+                                //set to moving, inits action
+                                brainN.action = "Moving";
+                                brainN.targetAction = "Drink";
+                            }
+                            break;
+                        }else{
+                            updateThirst(update[i], 1);
+                            break;
+                        }
                     case "Eat Target":
                         //calculate new path
                         //15 and 10 are bush size and rabbit size

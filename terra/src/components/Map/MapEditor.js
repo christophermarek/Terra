@@ -119,6 +119,7 @@ function MapEditor() {
     
                 if(objData.type === 'rabbit'){
                     newObj.hunger = 100;
+                    newObj.thirst = 100;
                 }
     
                 if(objData.type === 'bush'){

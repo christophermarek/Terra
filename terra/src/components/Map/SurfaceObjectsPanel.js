@@ -63,7 +63,10 @@ function SurfaceObjectsPanel({surfaceObjects, setSelectedSurfaceObjectId, select
                                 }
                                 {object[0].hunger != undefined &&
                                     <li className="listItem">hunger: {Number(object[0].hunger).toFixed(2)}</li>
-                                }                                    
+                                }
+                                {object[0].thirst != undefined &&
+                                    <li className="listItem">thirst: {Number(object[0].thirst).toFixed(2)}</li>
+                                }                                        
                                 {brain !== undefined && object[1] !== undefined && object[0].type === 'rabbit' &&
                                     <li className="listItem">action: {object[1].action}</li>
                                 }
