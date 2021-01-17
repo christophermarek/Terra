@@ -56,6 +56,11 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                     continue;
                 }
 
+                if(update[i].thirst <= 0 && update[i].health > 0){
+                    update[i] = updateHealth(update[i], -1);
+                    continue;
+                }
+
                 
                 update[i] = loseHungerOverTime(secondsPassed, update[i]);
                 update[i] = loseThirstOverTime(secondsPassed, update[i]);
@@ -159,8 +164,6 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                             update[i].y = update[i].y + (brainN.movement.directionY * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
 
                             if(getGridElementAtKey(update[i].x, update[i].y) === 1){
-                                console.log("id: " + update[i].id + " x, y: ", update[i].x, update[i].y, " grid at this pos is: ", )
-
                                 let point = getNearbyPointThatIsntWall(update[i].x, update[i].y);
                                 //brainN.movement.endX = point.x;
                                 //brainN.movement.endY = point.y;
@@ -234,7 +237,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                                 closestPoint = {x: points[v].x, y: points[v].y};
                             }
                         }
-
+                        closestPoint = getNearbyPointThatIsntWall(closestPoint.x, closestPoint.y);
                         let waterUpdatedData = initPathfinding(update[i], brainN, closestPoint, mapCopy, update, grid);
 
                         //no path found, set state to idle
