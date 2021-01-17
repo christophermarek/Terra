@@ -14,7 +14,7 @@ function Simulation() {
     const [requestAnimationFrameID, setRequestAnimationFrameID] = useState(undefined); 
     const [brain, setBrain] = useState([]);
     const [selectedMapSaveNumber, setSelectedMapSaveNumber] = useState(0);
-
+    
     let secondsPassed = 0;
     let oldTimeStamp = 0;
 
@@ -72,7 +72,7 @@ function Simulation() {
 
     function update(secondsPassed){
 
-        let update = updateSurfaceObjects(secondsPassed, map, surfaceObjects, brain, getGrid(map, surfaceObjects));
+        let update = updateSurfaceObjects(secondsPassed, map, surfaceObjects, brain, getGrid(map, surfaceObjects, selectedMapSaveNumber));
         setBrain(brain => (update.brain));
         setSurfaceObjects(surfaceObjects => (update.surfaceObjects));
 

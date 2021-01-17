@@ -84,7 +84,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                             break;
                         }
 
-                        if(update[i].thirst <=50){
+                        if(update[i].thirst <= 50){
                             brainN.action = "Thirsty";
                             break;
                         }
@@ -162,15 +162,19 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                         }else{
                             update[i].x = update[i].x + (brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
                             update[i].y = update[i].y + (brainN.movement.directionY * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
-
+                            console.log("xy ", update[i].x, update[i].y);
+                            console.log(getGridElementAtKey(update[i].x, update[i].y));
                             if(getGridElementAtKey(update[i].x, update[i].y) === 1){
                                 let point = getNearbyPointThatIsntWall(update[i].x, update[i].y);
+                                console.log("triggerin ", point);
+
                                 //brainN.movement.endX = point.x;
                                 //brainN.movement.endY = point.y;
                                 //brainN.isMoving = false;
                                 update[i].x = point.x;
                                 update[i].y = point.y;
                                 break;
+                                
                             }
                         }
                         

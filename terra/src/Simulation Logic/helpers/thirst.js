@@ -8,7 +8,7 @@ export function updateThirst(obj, amount){
 export function loseThirstOverTime(secondsPassed, obj){
     //where the rate is thirst depletion speed * time elapsed
     // * -1 to make it decrease
-    let thirstDepletionAmount = 10 * secondsPassed * - 1;
+    let thirstDepletionAmount = 2.5 * secondsPassed * - 1;
     obj = updateThirst(obj, thirstDepletionAmount);
     //console.log(obj);
     

@@ -1,3 +1,4 @@
+import { ge } from 'binary-search-bounds';
 import { returnSurfaceObject } from '../data/map/surfaceObjects';
 
 let ndarray = require('ndarray');
@@ -6,8 +7,9 @@ let createPlanner = require('l1-path-finder');
 let grid = [];
 
 let planner = 0;
+let saveNumber = 0;
 
-export function getGrid(map, surfaceObjects){
+export function getGrid(map, surfaceObjects, mapSaveNumber){
 
     //I wonder if this will create a new grid, if we have a grid loaded from one map,
     //and then load into a different map in the same session. 
@@ -76,7 +78,12 @@ function setupPlanner(map, surfaceObjects){
 }
 
 export function getGridElementAtKey(x, y){
-    return grid.get(Math.round(x), Math.round(y))
+    x = Math.round(x);
+    y = Math.round(y);
+    console.log(grid);
+    console.log("x,y",x,y, " grid: " , grid.get(x,y));
+    console.log(grid.length);
+    return grid.get(x, y);
 }
 
 export function getNearbyPointThatIsntWall(x, y){
@@ -87,19 +94,19 @@ export function getNearbyPointThatIsntWall(x, y){
     let validPoint = 0;
     while(validPoint === 0){
 
-        if(grid.get(x + counter, y + counter) === 0){
+        if(grid.get(x + counter, y + counter) === 0 && grid.get(x + counter, y + counter) !== undefined){
             validPoint = {x: x + counter, y: y + counter};
             break;
         }
-        if(grid.get(x - counter, y - counter) === 0){
+        if(grid.get(x - counter, y - counter) === 0 && grid.get(x + counter, y + counter) !== undefined){
             validPoint = {x: x - counter, y: y - counter};
             break;
         }
-        if(grid.get(x + counter, y - counter) === 0){
+        if(grid.get(x + counter, y - counter) === 0 && grid.get(x + counter, y + counter) !== undefined){
             validPoint = {x: x + counter, y: y - counter};
             break;
         }
-        if(grid.get(x - counter, y + counter) === 0){
+        if(grid.get(x - counter, y + counter) === 0 && grid.get(x + counter, y + counter) !== undefined){
             validPoint = {x: x - counter, y: y + counter};
             break;
         }
