@@ -1,5 +1,12 @@
-This program is written in React.
 
-It is a no player simulation of animals in a forest
+Terra is a no player simulation game of rabbits living in the forest.
 
-https://stoic-ride-a3eb39.netlify.app/
+
+There is a map editor and a simulation panel.
+
+
+To play just click the link to the app, and load a map in the simulation tab to watch the rabbits live in the forest.
+
+
+https://terrasim.netlify.app/
+
