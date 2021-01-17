@@ -157,14 +157,16 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                         }else{
                             update[i].x = update[i].x + (brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
                             update[i].y = update[i].y + (brainN.movement.directionY * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
-                        
-                            //console.log("x, y: ", update[i].x, update[i].y, " grid at this pos is: ", getGridElementAtKey(update[i].x, update[i].y))
-                            if(grid.get(update[i].x, update[i].y) === 1){
-                                let point = getNearbyPointThatIsntWall(update[i].x, update[i].y);
-                                brainN.movement.endX = point.x;
-                                brainN.movement.endY = point.y;
-                                brainN.isMoving = false;
 
+                            if(getGridElementAtKey(update[i].x, update[i].y) === 1){
+                                console.log("id: " + update[i].id + " x, y: ", update[i].x, update[i].y, " grid at this pos is: ", )
+
+                                let point = getNearbyPointThatIsntWall(update[i].x, update[i].y);
+                                //brainN.movement.endX = point.x;
+                                //brainN.movement.endY = point.y;
+                                //brainN.isMoving = false;
+                                update[i].x = point.x;
+                                update[i].y = point.y;
                                 break;
                             }
                         }
