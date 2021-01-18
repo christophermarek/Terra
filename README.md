@@ -16,6 +16,8 @@ https://terrasim.netlify.app/
 - Rabbits
     - Hunger
         - Eating bushes
+    - Thirst
+        - Drink water
     - Wander
         - Move to random point nearby
 

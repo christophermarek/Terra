@@ -26,7 +26,6 @@ function nonBrainObjectUpdate(secondsPassed, update, i){
 
 //when refractor-ing add a brainObjectUpdate() 
 export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUpdate, brainPreUpdate, grid){
-
     //no surfaceObjects exist
     if(surfaceObjectsPreUpdate.length === undefined){
         return;
@@ -75,6 +74,18 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                     continue;
                 }
 
+                //movement disruptors
+                if(brainN.action === 'Moving' && brainN.targetAction === 'Wander'){
+                    if(update[i].hunger <= 50){
+                        brainN.action = "Hungry";
+                        continue;
+                    }
+                    if(update[i].thirst <= 50){
+                        brainN.action = "Thirsty";
+                        continue;
+                    }
+                }
+
 
                 //THINKING
                 switch (brainN.action){
@@ -114,10 +125,10 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                         
                         let randomPoint = {x: randomX, y: randomY};
                         let updatedData = initPathfinding(update[i], brainN, randomPoint, mapCopy, update, grid);
-
                         //no path found, set state to idle
                         if(!updatedData){
-                            //console.log("idle no path found for, ", brainN.surfaceObjectId);
+
+                            console.log("idle no path found for, ", brainN.surfaceObjectId);
 
                             //need to catch the error for when we are trapped in a tree
                             //we will never make a valid path because update[i] is going to have starting
@@ -152,51 +163,77 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
 
                         break;
                     case "Moving":
-                        //init movement
-                        if(!brainN.isMoving){
-                            brainN.movement.distanceToPoint = getDistanceToPoint(update[i].x, update[i].y, brainN.movement.endX, brainN.movement.endY);
-                            let direction = getDirectionToPoint(update[i].x, update[i].y, brainN.movement.endX, brainN.movement.endY, brainN.movement.distanceToPoint);
-                            brainN.movement.directionX = direction.x;
-                            brainN.movement.directionY = direction.y;
-                            brainN.isMoving = true;                            
-                        }else{
-                            update[i].x = update[i].x + (brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
-                            update[i].y = update[i].y + (brainN.movement.directionY * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
-                            console.log("xy ", update[i].x, update[i].y);
-                            console.log(getGridElementAtKey(update[i].x, update[i].y));
-                            if(getGridElementAtKey(update[i].x, update[i].y) === 1){
-                                let point = getNearbyPointThatIsntWall(update[i].x, update[i].y);
-                                console.log("triggerin ", point);
-
-                                //brainN.movement.endX = point.x;
-                                //brainN.movement.endY = point.y;
-                                //brainN.isMoving = false;
-                                update[i].x = point.x;
-                                update[i].y = point.y;
-                                break;
-                                
-                            }
+                        if(getGridElementAtKey(update[i].x, update[i].y) === 1){
+                            let point = getNearbyPointThatIsntWall(update[i].x, update[i].y);
+                            console.log(getGridElementAtKey(point.x, point.y));
+                            update[i].x = point.x;
+                            update[i].y = point.y;
                         }
-                        
-                        if(Math.hypot(update[i].x - brainN.movement.startX, update[i].y - brainN.movement.startY) >= brainN.movement.distanceToPoint){
-                            //else get next point.
-                            //when point reached
-                            //if last point then set to done moving
+
+                        if((Math.hypot(update[i].x - brainN.movement.startX, update[i].y - brainN.movement.startY) >= brainN.movement.distanceToPoint)){
+                            //check if we end up close to the target
+                            //if we dont then reset
                             if(brainN.path.length === 0){
                                 brainN.isMoving = false;
                                 brainN.action = "Reached Target";
                             }else{
+                                //console.log("at x,y ", update[i].x, update[i].y, " getting next part of the path");
+                                //console.log("reached point, ", brainN.movement.endX, brainN.movement.endY);
+                                //update[i].x = brainN.movement.endX;
+                                //update[i].y = brainN.movement.endY;
+    
                                 let nextPoint = brainN.path.shift();
-                            
                                 brainN.movement.endX = nextPoint.x;
                                 brainN.movement.endY = nextPoint.y;
                                 //recalculate movement for new point
                                 brainN.isMoving = false;
                             }
                             
-                                
-                        }
 
+                            
+                        }
+                    
+                        //init movement
+                        if(!brainN.isMoving){
+                            brainN.movement.distanceToPoint = getDistanceToPoint(update[i].x, update[i].y, brainN.movement.endX, brainN.movement.endY);
+                            let direction = getDirectionToPoint(update[i].x, update[i].y, brainN.movement.endX, brainN.movement.endY, brainN.movement.distanceToPoint);
+                            brainN.movement.directionX = direction.x;
+                            brainN.movement.directionY = direction.y;
+                            brainN.isMoving = true;
+                            break;                            
+                        }else{
+                            let preUpdateX = update[i].x;
+                            let preUpdateY = update[i].y;
+
+                            update[i].x = update[i].x + (brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
+                            update[i].y = update[i].y + (brainN.movement.directionY * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
+
+                            //check if this movement will make us go into a wall
+                            //if it does we need to reset our path
+                            if(getGridElementAtKey(update[i].x, update[i].y) === 1){
+                                console.log("movement will make us go into a wall, resetting to");
+                                let point = getNearbyPointThatIsntWall(update[i].x, update[i].y);
+                                update[i].x = point.x;
+                                update[i].y = point.y;
+                                
+                                //need to write this out on paper only way
+                                
+                                
+
+                                //TODO
+                                //break;
+                            }
+                        }
+                        //ok can maybe redo this code to check?
+                        //here we just check for proper distance travelled, what if we check co ordinate accuracy.
+                        //console.log(getDistanceToPoint(update[i].x, update[i].y, brainN.movement.endX, brainN.movement.endY));
+                        
+
+                            //console.log("x,y, endX, endY ", update[i].x, update[i].y, brainN.movement.endX, brainN.movement.endY);
+                            //console.log("getting next point?", getDistanceToPoint(update[i].x, update[i].y, brainN.movement.endX, brainN.movement.endY));
+                            //else get next point.
+                            //when point reached
+                            //if last point then set to done moving
                         break;
                     case "Dying":
                         update = removeFromArrayByIndex(update, i);
@@ -246,7 +283,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
 
                         //no path found, set state to idle
                         if(!waterUpdatedData){
-                            console.log("no path found to water");
+                            console.log("no water")
                             let nearbyValidPoint = getNearbyPointThatIsntWall(update[i].x, update[i].y);
                             //reset surfaceObject to this x,y. will be so close usually that you cant tell.
                             update[i].x = nearbyValidPoint.x;

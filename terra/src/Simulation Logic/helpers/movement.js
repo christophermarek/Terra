@@ -6,7 +6,6 @@ export function getDistanceToPoint(x, y, destX, destY){
 }
 
 export function getDirectionToPoint(x, y, destX, destY, distance){
-
     let xDir = (destX - x) / distance
     let yDir = (destY - y) / distance
     

@@ -80,16 +80,14 @@ function setupPlanner(map, surfaceObjects){
 export function getGridElementAtKey(x, y){
     x = Math.round(x);
     y = Math.round(y);
-    console.log(grid);
-    console.log("x,y",x,y, " grid: " , grid.get(x,y));
-    console.log(grid.length);
+   // console.log(grid);
+   // console.log("x,y",x,y, " grid: " , grid.get(x,y));
     return grid.get(x, y);
 }
 
 export function getNearbyPointThatIsntWall(x, y){
     x = Math.round(x);
     y = Math.round(y);
-    //console.log(`grid get at x: ${x} y: ${y} = ` + grid.get(x, y));
     let counter = 0;
     let validPoint = 0;
     while(validPoint === 0){
