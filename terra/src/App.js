@@ -26,8 +26,8 @@ function App() {
     }
 
     //check if its the first time the user has been on
-    if(!localStorage.hasOwnProperty(`newUser`)){
-      localStorage.setItem('newUser', true);
+    if(!localStorage.hasOwnProperty(`version2`)){
+      localStorage.setItem('version2', true);
       //get map data and brain from file
       localStorage.setItem('map1', JSON.stringify(Map1));
       localStorage.setItem('map1Ai', JSON.stringify(Map1Ai));
