@@ -25,7 +25,7 @@ function SurfaceObjectsPanel({surfaceObjects, setSelectedSurfaceObjectId, select
         if(surfaceObjectsDisplayToggle){
             if(surfaceObjCopy[i].type === 'rabbit'){
                 if(brain !== undefined){
-                    let brainN = brainCopy[brain.findIndex(x => x.surfaceObjectId === i)];
+                    let brainN = brainCopy[brainCopy.findIndex(x => x.surfaceObjectId === surfaceObjCopy[i].id)];
                     brainSurfaceObjects.push([surfaceObjCopy[i], brainN]);
                 }else{
                     brainSurfaceObjects.push([surfaceObjCopy[i], 0]);
@@ -47,11 +47,8 @@ function SurfaceObjectsPanel({surfaceObjects, setSelectedSurfaceObjectId, select
 
     return(
         <div className="SurfaceObjectsPanels">
-
-
-
             {brainSurfaceObjects.map((object, i) => {
-                    
+                    console.log(object);
                     return(
                         <div key={object[0].id} onClick={() => panelClicked(object[0].id)}>
                             <ul className={"panelList Tile-Selector" + (selectedSurfaceObjectId === object[0].id ? ' selectedButton' : ' ')}>
@@ -67,7 +64,7 @@ function SurfaceObjectsPanel({surfaceObjects, setSelectedSurfaceObjectId, select
                                 {object[0].thirst != undefined &&
                                     <li className="listItem">thirst: {Number(object[0].thirst).toFixed(2)}</li>
                                 }                                        
-                                {brain !== undefined && object[1] !== undefined && object[0].type === 'rabbit' &&
+                                {object[1] !== undefined &&
                                     <li className="listItem">action: {object[1].action}</li>
                                 }
                             </ul>
