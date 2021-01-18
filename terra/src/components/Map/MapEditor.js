@@ -128,7 +128,19 @@ function MapEditor() {
     
                 newObj.type = objData.type;
     
-                newObj.id = newSurfaceObjects.length;
+                //newObj.id = newSurfaceObjects.length;
+
+                //find the last largest id and create bigger
+                let largest = 0;
+                for(let i = 0; i < newSurfaceObjects.length; i++){
+                    if(newSurfaceObjects[i].id > largest){
+                        largest = newSurfaceObjects[i].id;
+                    }
+                }
+                //guaranteed unique;
+                largest += 1;
+                newObj.id = largest;
+
                 newSurfaceObjects.push(newObj);
 
                 setSurfaceObjects(surfaceObjects => (newSurfaceObjects));

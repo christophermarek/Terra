@@ -36,6 +36,8 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
 
     
     for(let i = 0; i < update.length; i++){
+        //update[i].x = Math.round(update[i].x);
+        //update[i].y = Math.round(update[i].y);
 
         let brainN = brainUpdate[brainUpdate.findIndex(x => x.surfaceObjectId === update[i].id)];
         //need a bool property for this
@@ -165,9 +167,11 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                     case "Moving":
                         if(getGridElementAtKey(update[i].x, update[i].y) === 1){
                             let point = getNearbyPointThatIsntWall(update[i].x, update[i].y);
-                            console.log(getGridElementAtKey(point.x, point.y));
+                            //console.log(getGridElementAtKey(point.x, point.y));
                             update[i].x = point.x;
                             update[i].y = point.y;
+
+                            break;
                         }
 
                         if((Math.hypot(update[i].x - brainN.movement.startX, update[i].y - brainN.movement.startY) >= brainN.movement.distanceToPoint)){
@@ -215,7 +219,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                                 let point = getNearbyPointThatIsntWall(update[i].x, update[i].y);
                                 update[i].x = point.x;
                                 update[i].y = point.y;
-                                
+                                brainN.isMoving = false;
                                 //need to write this out on paper only way
                                 
                                 
@@ -255,6 +259,9 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                                     }
                                 }
                             }
+                        }
+                        if(closestWaterTile === 0){
+                            brainN.action = "Idle";
                         }
 
                         //this is only the top left corner of the tile. Now we need to get a point on the perimiter that is
