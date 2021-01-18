@@ -38,11 +38,6 @@ function App() {
 
   }, []);
 
-  
-
-
-
-
   function navButtonClicked(routeName) {
     setSelectedNavItem(routeName);
   }

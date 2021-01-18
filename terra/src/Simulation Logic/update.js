@@ -167,7 +167,6 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                     case "Moving":
                         if(getGridElementAtKey(update[i].x, update[i].y) === 1){
                             let point = getNearbyPointThatIsntWall(update[i].x, update[i].y);
-                            //console.log(getGridElementAtKey(point.x, point.y));
                             update[i].x = point.x;
                             update[i].y = point.y;
 
@@ -175,25 +174,16 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                         }
 
                         if((Math.hypot(update[i].x - brainN.movement.startX, update[i].y - brainN.movement.startY) >= brainN.movement.distanceToPoint)){
-                            //check if we end up close to the target
-                            //if we dont then reset
                             if(brainN.path.length === 0){
                                 brainN.isMoving = false;
                                 brainN.action = "Reached Target";
                             }else{
-                                //console.log("at x,y ", update[i].x, update[i].y, " getting next part of the path");
-                                //console.log("reached point, ", brainN.movement.endX, brainN.movement.endY);
-                                //update[i].x = brainN.movement.endX;
-                                //update[i].y = brainN.movement.endY;
-    
                                 let nextPoint = brainN.path.shift();
                                 brainN.movement.endX = nextPoint.x;
                                 brainN.movement.endY = nextPoint.y;
                                 //recalculate movement for new point
                                 brainN.isMoving = false;
                             }
-                            
-
                             
                         }
                     
@@ -206,8 +196,6 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                             brainN.isMoving = true;
                             break;                            
                         }else{
-                            let preUpdateX = update[i].x;
-                            let preUpdateY = update[i].y;
 
                             update[i].x = update[i].x + (brainN.movement.directionX * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed); 
                             update[i].y = update[i].y + (brainN.movement.directionY * returnSurfaceObject(update[i].type).movementSpeed * secondsPassed);
@@ -215,29 +203,14 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                             //check if this movement will make us go into a wall
                             //if it does we need to reset our path
                             if(getGridElementAtKey(update[i].x, update[i].y) === 1){
-                                console.log("movement will make us go into a wall, resetting to");
+                                //console.log("movement will make us go into a wall, resetting to");
                                 let point = getNearbyPointThatIsntWall(update[i].x, update[i].y);
                                 update[i].x = point.x;
                                 update[i].y = point.y;
                                 brainN.isMoving = false;
-                                //need to write this out on paper only way
-                                
-                                
 
-                                //TODO
-                                //break;
                             }
                         }
-                        //ok can maybe redo this code to check?
-                        //here we just check for proper distance travelled, what if we check co ordinate accuracy.
-                        //console.log(getDistanceToPoint(update[i].x, update[i].y, brainN.movement.endX, brainN.movement.endY));
-                        
-
-                            //console.log("x,y, endX, endY ", update[i].x, update[i].y, brainN.movement.endX, brainN.movement.endY);
-                            //console.log("getting next point?", getDistanceToPoint(update[i].x, update[i].y, brainN.movement.endX, brainN.movement.endY));
-                            //else get next point.
-                            //when point reached
-                            //if last point then set to done moving
                         break;
                     case "Dying":
                         update = removeFromArrayByIndex(update, i);
