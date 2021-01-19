@@ -3,7 +3,8 @@ import Map from '../Map/Map';
 import { updateSurfaceObjects } from '../../Simulation Logic/update'; 
 
 import './styles.css';
-import { getGrid } from '../../Simulation Logic/grid';
+import { setupNdGrid, setupPlanner } from '../../Simulation Logic/grid';
+let ndarray = require('ndarray');
 
 function Simulation() {
 
@@ -14,7 +15,10 @@ function Simulation() {
     const [requestAnimationFrameID, setRequestAnimationFrameID] = useState(undefined); 
     const [brain, setBrain] = useState([]);
     const [selectedMapSaveNumber, setSelectedMapSaveNumber] = useState(0);
-    
+    const [grid, setGrid] = useState([]);
+    const [planner, setPlanner] = useState(0);
+
+
     let secondsPassed = 0;
     let oldTimeStamp = 0;
 
@@ -22,7 +26,12 @@ function Simulation() {
         setIsLoaded(true);
     }
 
-    function loadMapClicked(mapSaveNumber){
+    async function loadMapClicked(mapSaveNumber){
+
+        //hard reset
+        //setGrid([]);
+        //setPlanner(0);
+
         setSelectedMapSaveNumber(mapSaveNumber);
 
         let mapData = window.localStorage.getItem(`map${mapSaveNumber}`);
@@ -30,8 +39,17 @@ function Simulation() {
         setMap(map => (data.mapData));
         setSurfaceObjects(surfaceObjects => (data.surfaceData));
 
-        let aiData = JSON.parse(window.localStorage.getItem(`map${mapSaveNumber}Ai`));
+        //need to initialize grid for this map
+        let newGrid = await setupNdGrid(data.mapData, data.surfaceData);
+        let newPlanner = await setupPlanner(data.mapData, data.surfaceData, newGrid);
+        
+        setGrid(grid => (newGrid));
+        setPlanner(planner => (newPlanner));
+        //console.log(planner);
+
+        let aiData = await JSON.parse(window.localStorage.getItem(`map${mapSaveNumber}Ai`));
         setBrain(aiData);
+
         mapLoaded();
     }
 
@@ -72,7 +90,7 @@ function Simulation() {
 
     function update(secondsPassed){
 
-        let update = updateSurfaceObjects(secondsPassed, map, surfaceObjects, brain, getGrid(map, surfaceObjects, selectedMapSaveNumber));
+        let update = updateSurfaceObjects(secondsPassed, map, surfaceObjects, brain, grid, planner);
         setBrain(brain => (update.brain));
         setSurfaceObjects(surfaceObjects => (update.surfaceObjects));
 

@@ -1,11 +1,7 @@
-import { getPlanner } from './grid';    
 
-export function startSearch(self, target, map, surfaceObjects){
-    
-
+export function startSearch(self, target, map, surfaceObjects, planner){
     //Find path
     let path = [];
-    let planner = getPlanner(map, surfaceObjects);
     let fixedPath = [];
 
     planner.search(self.x,self.y,  target.x,target.y, path);

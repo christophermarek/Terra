@@ -1,6 +1,6 @@
 import { getDirectionToPoint, getDistanceToPoint, initPathfinding } from './helpers/movement';
 import { updateHunger, loseHungerOverTime } from './helpers/hunger';
-import { upddateThirst, loseThirstOverTime, updateThirst } from './helpers/thirst';
+import { updateThirst, loseThirstOverTime } from './helpers/thirst';
 import { updateFood, plantFoodTickUpdate, getClosestBush } from './helpers/food';
 import { updateHealth } from './helpers/health';
 import { deleteBrainObjById } from './helpers/brain';
@@ -25,7 +25,8 @@ function nonBrainObjectUpdate(secondsPassed, update, i){
 }
 
 //when refractor-ing add a brainObjectUpdate() 
-export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUpdate, brainPreUpdate, grid){
+export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUpdate, brainPreUpdate, grid, planner){
+    //console.log(planner);
     //no surfaceObjects exist
     if(surfaceObjectsPreUpdate.length === undefined){
         return;
@@ -33,7 +34,6 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
 
     let update = [...surfaceObjectsPreUpdate];
     let brainUpdate = [...brainPreUpdate];
-
     
     for(let i = 0; i < update.length; i++){
         //update[i].x = Math.round(update[i].x);
@@ -120,13 +120,13 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                             //in range
                             randomX = Math.floor(Math.random() * (rightRange - leftRange + 1)) + leftRange;
                             randomY = Math.floor(Math.random() * (upperRange - bottomRange + 1)) + bottomRange;
-                            if(getGridElementAtKey(randomX, randomY) === 1){
+                            if(getGridElementAtKey(randomX, randomY, grid) === 1){
                                 randomX = -1;
                             }
                         }
                         
                         let randomPoint = {x: randomX, y: randomY};
-                        let updatedData = initPathfinding(update[i], brainN, randomPoint, mapCopy, update, grid);
+                        let updatedData = initPathfinding(update[i], brainN, randomPoint, mapCopy, update, planner);
                         //no path found, set state to idle
                         if(!updatedData){
 
@@ -165,7 +165,8 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
 
                         break;
                     case "Moving":
-                        if(getGridElementAtKey(update[i].x, update[i].y) === 1){
+                        //console.log("x,y ", update[i].x, update[i].y, " grid wall: ", getGridElementAtKey(update[i].x, update[i].y));
+                        if(getGridElementAtKey(update[i].x, update[i].y, grid) === 1){
                             let point = getNearbyPointThatIsntWall(update[i].x, update[i].y);
                             update[i].x = point.x;
                             update[i].y = point.y;
@@ -202,9 +203,9 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
 
                             //check if this movement will make us go into a wall
                             //if it does we need to reset our path
-                            if(getGridElementAtKey(update[i].x, update[i].y) === 1){
+                            if(getGridElementAtKey(update[i].x, update[i].y, grid) === 1){
                                 //console.log("movement will make us go into a wall, resetting to");
-                                let point = getNearbyPointThatIsntWall(update[i].x, update[i].y);
+                                let point = getNearbyPointThatIsntWall(update[i].x, update[i].y, grid);
                                 update[i].x = point.x;
                                 update[i].y = point.y;
                                 brainN.isMoving = false;
@@ -258,13 +259,13 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                                 closestPoint = {x: points[v].x, y: points[v].y};
                             }
                         }
-                        closestPoint = getNearbyPointThatIsntWall(closestPoint.x, closestPoint.y);
-                        let waterUpdatedData = initPathfinding(update[i], brainN, closestPoint, mapCopy, update, grid);
+                        closestPoint = getNearbyPointThatIsntWall(closestPoint.x, closestPoint.y, grid);
+                        let waterUpdatedData = initPathfinding(update[i], brainN, closestPoint, mapCopy, update, planner);
 
                         //no path found, set state to idle
                         if(!waterUpdatedData){
                             console.log("no water")
-                            let nearbyValidPoint = getNearbyPointThatIsntWall(update[i].x, update[i].y);
+                            let nearbyValidPoint = getNearbyPointThatIsntWall(update[i].x, update[i].y, grid);
                             //reset surfaceObject to this x,y. will be so close usually that you cant tell.
                             update[i].x = nearbyValidPoint.x;
                             update[i].y = nearbyValidPoint.y;
@@ -293,11 +294,11 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                             //we need to check if start point is wall.
                             //if it is then we need to find the closest point that is not a wall.
                             //and change start point to that
-                            updatedData = initPathfinding(update[i], brainN, bush, mapCopy, update, grid);
+                            updatedData = initPathfinding(update[i], brainN, bush, mapCopy, update, planner);
 
                             //no path found, set state to idle
                             if(!updatedData){
-                                let nearbyValidPoint = getNearbyPointThatIsntWall(update[i].x, update[i].y);
+                                let nearbyValidPoint = getNearbyPointThatIsntWall(update[i].x, update[i].y, grid);
                                 //reset surfaceObject to this x,y. will be so close usually that you cant tell.
                                 update[i].x = nearbyValidPoint.x;
                                 update[i].y = nearbyValidPoint.y;
@@ -322,7 +323,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                         //calculate new path
                         //15 is rabbit size and 10 is how close i want to be to target
                         if(!(Math.hypot(update[i].x - brainN.target.x, update[i].y - brainN.target.y) <= (15 + 10))){
-                            let updatedData = initPathfinding(update[i], brainN, brainN.target, mapCopy, update, grid);
+                            let updatedData = initPathfinding(update[i], brainN, brainN.target, mapCopy, update, planner);
                             //no path found, set state to idle
                             if(!updatedData){
                                 brainN.action = "Idle";
@@ -344,7 +345,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                         //calculate new path
                         //15 and 10 are bush size and rabbit size
                         if(!(Math.hypot(update[i].x - brainN.target.x, update[i].y - brainN.target.y) <= (15 + 10))){
-                            let updatedData = initPathfinding(update[i], brainN, brainN.target, mapCopy, update, grid);
+                            let updatedData = initPathfinding(update[i], brainN, brainN.target, mapCopy, update, planner);
                             //no path found, set state to idle
                             if(!updatedData){
                                 brainN.action = "Idle";
