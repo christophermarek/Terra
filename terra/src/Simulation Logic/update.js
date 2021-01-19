@@ -18,6 +18,7 @@ function nonBrainObjectUpdate(secondsPassed, update, i){
     //nested update logic
     if(update.type === 'bush'){
         plantFoodTickUpdate(secondsPassed, update);
+
     }
 
     return update;
@@ -26,7 +27,6 @@ function nonBrainObjectUpdate(secondsPassed, update, i){
 
 //when refractor-ing add a brainObjectUpdate() 
 export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUpdate, brainPreUpdate, grid, planner){
-    //console.log(planner);
     //no surfaceObjects exist
     if(surfaceObjectsPreUpdate.length === undefined){
         return;
@@ -43,6 +43,7 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
         //need a bool property for this
         if(update[i].type === 'bush' || update[i].type === 'tree'){
             update[i] = nonBrainObjectUpdate(secondsPassed, update[i], i);
+            continue;
         }else{
 
             if((update[i].health <= 0) && brainN.action !== "Dying"){
@@ -130,14 +131,13 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                         //no path found, set state to idle
                         if(!updatedData){
 
-                            console.log("idle no path found for, ", brainN.surfaceObjectId);
 
                             //need to catch the error for when we are trapped in a tree
                             //we will never make a valid path because update[i] is going to have starting
                             //coords that are a wall.
 
                             //need to find a nearby point that is not a wall.
-                            let nearbyValidPoint = getNearbyPointThatIsntWall(update[i].x, update[i].y);
+                            let nearbyValidPoint = getNearbyPointThatIsntWall(update[i].x, update[i].y, grid);
                             //reset surfaceObject to this x,y. will be so close usually that you cant tell.
                             update[i].x = nearbyValidPoint.x;
                             update[i].y = nearbyValidPoint.y;
@@ -221,11 +221,11 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
                         //find a water nearby
                         let closestWaterTile = 0;
                         let closestWaterDistance = -1;
-                        for(let i = 0; i < mapCopy.length; i++){
-                            for(let j = 0; j < mapCopy.length; j++){
-                                if(mapCopy[i][j].type === 'water'){
-                                    let x = j * 100;
-                                    let y = i * 100;
+                        for(let w = 0; w < mapCopy.length; w++){
+                            for(let e = 0; e < mapCopy.length; e++){
+                                if(mapCopy[w][e].type === 'water'){
+                                    let x = e * 100;
+                                    let y = w * 100;
                                     let distFromWater = getDistanceToPoint(update[i].x, update[i].y, x, y); 
                                     if(distFromWater < closestWaterDistance || closestWaterDistance === -1){
                                         closestWaterDistance = distFromWater;
@@ -264,7 +264,6 @@ export function updateSurfaceObjects(secondsPassed, mapCopy, surfaceObjectsPreUp
 
                         //no path found, set state to idle
                         if(!waterUpdatedData){
-                            console.log("no water")
                             let nearbyValidPoint = getNearbyPointThatIsntWall(update[i].x, update[i].y, grid);
                             //reset surfaceObject to this x,y. will be so close usually that you cant tell.
                             update[i].x = nearbyValidPoint.x;

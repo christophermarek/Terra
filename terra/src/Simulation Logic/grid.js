@@ -54,7 +54,7 @@ export function setupPlanner(map, surfaceObjects, grid){
 
 export function getGridElementAtKey(x, y, grid){
     x = Math.round(x);
-    console.log(grid);
+    //console.log(grid);
     y = Math.round(y);
    // console.log(grid);
    /*
@@ -96,7 +96,7 @@ export function getNearbyPointThatIsntWall(x, y, grid){
 
 
 export function setupNdGrid(map, surfaceObjects){
-    console.log("generating new grid");
+    //console.log("generating new grid");
     let grid = [];
     let size = (map.length * 100) * (map.length * 100);
     //fill with 0s
