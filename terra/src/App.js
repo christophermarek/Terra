@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import MapEditor from './components/Map/MapEditor';
 import Simulation from './components/Simulation/Simulation';
-import { Map1, Map1Ai, Map2, Map2Ai } from './data/map/map1preset';
+import { Map1, Map1Ai, Map2, Map2Ai, Map3, Map3Ai } from './data/map/mappresets';
 
 import {
   BrowserRouter as Router,
@@ -26,13 +26,15 @@ function App() {
     }
 
     //check if its the first time the user has been on
-    if(!localStorage.hasOwnProperty(`version3`)){
-      localStorage.setItem('version3', true);
+    if(!localStorage.hasOwnProperty(`version4`)){
+      localStorage.setItem('version4', true);
       //get map data and brain from file
       localStorage.setItem('map1', JSON.stringify(Map1));
       localStorage.setItem('map1Ai', JSON.stringify(Map1Ai));
       localStorage.setItem('map2', JSON.stringify(Map2));
       localStorage.setItem('map2Ai', JSON.stringify(Map2Ai));
+      localStorage.setItem('map3', JSON.stringify(Map3));
+      localStorage.setItem('map3Ai', JSON.stringify(Map3Ai));
       //set map and brain data to map1 from local storage
     }
 

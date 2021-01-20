@@ -160,17 +160,18 @@ function MapEditor() {
 
         setSelectedMapSaveNumber(mapSaveNumber);
 
-        let sizePrompt = prompt("Enter a map size as an integer between 1 - 6:");
+        let sizePrompt = prompt("Enter an integer for map size. Recommended map size is between 1-6.:");
         if (sizePrompt === null || sizePrompt === "") {
             alert("Invalid map size, please enter a integer between 1-6");
             return;
         } else {
             let parsedSize = parseInt(sizePrompt);
-
-            if(!(parsedSize > 0 && parsedSize < 7)){
+            
+            if(!(parsedSize > 0)){
                 alert("Invalid map size, please enter a integer between 1-6");
                 return;
             }
+            
             generateWorld(parsedSize);
         } 
     }
